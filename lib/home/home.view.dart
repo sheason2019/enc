@@ -10,9 +10,7 @@ class HomePage extends StatelessWidget {
     Get.put(HomeController());
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sheason Chat'),
-      ),
+      appBar: AppBar(),
       body: const LinearProgressIndicator(),
     );
   }

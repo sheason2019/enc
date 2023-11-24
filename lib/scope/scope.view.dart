@@ -12,7 +12,7 @@ class ScopePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(scope);
-    final controller = Get.put(ScopeController());
+    final controller = Get.put(ScopeController(scope: scope));
 
     return Scaffold(
       body: Obx(

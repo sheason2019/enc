@@ -10,19 +10,25 @@ class AccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AccountCardController());
+    final currentScope = Get.findOrNull<Scope>();
+
+    final current = currentScope == scope;
 
     return Obx(
-      () => ListTile(
-        onTap: () => controller.handleEnterScope(scope),
-        onLongPress: () => controller.handleDeleteScope(scope),
-        leading: const CircleAvatar(),
-        title: Text(
-          scope.snapshot.value.username,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          scope.snapshot.value.index.signPubKey,
-          overflow: TextOverflow.ellipsis,
+      () => ColoredBox(
+        color: current ? Colors.black.withOpacity(0.05) : Colors.transparent,
+        child: ListTile(
+          onTap: () => controller.handleEnterScope(scope),
+          onLongPress: () => controller.handleDeleteScope(scope),
+          leading: const CircleAvatar(),
+          title: Text(
+            scope.snapshot.value.username,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            scope.snapshot.value.index.signPubKey,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
     );

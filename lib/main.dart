@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sheason_chat/accounts/accounts.controller.dart';
 import 'package:sheason_chat/home/home.view.dart';
 
 void main() async {
@@ -11,6 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(AccountsController());
+
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

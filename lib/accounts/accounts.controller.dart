@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/scope/scope.view.dart';
 
 class AccountsController extends GetxController {
   final subs = <StreamSubscription>[];
@@ -20,7 +21,10 @@ class AccountsController extends GetxController {
 
   handleUpdateAccounts() async {
     final entries = Directory(await accountsPath).listSync();
-    final paths = entries.map((e) => e.path).toList();
+    final paths = entries
+        .map((e) => e.path)
+        .where((e) => !path.basename(e).startsWith('.'))
+        .toList();
 
     final deleteSet = scopeMap.keys.toSet();
     final appendSet = <String>{};
@@ -86,9 +90,27 @@ class AccountsController extends GetxController {
     await handleUpdateAccounts();
   }
 
+  Future<Scope?> handleFindDefaultScope() async {
+    final file = File(path.join(await accountsPath, '.active-account'));
+    if (await file.exists()) {
+      return scopeMap[await file.readAsString()];
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> handleSetDefaultScope(Scope scope) async {
+    final file = File(path.join(await accountsPath, '.active-account'));
+    await file.writeAsString(scope.accountPath);
+  }
+
   @override
-  void onInit() {
-    handleUpdateAccounts();
+  void onInit() async {
+    await handleUpdateAccounts();
+    final defaultScope = await handleFindDefaultScope();
+    if (defaultScope != null) {
+      Get.offAll(() => ScopePage(scope: defaultScope));
+    }
     super.onInit();
   }
 

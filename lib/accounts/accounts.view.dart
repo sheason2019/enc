@@ -8,7 +8,7 @@ class AccountsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AccountsController());
+    final controller = Get.find<AccountsController>();
 
     return Scaffold(
       appBar: AppBar(

@@ -13,11 +13,11 @@ class ChatView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('消息列表'),
         centerTitle: true,
-        leading: MouseRegion(
-          cursor: SystemMouseCursors.click,
+        leading: Center(
           child: GestureDetector(
             onTap: controller.handleEnterAccounts,
-            child: const Center(
+            child: const MouseRegion(
+              cursor: SystemMouseCursors.click,
               child: CircleAvatar(),
             ),
           ),
