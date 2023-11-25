@@ -4,21 +4,20 @@ part 'operation.g.dart';
 
 @collection
 class Operation {
-  final int id;
+  Id id = Isar.autoIncrement;
 
+  @Index()
   final String clientId;
+  @Index()
   final int clock;
 
-  String source;
+  String payload;
   String apply;
-  String revert;
 
   Operation({
-    required this.id,
     required this.clock,
     required this.clientId,
-    required this.source,
+    required this.payload,
     required this.apply,
-    required this.revert,
   });
 }

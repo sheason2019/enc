@@ -1,10 +1,20 @@
-import 'package:sheason_chat/scope/chain/chain.dart';
+import 'dart:convert';
+
+import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Subscribe {
-  final Chain chain;
+  final AccountSecret secret;
+  final AccountIndex index;
+  final String deviceId;
   final String url;
-  Subscribe({required this.chain, required this.url});
+
+  Subscribe({
+    required this.secret,
+    required this.index,
+    required this.url,
+    required this.deviceId,
+  });
 
   late Socket socket;
   init() async {
@@ -20,11 +30,10 @@ class Subscribe {
 
     socket.onConnect((data) {
       socket.emit('subscribe', {
-        'signPubkey': chain.secret.signPubKey,
-        'deviceId': chain.deviceId,
+        'deviceId': deviceId,
+        'index': base64Encode(index.writeToBuffer()),
       });
     });
-    chain.attachEvent(socket);
 
     socket.connect();
   }

@@ -291,9 +291,8 @@ class PortableOperation extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PortableOperation', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'clientId')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'clock', $pb.PbFieldType.O3)
-    ..aOS(3, _omitFieldNames ? '' : 'source')
-    ..aOS(4, _omitFieldNames ? '' : 'apply')
-    ..aOS(5, _omitFieldNames ? '' : 'revert')
+    ..aOS(3, _omitFieldNames ? '' : 'payload')
+    ..aOM<PortableSecretBox>(4, _omitFieldNames ? '' : 'secretBox', subBuilder: PortableSecretBox.create)
     ..hasRequiredFields = false
   ;
 
@@ -337,31 +336,24 @@ class PortableOperation extends $pb.GeneratedMessage {
   void clearClock() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get source => $_getSZ(2);
+  $core.String get payload => $_getSZ(2);
   @$pb.TagNumber(3)
-  set source($core.String v) { $_setString(2, v); }
+  set payload($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasSource() => $_has(2);
+  $core.bool hasPayload() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSource() => clearField(3);
+  void clearPayload() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get apply => $_getSZ(3);
+  PortableSecretBox get secretBox => $_getN(3);
   @$pb.TagNumber(4)
-  set apply($core.String v) { $_setString(3, v); }
+  set secretBox(PortableSecretBox v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasApply() => $_has(3);
+  $core.bool hasSecretBox() => $_has(3);
   @$pb.TagNumber(4)
-  void clearApply() => clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get revert => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set revert($core.String v) { $_setString(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasRevert() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearRevert() => clearField(5);
+  void clearSecretBox() => clearField(4);
+  @$pb.TagNumber(4)
+  PortableSecretBox ensureSecretBox() => $_ensure(3);
 }
 
 class PortableConversation extends $pb.GeneratedMessage {

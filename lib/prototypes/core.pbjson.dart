@@ -147,17 +147,21 @@ const PortableOperation$json = {
   '2': [
     {'1': 'client_id', '3': 1, '4': 1, '5': 9, '10': 'clientId'},
     {'1': 'clock', '3': 2, '4': 1, '5': 5, '10': 'clock'},
-    {'1': 'source', '3': 3, '4': 1, '5': 9, '10': 'source'},
-    {'1': 'apply', '3': 4, '4': 1, '5': 9, '10': 'apply'},
-    {'1': 'revert', '3': 5, '4': 1, '5': 9, '10': 'revert'},
+    {'1': 'payload', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'payload', '17': true},
+    {'1': 'secret_box', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.PortableSecretBox', '9': 1, '10': 'secretBox', '17': true},
+  ],
+  '8': [
+    {'1': '_payload'},
+    {'1': '_secret_box'},
   ],
 };
 
 /// Descriptor for `PortableOperation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List portableOperationDescriptor = $convert.base64Decode(
     'ChFQb3J0YWJsZU9wZXJhdGlvbhIbCgljbGllbnRfaWQYASABKAlSCGNsaWVudElkEhQKBWNsb2'
-    'NrGAIgASgFUgVjbG9jaxIWCgZzb3VyY2UYAyABKAlSBnNvdXJjZRIUCgVhcHBseRgEIAEoCVIF'
-    'YXBwbHkSFgoGcmV2ZXJ0GAUgASgJUgZyZXZlcnQ=');
+    'NrGAIgASgFUgVjbG9jaxIdCgdwYXlsb2FkGAMgASgJSABSB3BheWxvYWSIAQESQwoKc2VjcmV0'
+    'X2JveBgEIAEoCzIfLnNoZWFzb25fY2hhdC5Qb3J0YWJsZVNlY3JldEJveEgBUglzZWNyZXRCb3'
+    'iIAQFCCgoIX3BheWxvYWRCDQoLX3NlY3JldF9ib3g=');
 
 @$core.Deprecated('Use portableConversationDescriptor instead')
 const PortableConversation$json = {
