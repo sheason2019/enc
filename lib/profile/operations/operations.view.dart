@@ -14,7 +14,7 @@ class OperationsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Operations'),
+        title: Text('${scope.secret.value.signPubKey} / Operations'),
       ),
       body: StreamBuilder(
         initialData: const [],

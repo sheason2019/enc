@@ -18,6 +18,7 @@ class Scope {
   final secret = AccountSecret().obs;
   final snapshot = AccountSnapshot().obs;
   final subscribes = <String, Subscribe>{}.obs;
+  final inited = false.obs;
 
   late final operator = Operator(scope: this);
 
@@ -84,14 +85,14 @@ class Scope {
     // 构建服务器长连接，并注入私有链控制器
     const url = 'http://192.168.31.174';
     final subscribe = Subscribe(
-      index: snapshot.value.index,
-      secret: secret.value,
+      scope: this,
       url: url,
       deviceId: deviceId,
     );
     await subscribe.init();
 
     subscribes[url] = subscribe;
+    inited.value = true;
   }
 
   dispose() {

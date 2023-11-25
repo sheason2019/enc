@@ -13,6 +13,7 @@ import 'package:sheason_chat/scope/scope.view.dart';
 class AccountsController extends GetxController {
   final subs = <StreamSubscription>[];
   final scopeMap = <String, Scope>{}.obs;
+  final activeScope = Rx<Scope?>(null);
 
   Future<String> get accountsPath async {
     final dir = await getApplicationDocumentsDirectory();
@@ -109,7 +110,7 @@ class AccountsController extends GetxController {
     await handleUpdateAccounts();
     final defaultScope = await handleFindDefaultScope();
     if (defaultScope != null) {
-      Get.offAll(() => ScopePage(scope: defaultScope));
+      Get.offAll(() => const ScopePage());
     }
     super.onInit();
   }

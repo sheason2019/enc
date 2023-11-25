@@ -1,17 +1,18 @@
 import 'dart:convert';
 
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:get/get.dart';
+import 'package:isar/isar.dart';
+import 'package:sheason_chat/schema/operation.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Subscribe {
-  final AccountSecret secret;
-  final AccountIndex index;
+  final Scope scope;
   final String deviceId;
   final String url;
 
   Subscribe({
-    required this.secret,
-    required this.index,
+    required this.scope,
     required this.url,
     required this.deviceId,
   });
@@ -29,9 +30,16 @@ class Subscribe {
     );
 
     socket.onConnect((data) {
-      socket.emit('subscribe', {
+      socket.emitWithAck('subscribe', {
         'deviceId': deviceId,
-        'index': base64Encode(index.writeToBuffer()),
+        'snapshot': base64Encode(scope.snapshot.value.writeToBuffer()),
+      }, ack: (data) async {
+        final replicaClockMap = await scope.isar.operations
+            .where(distinct: true)
+            .sortByClock()
+            .distinctByClientId()
+            .findAll();
+        Get.log('replica set::$replicaClockMap');
       });
     });
 

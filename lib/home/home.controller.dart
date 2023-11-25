@@ -15,7 +15,7 @@ class HomeController extends GetxController {
     if (scope == null) {
       Get.off(() => const AccountsPage());
     } else {
-      Get.off(() => ScopePage(scope: scope));
+      Get.off(() => const ScopePage());
     }
     super.onInit();
   }
