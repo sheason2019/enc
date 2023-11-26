@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:isar/isar.dart';
+import 'package:provider/provider.dart';
 import 'package:sheason_chat/profile/operations/operation/operation.view.dart';
 import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -10,11 +10,11 @@ class OperationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scope = Get.find<Scope>();
+    final scope = context.watch<Scope>();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${scope.secret.value.signPubKey} / Operations'),
+        title: Text('${scope.secret.signPubKey} / Operations'),
       ),
       body: StreamBuilder(
         initialData: const [],

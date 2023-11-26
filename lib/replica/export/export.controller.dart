@@ -2,17 +2,16 @@ import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-class ExportReplicaController extends GetxController {
-  final scanned = false.obs;
-  final socketId = ''.obs;
-  final verifyCode = ''.obs;
+class ExportReplicaController extends ChangeNotifier {
+  var scanned = false;
+  var socketId = '';
+  var verifyCode = '';
   final pageController = PageController();
   late Socket socket;
   final Scope scope;
@@ -33,17 +32,17 @@ class ExportReplicaController extends GetxController {
           .build(),
     );
     socket.on('pull', (data) {
-      if (scanned.value) return;
+      if (scanned) return;
 
       final socketId = data['socketId'];
       final account = AccountIndex.fromBuffer(base64Decode(data['account']));
-      scanned.value = true;
+      scanned = true;
       _targetSocketId = socketId;
       _targetAccountIndex = account;
 
       socket.emit('push', {
         'socketId': _targetSocketId,
-        'account': base64Encode(scope.snapshot.value.writeToBuffer()),
+        'account': base64Encode(scope.snapshot.writeToBuffer()),
       });
     });
     socket.on('verify-code', (data) async {
@@ -53,12 +52,12 @@ class ExportReplicaController extends GetxController {
         mac: Mac(base64Decode(data['mac'])),
       );
       final decrypt = await CryptoUtils.decrypt(
-        CryptoKeyPair.fromSecret(scope.secret.value),
+        CryptoKeyPair.fromSecret(scope.secret),
         _targetAccountIndex.ecdhPubKey,
         secretBox,
       );
       final verifyCode = String.fromCharCodes(decrypt);
-      this.verifyCode.value = verifyCode;
+      this.verifyCode = verifyCode;
       pageController.animateToPage(
         1,
         duration: const Duration(milliseconds: 250),
@@ -66,7 +65,7 @@ class ExportReplicaController extends GetxController {
       );
     });
     socket.onConnect((data) {
-      socketId.value = socket.id!;
+      socketId = socket.id!;
     });
     this.socket = socket;
     socket.connect();
@@ -74,9 +73,9 @@ class ExportReplicaController extends GetxController {
 
   Future<void> handleTransport() async {
     final secretBox = await CryptoUtils.encrypt(
-      CryptoKeyPair.fromSecret(scope.secret.value),
+      CryptoKeyPair.fromSecret(scope.secret),
       _targetAccountIndex.ecdhPubKey,
-      scope.secret.value.writeToBuffer(),
+      scope.secret.writeToBuffer(),
     );
 
     socket.emit('secret', {
@@ -85,19 +84,12 @@ class ExportReplicaController extends GetxController {
       'nonce': base64Encode(secretBox.nonce),
       'mac': base64Encode(secretBox.mac.bytes),
     });
-    Get.back();
   }
 
   @override
-  void onInit() {
-    createSocket();
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
+  void dispose() {
     socket.dispose();
     pageController.dispose();
-    super.onClose();
+    super.dispose();
   }
 }

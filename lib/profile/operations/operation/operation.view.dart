@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -9,7 +9,7 @@ class OperationListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scope = Get.find<Scope>();
+    final scope = context.watch<Scope>();
 
     return FutureBuilder(
       future: scope.isar.operations.get(id),

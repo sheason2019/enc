@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sheason_chat/accounts/account_card/account_card.controller.dart';
+import 'package:provider/provider.dart';
+import 'package:sheason_chat/scope/scope.collection.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class AccountCard extends StatelessWidget {
   final Scope scope;
   const AccountCard({super.key, required this.scope});
 
+  handleEnterScope(BuildContext context) {
+    final controller = context.read<MainController>();
+    controller.handleEnterScope(scope);
+  }
+
+  handleDeleteScope(BuildContext context) {
+    final controller = context.read<ScopeCollection>();
+    controller.handleDeleteAccount(scope);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AccountCardController());
-    final currentScope = Get.findOrNull<Scope>();
+    final currentScope = context.watch<Scope?>();
 
     final current = currentScope == scope;
 
-    return Obx(
-      () => ColoredBox(
-        color: current ? Colors.black.withOpacity(0.05) : Colors.transparent,
-        child: ListTile(
-          onTap: () => controller.handleEnterScope(scope),
-          onLongPress: () => controller.handleDeleteScope(scope),
-          leading: const CircleAvatar(),
-          title: Text(
-            scope.snapshot.value.username,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            scope.snapshot.value.index.signPubKey,
-            overflow: TextOverflow.ellipsis,
-          ),
+    return ColoredBox(
+      color: current ? Colors.black.withOpacity(0.05) : Colors.transparent,
+      child: ListTile(
+        onTap: () => handleEnterScope(context),
+        onLongPress: () => handleDeleteScope(context),
+        leading: const CircleAvatar(),
+        title: Text(
+          scope.snapshot.username,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          scope.snapshot.index.signPubKey,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

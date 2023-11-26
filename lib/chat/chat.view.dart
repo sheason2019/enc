@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sheason_chat/chat/chat.controller.dart';
+import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/accounts.view.dart';
+import 'package:sheason_chat/main.controller.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
+  toBarcodeScanner(BuildContext context) {}
+  toAccounts(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(const AccountsPage());
+    delegate.notify();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ChatController());
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('消息列表'),
         centerTitle: true,
         leading: Center(
           child: GestureDetector(
-            onTap: controller.handleEnterAccounts,
+            onTap: () => toAccounts(context),
             child: const MouseRegion(
               cursor: SystemMouseCursors.click,
               child: CircleAvatar(),
@@ -23,22 +29,25 @@ class ChatView extends StatelessWidget {
           ),
         ),
         actions: [
-          PopupMenuButton<int>(
-            onSelected: (v) {
-              switch (v) {
-                case 0:
-                  controller.handleEnterBarcode();
-                  return;
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 0,
-                child: Text('扫一扫'),
-              ),
-            ],
-            icon: const Icon(Icons.add),
-          ).paddingOnly(right: 8),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: PopupMenuButton<int>(
+              onSelected: (v) {
+                switch (v) {
+                  case 0:
+                    toBarcodeScanner(context);
+                    return;
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 0,
+                  child: Text('扫一扫'),
+                ),
+              ],
+              icon: const Icon(Icons.add),
+            ),
+          ),
         ],
       ),
     );

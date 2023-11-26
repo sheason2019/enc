@@ -2,23 +2,23 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart' as path;
-import 'package:get/get.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/scope/operator/operator.model.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
 
-class Scope {
+class Scope extends ChangeNotifier {
   final String accountPath;
   Scope({required this.accountPath});
   final subs = <StreamSubscription>[];
 
-  final secret = AccountSecret().obs;
-  final snapshot = AccountSnapshot().obs;
-  final subscribes = <String, Subscribe>{}.obs;
-  final inited = false.obs;
+  var secret = AccountSecret();
+  var snapshot = AccountSnapshot();
+  var inited = false;
+  final subscribes = <String, Subscribe>{};
 
   late final operator = Operator(scope: this);
 
@@ -32,13 +32,15 @@ class Scope {
     final snapshot = AccountSnapshot.fromBuffer(
       await snapshotFile.readAsBytes(),
     );
-    this.snapshot.value = snapshot;
+    this.snapshot = snapshot;
+    notifyListeners();
   }
 
   Future<void> handleSetSnapshot(AccountSnapshot snapshot) async {
     final snapshotFile = File(path.join(accountPath, '.snapshot'));
     await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
-    this.snapshot.value = snapshot;
+    this.snapshot = snapshot;
+    notifyListeners();
   }
 
   Future handleUpdateSecret() async {
@@ -48,7 +50,8 @@ class Scope {
     final secret = AccountSecret.fromBuffer(
       await secretFile.readAsBytes(),
     );
-    this.secret.value = secret;
+    this.secret = secret;
+    notifyListeners();
   }
 
   Future<void> handleInitIsar() async {
@@ -92,10 +95,12 @@ class Scope {
     await subscribe.init();
 
     subscribes[url] = subscribe;
-    inited.value = true;
+    inited = true;
+    notifyListeners();
   }
 
-  dispose() {
+  @override
+  void dispose() {
     for (final sub in subs) {
       sub.cancel();
     }
@@ -103,5 +108,6 @@ class Scope {
       subscribe.dispose();
     }
     isar.close();
+    super.dispose();
   }
 }

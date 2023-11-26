@@ -3,17 +3,14 @@ import 'dart:io';
 
 import 'package:fixnum/fixnum.dart';
 import 'package:path/path.dart' as path;
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/scope/scope.view.dart';
 
-class AccountsController extends GetxController {
+class ScopeCollection {
   final subs = <StreamSubscription>[];
-  final scopeMap = <String, Scope>{}.obs;
-  final activeScope = Rx<Scope?>(null);
+  final scopeMap = <String, Scope>{};
 
   Future<String> get accountsPath async {
     final dir = await getApplicationDocumentsDirectory();
@@ -85,7 +82,7 @@ class AccountsController extends GetxController {
 
   Future<void> handleDeleteAccount(Scope scope) async {
     final dir = Directory(
-      path.join(await accountsPath, scope.secret.value.signPubKey),
+      path.join(await accountsPath, scope.secret.signPubKey),
     );
     await dir.delete(recursive: true);
     await handleUpdateAccounts();
@@ -105,24 +102,12 @@ class AccountsController extends GetxController {
     await file.writeAsString(scope.accountPath);
   }
 
-  @override
-  void onInit() async {
-    await handleUpdateAccounts();
-    final defaultScope = await handleFindDefaultScope();
-    if (defaultScope != null) {
-      Get.offAll(() => const ScopePage());
-    }
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
+  void dispose() {
     for (final sub in subs) {
       sub.cancel();
     }
     for (final scope in scopeMap.values) {
       scope.dispose();
     }
-    super.onClose();
   }
 }

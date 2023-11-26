@@ -35,7 +35,7 @@ class Operator {
     PortableOperation portableOperation,
     Map map,
   ) async {
-    final currentUsername = scope.snapshot.value.username;
+    final currentUsername = scope.snapshot.username;
     final String newUsername = map['payload']['username'];
 
     final operation = Operation(
@@ -49,7 +49,7 @@ class Operator {
       }),
     );
 
-    final snapshot = scope.snapshot.value.deepCopy()..username = newUsername;
+    final snapshot = scope.snapshot.deepCopy()..username = newUsername;
 
     await scope.isar.writeTxn(() => scope.isar.operations.put(operation));
     await scope.handleSetSnapshot(snapshot);

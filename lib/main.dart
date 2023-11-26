@@ -1,27 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sheason_chat/accounts/accounts.controller.dart';
-import 'package:sheason_chat/home/home.view.dart';
+import 'package:provider/provider.dart';
+import 'package:sheason_chat/scope/scope.collection.dart';
+import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 
 void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Get.put(AccountsController());
+  State<StatefulWidget> createState() => _MyAppState();
+}
 
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+class _MyAppState extends State<MyApp> {
+  late final mainController = MainController(onActiveScopeChanged: (scope) {
+    setState(() {
+      currentScope = scope;
+    });
+  });
+  final collection = ScopeCollection();
+  Scope? currentScope;
+
+  void init() async {
+    await collection.handleUpdateAccounts();
+    final defaultScope = await collection.handleFindDefaultScope();
+    await mainController.handleEnterScope(defaultScope);
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    mainController.dispose();
+    collection.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider.value(value: mainController),
+        Provider.value(value: collection),
+        ListenableProvider.value(value: currentScope),
+      ],
+      builder: (context, _) => MaterialApp.router(
+        title: 'Sheason Chat',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        routerDelegate: mainController.rootDelegate,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(),
     );
   }
 }

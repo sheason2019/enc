@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -32,14 +32,14 @@ class Subscribe {
     socket.onConnect((data) {
       socket.emitWithAck('subscribe', {
         'deviceId': deviceId,
-        'snapshot': base64Encode(scope.snapshot.value.writeToBuffer()),
+        'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
       }, ack: (data) async {
         final replicaClockMap = await scope.isar.operations
             .where(distinct: true)
             .sortByClock()
             .distinctByClientId()
             .findAll();
-        Get.log('replica set::$replicaClockMap');
+        log('replica set::$replicaClockMap');
       });
     });
 

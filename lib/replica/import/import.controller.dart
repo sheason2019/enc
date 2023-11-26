@@ -3,14 +3,14 @@ import 'dart:math';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sheason_chat/accounts/accounts.controller.dart';
+import 'package:provider/provider.dart';
+import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-class ImportReplicaController extends GetxController {
+class ImportReplicaController extends ChangeNotifier {
   final String url;
   final String socketId;
   ImportReplicaController({
@@ -20,12 +20,13 @@ class ImportReplicaController extends GetxController {
 
   final pageController = PageController();
 
-  final snapshot = AccountSnapshot().obs;
+  var snapshot = AccountSnapshot();
   late Socket socket;
   late CryptoKeyPair keypair;
-  final verifyCode = ''.obs;
+  var verifyCode = '';
 
-  handleConnect() async {
+  handleConnect(BuildContext context) async {
+    final controller = context.read<ScopeCollection>();
     final keypair = await CryptoUtils.generate();
     this.keypair = keypair;
 
@@ -53,8 +54,9 @@ class ImportReplicaController extends GetxController {
       );
     });
     socket.on('push', (data) {
-      final account = AccountSnapshot.fromBuffer(base64Decode(data['account']));
-      snapshot.value = account;
+      final snapshot =
+          AccountSnapshot.fromBuffer(base64Decode(data['account']));
+      this.snapshot = snapshot;
       pageController.animateToPage(
         1,
         duration: const Duration(milliseconds: 250),
@@ -69,13 +71,11 @@ class ImportReplicaController extends GetxController {
       );
       final decrypt = await CryptoUtils.decrypt(
         keypair,
-        snapshot.value.index.ecdhPubKey,
+        snapshot.index.ecdhPubKey,
         secretBox,
       );
       final secret = AccountSecret.fromBuffer(decrypt);
-      final controller = Get.find<AccountsController>();
       await controller.createAccountBySecret(secret);
-      Get.back();
     });
 
     socket.connect();
@@ -88,11 +88,11 @@ class ImportReplicaController extends GetxController {
       verifyCode.add(Random().nextInt(10));
     }
     final codeStr = verifyCode.join();
-    this.verifyCode.value = codeStr;
+    this.verifyCode = codeStr;
 
     final secretBox = await CryptoUtils.encrypt(
       keypair,
-      snapshot.value.index.ecdhPubKey,
+      snapshot.index.ecdhPubKey,
       codeStr.codeUnits,
     );
 
@@ -105,14 +105,8 @@ class ImportReplicaController extends GetxController {
   }
 
   @override
-  void onInit() {
-    handleConnect();
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    socket.close();
-    super.onClose();
+  void dispose() {
+    socket.dispose();
+    super.dispose();
   }
 }
