@@ -97,9 +97,13 @@ class ScopeCollection {
     }
   }
 
-  Future<void> handleSetDefaultScope(Scope scope) async {
+  Future<void> handleSetDefaultScope(Scope? scope) async {
     final file = File(path.join(await accountsPath, '.active-account'));
-    await file.writeAsString(scope.accountPath);
+    if (scope != null) {
+      await file.writeAsString(scope.accountPath);
+    } else {
+      await file.writeAsString('');
+    }
   }
 
   void dispose() {

@@ -16,12 +16,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final mainController = MainController(onActiveScopeChanged: (scope) {
-    setState(() {
-      currentScope = scope;
-    });
-  });
-  final collection = ScopeCollection();
+  late final mainController = MainController(
+    onActiveScopeChanged: (scope) async {
+      await collection.handleSetDefaultScope(scope);
+      setState(() {
+        currentScope = scope;
+      });
+    },
+  );
+  late final collection = ScopeCollection();
   Scope? currentScope;
 
   void init() async {
