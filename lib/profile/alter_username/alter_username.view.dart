@@ -1,11 +1,10 @@
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class AlterUsernamePage extends StatefulWidget {
@@ -30,8 +29,11 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
   Future<void> handleSubmit() async {
     final delegate = context.read<MainController>().rootDelegate;
     final newName = textController.text;
-    final currentClock =
-        await scope.isar.operations.where().clockProperty().max() ?? 0;
+    final maxClock = scope.db.operations.clock.max();
+    final selectCurrentClock = scope.db.operations.selectOnly()
+      ..addColumns([maxClock]);
+    final record = await selectCurrentClock.getSingleOrNull();
+    final currentClock = record?.read(maxClock) ?? 0;
     final operation = PortableOperation()
       ..clientId = scope.deviceId
       ..clock = currentClock + 1

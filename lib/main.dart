@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/scope/scope.collection.dart';
@@ -5,6 +6,7 @@ import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 void main() async {
+  driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   runApp(const MyApp());
 }
 

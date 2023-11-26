@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:isar/isar.dart';
-import 'package:sheason_chat/schema/operation.dart';
+import 'package:drift/drift.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -34,12 +33,17 @@ class Subscribe {
         'deviceId': deviceId,
         'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
       }, ack: (data) async {
-        final replicaClockMap = await scope.isar.operations
-            .where(distinct: true)
-            .sortByClock()
-            .distinctByClientId()
-            .findAll();
-        log('replica set::$replicaClockMap');
+        // 寻找每一个 Client ID 下最大的 Clock
+        final maxClock = scope.db.operations.clock.max();
+        final select = scope.db.operations.selectOnly();
+        select.addColumns([
+          scope.db.operations.clientId,
+          maxClock,
+        ]);
+        select.groupBy([scope.db.operations.clientId]);
+        final result = await select.get();
+
+        log('replica set::$result');
       });
     });
 

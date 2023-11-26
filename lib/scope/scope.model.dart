@@ -3,10 +3,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:path/path.dart' as path;
 import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/operation.dart';
+import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operator.model.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
 
@@ -23,7 +22,7 @@ class Scope extends ChangeNotifier {
   late final operator = Operator(scope: this);
 
   late String deviceId;
-  late Isar isar;
+  late final AppDatabase db;
 
   Future handleUpdateSnapshot() async {
     final snapshotFile = File(path.join(accountPath, '.snapshot'));
@@ -55,15 +54,7 @@ class Scope extends ChangeNotifier {
   }
 
   Future<void> handleInitIsar() async {
-    final isar = await Isar.open(
-      [
-        OperationSchema,
-      ],
-      directory: accountPath,
-      inspector: false,
-      name: path.basename(accountPath),
-    );
-    this.isar = isar;
+    db = AppDatabase(accountPath);
   }
 
   Future<void> handleInitDeviceId() async {
@@ -107,7 +98,7 @@ class Scope extends ChangeNotifier {
     for (final subscribe in subscribes.values) {
       subscribe.dispose();
     }
-    isar.close();
+    db.close();
     super.dispose();
   }
 }

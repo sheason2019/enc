@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/operation.dart';
+import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class Operator {
@@ -38,20 +39,20 @@ class Operator {
     final currentUsername = scope.snapshot.username;
     final String newUsername = map['payload']['username'];
 
-    final operation = Operation(
-      clock: portableOperation.clock,
-      clientId: portableOperation.clientId,
-      payload: portableOperation.payload,
-      apply: jsonEncode({
-        'type': 'account/username',
-        'from': currentUsername,
-        'to': newUsername,
-      }),
+    await scope.db.operations.insertReturning(
+      OperationsCompanion.insert(
+        clientId: portableOperation.clientId,
+        clock: portableOperation.clock,
+        payload: portableOperation.payload,
+        apply: jsonEncode({
+          'type': 'account/username',
+          'from': currentUsername,
+          'to': newUsername,
+        }),
+      ),
     );
 
     final snapshot = scope.snapshot.deepCopy()..username = newUsername;
-
-    await scope.isar.writeTxn(() => scope.isar.operations.put(operation));
     await scope.handleSetSnapshot(snapshot);
   }
 }

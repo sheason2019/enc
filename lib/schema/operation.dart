@@ -1,23 +1,9 @@
-import 'package:isar/isar.dart';
+import 'package:drift/drift.dart';
 
-part 'operation.g.dart';
-
-@collection
-class Operation {
-  Id id = Isar.autoIncrement;
-
-  @Index()
-  final String clientId;
-  @Index()
-  final int clock;
-
-  String payload;
-  String apply;
-
-  Operation({
-    required this.clock,
-    required this.clientId,
-    required this.payload,
-    required this.apply,
-  });
+class Operations extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get clientId => text()();
+  IntColumn get clock => integer()();
+  TextColumn get payload => text()();
+  TextColumn get apply => text()();
 }
