@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/accounts.view.dart';
+import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
-  toBarcodeScanner(BuildContext context) {}
+  toBarcodeScanner(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(const BarcodeScannerPage());
+    delegate.notify();
+  }
+
   toAccounts(BuildContext context) {
     final delegate = context.read<MainController>().rootDelegate;
     delegate.pages.add(const AccountsPage());
