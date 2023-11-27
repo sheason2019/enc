@@ -43,7 +43,7 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
           'username': newName,
         },
       });
-    await scope.operator.apply(operation);
+    await scope.operator.apply([operation]);
     delegate.pages.removeLast();
     delegate.notify();
   }

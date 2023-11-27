@@ -12,6 +12,10 @@ class OperationsPage extends StatelessWidget {
     final scope = context.watch<Scope>();
     final select = scope.db.operations.selectOnly()
       ..addColumns([scope.db.operations.id]);
+    select.orderBy([
+      OrderingTerm.asc(scope.db.operations.clock),
+      OrderingTerm.asc(scope.db.operations.clientId),
+    ]);
     final stream = select.watch();
 
     return Scaffold(

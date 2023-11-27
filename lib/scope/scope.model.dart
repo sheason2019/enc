@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/operator/operator.model.dart';
+import 'package:sheason_chat/scope/operator/operator.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
 
 class Scope extends ChangeNotifier {
