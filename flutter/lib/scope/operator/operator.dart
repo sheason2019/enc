@@ -34,8 +34,11 @@ class Operator {
       final applyList = await _getApplyList();
       // 应用所有 Operation
       await BatchOperate.apply(scope, applyList);
-      // TODO: 请求与服务器进行同步
     });
+    // 请求与服务器进行同步
+    for (final subscribe in scope.subscribes.values) {
+      subscribe.syncOperation();
+    }
   }
 
   Future<void> _write(List<PortableOperation> operations) async {

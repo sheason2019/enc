@@ -31,31 +31,14 @@ class Subscribe {
     );
 
     socket.onConnect((data) {
-      socket.emitWithAck('subscribe', {
-        'deviceId': deviceId,
-        'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
-      }, ack: (data) async {
-        // 寻找每一个 Client ID 下最大的 Clock
-        final clientId = scope.db.operations.clientId;
-        final clock = scope.db.operations.clock;
-        final select = scope.db.operations.selectOnly();
-        select.addColumns([
-          clientId,
-          clock,
-        ]);
-        final replicaClockMap = <String, List<int>>{};
-        final records = await select.get();
-        for (final record in records) {
-          final cid = record.read(clientId)!;
-          final clo = record.read(clock)!;
-          if (replicaClockMap[cid] == null) {
-            replicaClockMap[cid] = [];
-          }
-          replicaClockMap[cid]!.add(clo);
-        }
-
-        socket.emit('sync-operation', replicaClockMap);
-      });
+      socket.emitWithAck(
+        'subscribe',
+        {
+          'deviceId': deviceId,
+          'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
+        },
+        ack: (data) => syncOperation(),
+      );
     });
 
     socket.on('pull-operation', (data) async {
@@ -107,6 +90,29 @@ class Subscribe {
     });
 
     socket.connect();
+  }
+
+  syncOperation() async {
+    // 寻找每一个 Client ID 下最大的 Clock
+    final clientId = scope.db.operations.clientId;
+    final clock = scope.db.operations.clock;
+    final select = scope.db.operations.selectOnly();
+    select.addColumns([
+      clientId,
+      clock,
+    ]);
+    final replicaClockMap = <String, List<int>>{};
+    final records = await select.get();
+    for (final record in records) {
+      final cid = record.read(clientId)!;
+      final clo = record.read(clock)!;
+      if (replicaClockMap[cid] == null) {
+        replicaClockMap[cid] = [];
+      }
+      replicaClockMap[cid]!.add(clo);
+    }
+
+    socket.emit('sync-operation', replicaClockMap);
   }
 
   handleSendMessage() async {
