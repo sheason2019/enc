@@ -3,7 +3,7 @@
 更新 Protobuf。
 
 ```sh
-protoc --proto_path=".\protos" --dart_out=".\lib\prototypes" ".\protos\core.proto"
+protoc --proto_path="..\protobufs" --dart_out=".\lib\prototypes" "..\protobufs\core.proto"
 ```
 
 # Windows 打包步骤

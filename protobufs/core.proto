@@ -1,0 +1,97 @@
+syntax = "proto3";
+package sheason_chat;
+
+message AccountSecret {
+  string ecdh_pub_key = 1;
+  string ecdh_priv_key = 2;
+  string sign_pub_key = 3;
+  string sign_priv_key = 4;
+}
+
+message AccountIndex {
+  string ecdh_pub_key = 1;
+  string sign_pub_key = 2;
+}
+
+message AccountSnapshot {
+  AccountIndex index = 1;
+  string username = 2;
+  string avatar_url = 3;
+  repeated string services = 4;
+  int64 created_at = 10;
+}
+
+message PortableSecretBox {
+  bytes cipher_data = 1;
+  bytes nonce = 2;
+  bytes mac = 3;
+}
+
+message PortableOperation {
+  string client_id = 1; // 设备ID
+  // Opaeration 链表
+  int32 clock = 2;
+  string payload = 3;
+  PortableSecretBox secret_box = 4;
+}
+
+enum ConversationType {
+  CONVERSATION_UNKNOWN = 0;
+  CONVERSATION_PRIVATE = 1;
+  CONVERSATION_GROUP = 2;
+}
+
+message PortableConversation {
+  ConversationType type = 1;
+  repeated AccountIndex members = 2;
+  
+  AccountIndex owner = 3;
+  string remote_url = 4;
+  map<int32, bytes> declared_secrets = 5;
+}
+
+enum MessageType {
+  MESSAGE_TYPE_UNKNOWN = 0;
+  MESSAGE_TYPE_TEXT = 1;
+  MESSAGE_TYPE_AUDIO = 2;
+  MESSAGE_TYPE_IMAGE = 3;
+  MESSAGE_TYPE_VIDEO = 4;
+  MESSAGE_TYPE_FILE = 5;
+}
+
+message PortableMessage {
+  string uuid = 1;
+  MessageType message_type = 2;
+  string content = 3;
+  AccountIndex sender = 4;
+  PortableConversation conversation = 5;
+  repeated PortableMessageState message_states = 6;
+}
+
+message PortableMessageState {
+  AccountIndex account = 1;
+  int64 created_at = 2;
+  int64 receive_at = 3;
+  int64 checked_at = 4;
+}
+
+enum SignedBundleContentType {
+  BUNDLE_TYPE_UNKNOWN = 0;
+  BUNDLE_TYPE_MESSAGE = 1;
+}
+
+enum EcryptType {
+  ENCRYPT_TYPE_NONE = 0;
+  ENCRYPT_TYPE_SHARED_SECRET = 1;
+  ENCRYPT_TYPE_DECLARED_SECRET = 2;
+}
+
+message SignedBundle {
+  EcryptType encrypt_type = 1;
+  int32 secret_key = 2;
+  AccountIndex sender = 3;
+  AccountIndex receiver = 4;
+  bytes plain_data = 5;
+  PortableSecretBox secret_box = 6;
+  SignedBundleContentType content_type = 7;
+}
