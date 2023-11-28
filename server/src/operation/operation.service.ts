@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Account } from '@prisma/client';
+import { Account, Operation } from '@prisma/client';
 import { prisma } from 'src/prisma/prisma';
 import { IOperationDiff, IPullOperation, IPushOperation } from './typings';
 
@@ -68,8 +68,12 @@ export class OperationService {
     };
   }
 
-  async apply(account: Account, operations: IPushOperation[]) {
-    await prisma.$transaction(async (tx) => {
+  async apply(
+    account: Account,
+    operations: IPushOperation[],
+  ): Promise<Operation[]> {
+    return prisma.$transaction(async (tx) => {
+      const records: Operation[] = [];
       for (const operation of operations) {
         const exist = await tx.operation.findFirst({
           where: {
@@ -82,7 +86,7 @@ export class OperationService {
           },
         });
         if (!!exist) continue;
-        await tx.operation.create({
+        const record = await tx.operation.create({
           data: {
             clientId: operation.clientId,
             clock: operation.clock,
@@ -90,7 +94,9 @@ export class OperationService {
             account: { connect: account },
           },
         });
+        records.push(record);
       }
+      return records;
     });
   }
 }

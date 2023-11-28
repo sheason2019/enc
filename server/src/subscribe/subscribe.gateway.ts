@@ -55,12 +55,13 @@ export class SubscribeGateway {
     if (!account) {
       throw new Error('Cannot find account by socket client');
     }
-    console.log(
-      'account id',
-      account.id,
-      'push-operations',
+
+    const applyList = await this.operationService.apply(
+      account,
       payload.operations,
     );
-    await this.operationService.apply(account, payload.operations);
+    if (applyList.length > 0) {
+      client.broadcast.to(account.signPubkey).emit('sync-operation');
+    }
   }
 }

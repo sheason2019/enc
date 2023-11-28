@@ -88,6 +88,7 @@ class Subscribe {
       await OperationCipher.decrypt(scope, operations);
       await scope.operator.apply(operations);
     });
+    socket.on('sync-operation', (data) => syncOperation());
 
     socket.connect();
   }
