@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         Provider.value(value: mainController),
-        Provider.value(value: collection),
+        ListenableProvider.value(value: collection),
         ListenableProvider.value(value: currentScope),
       ],
       builder: (context, _) => MaterialApp.router(

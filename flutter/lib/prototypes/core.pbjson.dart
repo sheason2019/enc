@@ -114,17 +114,39 @@ const AccountSnapshot$json = {
     {'1': 'index', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'index'},
     {'1': 'username', '3': 2, '4': 1, '5': 9, '10': 'username'},
     {'1': 'avatar_url', '3': 3, '4': 1, '5': 9, '10': 'avatarUrl'},
-    {'1': 'services', '3': 4, '4': 3, '5': 9, '10': 'services'},
+    {'1': 'serviceMap', '3': 4, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot.ServiceMapEntry', '10': 'serviceMap'},
     {'1': 'created_at', '3': 10, '4': 1, '5': 3, '10': 'createdAt'},
   ],
+  '3': [AccountSnapshot_ServiceMapEntry$json],
+};
+
+@$core.Deprecated('Use accountSnapshotDescriptor instead')
+const AccountSnapshot_ServiceMapEntry$json = {
+  '1': 'ServiceMapEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.sheason_chat.PortableService', '10': 'value'},
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `AccountSnapshot`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List accountSnapshotDescriptor = $convert.base64Decode(
     'Cg9BY2NvdW50U25hcHNob3QSMAoFaW5kZXgYASABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudE'
     'luZGV4UgVpbmRleBIaCgh1c2VybmFtZRgCIAEoCVIIdXNlcm5hbWUSHQoKYXZhdGFyX3VybBgD'
-    'IAEoCVIJYXZhdGFyVXJsEhoKCHNlcnZpY2VzGAQgAygJUghzZXJ2aWNlcxIdCgpjcmVhdGVkX2'
-    'F0GAogASgDUgljcmVhdGVkQXQ=');
+    'IAEoCVIJYXZhdGFyVXJsEk0KCnNlcnZpY2VNYXAYBCADKAsyLS5zaGVhc29uX2NoYXQuQWNjb3'
+    'VudFNuYXBzaG90LlNlcnZpY2VNYXBFbnRyeVIKc2VydmljZU1hcBIdCgpjcmVhdGVkX2F0GAog'
+    'ASgDUgljcmVhdGVkQXQaXAoPU2VydmljZU1hcEVudHJ5EhAKA2tleRgBIAEoCVIDa2V5EjMKBX'
+    'ZhbHVlGAIgASgLMh0uc2hlYXNvbl9jaGF0LlBvcnRhYmxlU2VydmljZVIFdmFsdWU6AjgB');
+
+@$core.Deprecated('Use portableServiceDescriptor instead')
+const PortableService$json = {
+  '1': 'PortableService',
+};
+
+/// Descriptor for `PortableService`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List portableServiceDescriptor = $convert.base64Decode(
+    'Cg9Qb3J0YWJsZVNlcnZpY2U=');
 
 @$core.Deprecated('Use portableSecretBoxDescriptor instead')
 const PortableSecretBox$json = {

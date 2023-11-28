@@ -8,8 +8,8 @@ class AccountsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<ScopeCollection>();
-    final scopes = controller.scopeMap.values.toList();
+    final collection = context.watch<ScopeCollection>();
+    final scopes = collection.scopeMap.values.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -22,7 +22,7 @@ class AccountsPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: controller.handleCreateAccount,
+        onPressed: collection.handleCreateAccount,
         child: const Icon(Icons.add),
       ),
     );

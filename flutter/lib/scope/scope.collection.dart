@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:fixnum/fixnum.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
-class ScopeCollection {
+class ScopeCollection extends ChangeNotifier {
   final subs = <StreamSubscription>[];
   final scopeMap = <String, Scope>{};
 
@@ -38,6 +39,7 @@ class ScopeCollection {
     for (final append in appendSet) {
       scopeMap[append] = Scope(accountPath: append)..init();
     }
+    notifyListeners();
   }
 
   Future<void> handleCreateAccount() async {
@@ -106,6 +108,7 @@ class ScopeCollection {
     }
   }
 
+  @override
   void dispose() {
     for (final sub in subs) {
       sub.cancel();
@@ -113,5 +116,6 @@ class ScopeCollection {
     for (final scope in scopeMap.values) {
       scope.dispose();
     }
+    super.dispose();
   }
 }

@@ -534,7 +534,7 @@
              * @property {sheason_chat.IAccountIndex|null} [index] AccountSnapshot index
              * @property {string|null} [username] AccountSnapshot username
              * @property {string|null} [avatarUrl] AccountSnapshot avatarUrl
-             * @property {Array.<string>|null} [services] AccountSnapshot services
+             * @property {Object.<string,sheason_chat.IPortableService>|null} [serviceMap] AccountSnapshot serviceMap
              * @property {number|Long|null} [createdAt] AccountSnapshot createdAt
              */
     
@@ -547,7 +547,7 @@
              * @param {sheason_chat.IAccountSnapshot=} [properties] Properties to set
              */
             function AccountSnapshot(properties) {
-                this.services = [];
+                this.serviceMap = {};
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -579,12 +579,12 @@
             AccountSnapshot.prototype.avatarUrl = "";
     
             /**
-             * AccountSnapshot services.
-             * @member {Array.<string>} services
+             * AccountSnapshot serviceMap.
+             * @member {Object.<string,sheason_chat.IPortableService>} serviceMap
              * @memberof sheason_chat.AccountSnapshot
              * @instance
              */
-            AccountSnapshot.prototype.services = $util.emptyArray;
+            AccountSnapshot.prototype.serviceMap = $util.emptyObject;
     
             /**
              * AccountSnapshot createdAt.
@@ -624,9 +624,11 @@
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.username);
                 if (message.avatarUrl != null && Object.hasOwnProperty.call(message, "avatarUrl"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.avatarUrl);
-                if (message.services != null && message.services.length)
-                    for (var i = 0; i < message.services.length; ++i)
-                        writer.uint32(/* id 4, wireType 2 =*/34).string(message.services[i]);
+                if (message.serviceMap != null && Object.hasOwnProperty.call(message, "serviceMap"))
+                    for (var keys = Object.keys(message.serviceMap), i = 0; i < keys.length; ++i) {
+                        writer.uint32(/* id 4, wireType 2 =*/34).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                        $root.sheason_chat.PortableService.encode(message.serviceMap[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                    }
                 if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
                     writer.uint32(/* id 10, wireType 0 =*/80).int64(message.createdAt);
                 return writer;
@@ -659,7 +661,7 @@
             AccountSnapshot.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.AccountSnapshot();
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.AccountSnapshot(), key, value;
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -676,9 +678,26 @@
                             break;
                         }
                     case 4: {
-                            if (!(message.services && message.services.length))
-                                message.services = [];
-                            message.services.push(reader.string());
+                            if (message.serviceMap === $util.emptyObject)
+                                message.serviceMap = {};
+                            var end2 = reader.uint32() + reader.pos;
+                            key = "";
+                            value = null;
+                            while (reader.pos < end2) {
+                                var tag2 = reader.uint32();
+                                switch (tag2 >>> 3) {
+                                case 1:
+                                    key = reader.string();
+                                    break;
+                                case 2:
+                                    value = $root.sheason_chat.PortableService.decode(reader, reader.uint32());
+                                    break;
+                                default:
+                                    reader.skipType(tag2 & 7);
+                                    break;
+                                }
+                            }
+                            message.serviceMap[key] = value;
                             break;
                         }
                     case 10: {
@@ -731,12 +750,15 @@
                 if (message.avatarUrl != null && message.hasOwnProperty("avatarUrl"))
                     if (!$util.isString(message.avatarUrl))
                         return "avatarUrl: string expected";
-                if (message.services != null && message.hasOwnProperty("services")) {
-                    if (!Array.isArray(message.services))
-                        return "services: array expected";
-                    for (var i = 0; i < message.services.length; ++i)
-                        if (!$util.isString(message.services[i]))
-                            return "services: string[] expected";
+                if (message.serviceMap != null && message.hasOwnProperty("serviceMap")) {
+                    if (!$util.isObject(message.serviceMap))
+                        return "serviceMap: object expected";
+                    var key = Object.keys(message.serviceMap);
+                    for (var i = 0; i < key.length; ++i) {
+                        var error = $root.sheason_chat.PortableService.verify(message.serviceMap[key[i]]);
+                        if (error)
+                            return "serviceMap." + error;
+                    }
                 }
                 if (message.createdAt != null && message.hasOwnProperty("createdAt"))
                     if (!$util.isInteger(message.createdAt) && !(message.createdAt && $util.isInteger(message.createdAt.low) && $util.isInteger(message.createdAt.high)))
@@ -765,12 +787,15 @@
                     message.username = String(object.username);
                 if (object.avatarUrl != null)
                     message.avatarUrl = String(object.avatarUrl);
-                if (object.services) {
-                    if (!Array.isArray(object.services))
-                        throw TypeError(".sheason_chat.AccountSnapshot.services: array expected");
-                    message.services = [];
-                    for (var i = 0; i < object.services.length; ++i)
-                        message.services[i] = String(object.services[i]);
+                if (object.serviceMap) {
+                    if (typeof object.serviceMap !== "object")
+                        throw TypeError(".sheason_chat.AccountSnapshot.serviceMap: object expected");
+                    message.serviceMap = {};
+                    for (var keys = Object.keys(object.serviceMap), i = 0; i < keys.length; ++i) {
+                        if (typeof object.serviceMap[keys[i]] !== "object")
+                            throw TypeError(".sheason_chat.AccountSnapshot.serviceMap: object expected");
+                        message.serviceMap[keys[i]] = $root.sheason_chat.PortableService.fromObject(object.serviceMap[keys[i]]);
+                    }
                 }
                 if (object.createdAt != null)
                     if ($util.Long)
@@ -797,8 +822,8 @@
                 if (!options)
                     options = {};
                 var object = {};
-                if (options.arrays || options.defaults)
-                    object.services = [];
+                if (options.objects || options.defaults)
+                    object.serviceMap = {};
                 if (options.defaults) {
                     object.index = null;
                     object.username = "";
@@ -815,10 +840,11 @@
                     object.username = message.username;
                 if (message.avatarUrl != null && message.hasOwnProperty("avatarUrl"))
                     object.avatarUrl = message.avatarUrl;
-                if (message.services && message.services.length) {
-                    object.services = [];
-                    for (var j = 0; j < message.services.length; ++j)
-                        object.services[j] = message.services[j];
+                var keys2;
+                if (message.serviceMap && (keys2 = Object.keys(message.serviceMap)).length) {
+                    object.serviceMap = {};
+                    for (var j = 0; j < keys2.length; ++j)
+                        object.serviceMap[keys2[j]] = $root.sheason_chat.PortableService.toObject(message.serviceMap[keys2[j]], options);
                 }
                 if (message.createdAt != null && message.hasOwnProperty("createdAt"))
                     if (typeof message.createdAt === "number")
@@ -855,6 +881,181 @@
             };
     
             return AccountSnapshot;
+        })();
+    
+        sheason_chat.PortableService = (function() {
+    
+            /**
+             * Properties of a PortableService.
+             * @memberof sheason_chat
+             * @interface IPortableService
+             */
+    
+            /**
+             * Constructs a new PortableService.
+             * @memberof sheason_chat
+             * @classdesc Represents a PortableService.
+             * @implements IPortableService
+             * @constructor
+             * @param {sheason_chat.IPortableService=} [properties] Properties to set
+             */
+            function PortableService(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * Creates a new PortableService instance using the specified properties.
+             * @function create
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {sheason_chat.IPortableService=} [properties] Properties to set
+             * @returns {sheason_chat.PortableService} PortableService instance
+             */
+            PortableService.create = function create(properties) {
+                return new PortableService(properties);
+            };
+    
+            /**
+             * Encodes the specified PortableService message. Does not implicitly {@link sheason_chat.PortableService.verify|verify} messages.
+             * @function encode
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {sheason_chat.IPortableService} message PortableService message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PortableService.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified PortableService message, length delimited. Does not implicitly {@link sheason_chat.PortableService.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {sheason_chat.IPortableService} message PortableService message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PortableService.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a PortableService message from the specified reader or buffer.
+             * @function decode
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {sheason_chat.PortableService} PortableService
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PortableService.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.PortableService();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a PortableService message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {sheason_chat.PortableService} PortableService
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PortableService.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a PortableService message.
+             * @function verify
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PortableService.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                return null;
+            };
+    
+            /**
+             * Creates a PortableService message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {sheason_chat.PortableService} PortableService
+             */
+            PortableService.fromObject = function fromObject(object) {
+                if (object instanceof $root.sheason_chat.PortableService)
+                    return object;
+                return new $root.sheason_chat.PortableService();
+            };
+    
+            /**
+             * Creates a plain object from a PortableService message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {sheason_chat.PortableService} message PortableService
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            PortableService.toObject = function toObject() {
+                return {};
+            };
+    
+            /**
+             * Converts this PortableService to JSON.
+             * @function toJSON
+             * @memberof sheason_chat.PortableService
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            PortableService.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            /**
+             * Gets the default type url for PortableService
+             * @function getTypeUrl
+             * @memberof sheason_chat.PortableService
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            PortableService.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/sheason_chat.PortableService";
+            };
+    
+            return PortableService;
         })();
     
         sheason_chat.PortableSecretBox = (function() {

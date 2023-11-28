@@ -18,7 +18,6 @@ class _UsernameStrategy implements _StrategyBase {
     update.where((tbl) => tbl.id.equals(operation.id));
     await update.write(OperationsCompanion(
       apply: Value(jsonEncode({
-        'type': 'account/username',
         'from': currentUsername,
         'to': username,
       })),

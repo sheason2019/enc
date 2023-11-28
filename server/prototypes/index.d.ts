@@ -233,8 +233,8 @@ export namespace sheason_chat {
         /** AccountSnapshot avatarUrl */
         avatarUrl?: (string|null);
 
-        /** AccountSnapshot services */
-        services?: (string[]|null);
+        /** AccountSnapshot serviceMap */
+        serviceMap?: ({ [k: string]: sheason_chat.IPortableService }|null);
 
         /** AccountSnapshot createdAt */
         createdAt?: (number|Long|null);
@@ -258,8 +258,8 @@ export namespace sheason_chat {
         /** AccountSnapshot avatarUrl. */
         public avatarUrl: string;
 
-        /** AccountSnapshot services. */
-        public services: string[];
+        /** AccountSnapshot serviceMap. */
+        public serviceMap: { [k: string]: sheason_chat.IPortableService };
 
         /** AccountSnapshot createdAt. */
         public createdAt: (number|Long);
@@ -336,6 +336,97 @@ export namespace sheason_chat {
 
         /**
          * Gets the default type url for AccountSnapshot
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a PortableService. */
+    interface IPortableService {
+    }
+
+    /** Represents a PortableService. */
+    class PortableService implements IPortableService {
+
+        /**
+         * Constructs a new PortableService.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: sheason_chat.IPortableService);
+
+        /**
+         * Creates a new PortableService instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns PortableService instance
+         */
+        public static create(properties?: sheason_chat.IPortableService): sheason_chat.PortableService;
+
+        /**
+         * Encodes the specified PortableService message. Does not implicitly {@link sheason_chat.PortableService.verify|verify} messages.
+         * @param message PortableService message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: sheason_chat.IPortableService, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified PortableService message, length delimited. Does not implicitly {@link sheason_chat.PortableService.verify|verify} messages.
+         * @param message PortableService message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: sheason_chat.IPortableService, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a PortableService message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns PortableService
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): sheason_chat.PortableService;
+
+        /**
+         * Decodes a PortableService message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns PortableService
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): sheason_chat.PortableService;
+
+        /**
+         * Verifies a PortableService message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a PortableService message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns PortableService
+         */
+        public static fromObject(object: { [k: string]: any }): sheason_chat.PortableService;
+
+        /**
+         * Creates a plain object from a PortableService message. Also converts values to other types if specified.
+         * @param message PortableService
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: sheason_chat.PortableService, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this PortableService to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PortableService
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

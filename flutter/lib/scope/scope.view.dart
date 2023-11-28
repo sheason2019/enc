@@ -29,6 +29,11 @@ class _ScopePageState extends State<ScopePage> {
 
   @override
   Widget build(BuildContext context) {
+    final scope = context.watch<Scope?>();
+    if (scope == null) {
+      return const Scaffold();
+    }
+
     return Scaffold(
       body: IndexedStack(
         index: tabIndex,

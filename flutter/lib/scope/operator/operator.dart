@@ -10,6 +10,18 @@ class Operator {
 
   Operator({required this.scope});
 
+  Future<PortableOperation> createOperation(String payload) async {
+    final maxClock = scope.db.operations.clock.max();
+    final selectCurrentClock = scope.db.operations.selectOnly()
+      ..addColumns([maxClock]);
+    final record = await selectCurrentClock.getSingleOrNull();
+    final currentClock = record?.read(maxClock) ?? 0;
+    return PortableOperation()
+      ..clientId = scope.deviceId
+      ..clock = currentClock + 1
+      ..payload = payload;
+  }
+
   Future<void> apply(List<PortableOperation> operations) async {
     await scope.db.transaction(() async {
       // 写入 Operation

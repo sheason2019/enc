@@ -5,6 +5,9 @@ import 'package:sheason_chat/profile/alter_username/alter_username.view.dart';
 import 'package:sheason_chat/profile/operations/operations.view.dart';
 import 'package:sheason_chat/replica/export/export.view.dart';
 import 'package:sheason_chat/router/base_delegate.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
+
+import 'services/services.view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -16,6 +19,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scope = context.watch<Scope>();
     final delegate = context.watch<MainController>().rootDelegate;
 
     return Scaffold(
@@ -29,7 +33,14 @@ class ProfileView extends StatelessWidget {
           ListTile(
             onTap: () => to(delegate, const AlterUsernamePage()),
             title: const Text('配置用户名'),
-            subtitle: const Text('配置用户名'),
+            subtitle: Text(scope.snapshot.username),
+          ),
+          ListTile(
+            onTap: () => to(delegate, const ServicesPage()),
+            title: const Text('服务器配置'),
+            subtitle: Text(
+              '${scope.snapshot.serviceMap.length} 个正在使用的服务器',
+            ),
           ),
           ListTile(
             onTap: () {},

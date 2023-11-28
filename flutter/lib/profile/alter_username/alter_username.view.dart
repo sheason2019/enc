@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class AlterUsernamePage extends StatefulWidget {
@@ -29,20 +27,12 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
   Future<void> handleSubmit() async {
     final delegate = context.read<MainController>().rootDelegate;
     final newName = textController.text;
-    final maxClock = scope.db.operations.clock.max();
-    final selectCurrentClock = scope.db.operations.selectOnly()
-      ..addColumns([maxClock]);
-    final record = await selectCurrentClock.getSingleOrNull();
-    final currentClock = record?.read(maxClock) ?? 0;
-    final operation = PortableOperation()
-      ..clientId = scope.deviceId
-      ..clock = currentClock + 1
-      ..payload = jsonEncode({
-        'type': 'account/username',
-        'payload': {
-          'username': newName,
-        },
-      });
+    final operation = await scope.operator.createOperation(jsonEncode({
+      'type': 'account/username',
+      'payload': {
+        'username': newName,
+      },
+    }));
     await scope.operator.apply([operation]);
     delegate.pages.removeLast();
     delegate.notify();

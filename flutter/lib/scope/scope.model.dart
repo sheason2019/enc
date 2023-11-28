@@ -77,15 +77,15 @@ class Scope extends ChangeNotifier {
     await handleInitDeviceId();
 
     // 构建服务器长连接，并注入私有链控制器
-    const url = 'http://192.168.31.174';
-    final subscribe = Subscribe(
-      scope: this,
-      url: url,
-      deviceId: deviceId,
-    );
-    await subscribe.init();
-
-    subscribes[url] = subscribe;
+    for (final url in snapshot.serviceMap.keys) {
+      final subscribe = Subscribe(
+        scope: this,
+        url: url,
+        deviceId: deviceId,
+      );
+      await subscribe.init();
+      subscribes[url] = subscribe;
+    }
     inited = true;
     notifyListeners();
   }

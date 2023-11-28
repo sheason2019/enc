@@ -17,9 +17,11 @@ message AccountSnapshot {
   AccountIndex index = 1;
   string username = 2;
   string avatar_url = 3;
-  repeated string services = 4;
+  map<string, PortableService> serviceMap = 4;
   int64 created_at = 10;
 }
+
+message PortableService {}
 
 message PortableSecretBox {
   bytes cipher_data = 1;

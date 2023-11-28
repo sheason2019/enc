@@ -152,7 +152,7 @@ class AccountSnapshot extends $pb.GeneratedMessage {
     ..aOM<AccountIndex>(1, _omitFieldNames ? '' : 'index', subBuilder: AccountIndex.create)
     ..aOS(2, _omitFieldNames ? '' : 'username')
     ..aOS(3, _omitFieldNames ? '' : 'avatarUrl')
-    ..pPS(4, _omitFieldNames ? '' : 'services')
+    ..m<$core.String, PortableService>(4, _omitFieldNames ? '' : 'serviceMap', protoName: 'serviceMap', entryClassName: 'AccountSnapshot.ServiceMapEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: PortableService.create, valueDefaultOrMaker: PortableService.getDefault, packageName: const $pb.PackageName('sheason_chat'))
     ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false
   ;
@@ -208,7 +208,7 @@ class AccountSnapshot extends $pb.GeneratedMessage {
   void clearAvatarUrl() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<$core.String> get services => $_getList(3);
+  $core.Map<$core.String, PortableService> get serviceMap => $_getMap(3);
 
   @$pb.TagNumber(10)
   $fixnum.Int64 get createdAt => $_getI64(4);
@@ -218,6 +218,38 @@ class AccountSnapshot extends $pb.GeneratedMessage {
   $core.bool hasCreatedAt() => $_has(4);
   @$pb.TagNumber(10)
   void clearCreatedAt() => clearField(10);
+}
+
+class PortableService extends $pb.GeneratedMessage {
+  factory PortableService() => create();
+  PortableService._() : super();
+  factory PortableService.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PortableService.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PortableService', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PortableService clone() => PortableService()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PortableService copyWith(void Function(PortableService) updates) => super.copyWith((message) => updates(message as PortableService)) as PortableService;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PortableService create() => PortableService._();
+  PortableService createEmptyInstance() => create();
+  static $pb.PbList<PortableService> createRepeated() => $pb.PbList<PortableService>();
+  @$core.pragma('dart2js:noInline')
+  static PortableService getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PortableService>(create);
+  static PortableService? _defaultInstance;
 }
 
 class PortableSecretBox extends $pb.GeneratedMessage {
