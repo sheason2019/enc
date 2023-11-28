@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
-import 'package:jwk/jwk.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 
@@ -28,30 +29,32 @@ class CryptoKeyPair {
         ecdhPrivKey,
       );
 
-  static PublicKey? createSignPubKey(String pubkey) => Jwk.fromJson({
-        'crv': 'Ed25519',
-        'kty': 'OKP',
-        'x': pubkey,
-      }).toPublicKey();
+  static PublicKey? createSignPubKey(String pubkey) => SimplePublicKey(
+        base64Decode(pubkey),
+        type: KeyPairType.ed25519,
+      );
   static KeyPair createSignKeypair(String pubkey, String privkey) =>
-      Jwk.fromJson({
-        'crv': 'Ed25519',
-        'kty': 'OKP',
-        'x': pubkey,
-        'd': privkey,
-      }).toKeyPair();
-  static PublicKey? createEcdhPubKey(String pubkey) => Jwk.fromJson({
-        'crv': 'X25519',
-        'kty': 'OKP',
-        'x': pubkey,
-      }).toPublicKey();
+      SimpleKeyPairData(
+        base64Decode(privkey),
+        publicKey: SimplePublicKey(
+          base64Decode(pubkey),
+          type: KeyPairType.ed25519,
+        ),
+        type: KeyPairType.ed25519,
+      );
+  static PublicKey? createEcdhPubKey(String pubkey) => SimplePublicKey(
+        base64Decode(pubkey),
+        type: KeyPairType.x25519,
+      );
   static KeyPair createEcdhKeypair(String pubkey, String privkey) =>
-      Jwk.fromJson({
-        'crv': 'X25519',
-        'kty': 'OKP',
-        'x': pubkey,
-        'd': privkey,
-      }).toKeyPair();
+      SimpleKeyPairData(
+        base64Decode(privkey),
+        publicKey: SimplePublicKey(
+          base64Decode(pubkey),
+          type: KeyPairType.x25519,
+        ),
+        type: KeyPairType.x25519,
+      );
 
   factory CryptoKeyPair.fromSecret(AccountSecret secret) {
     return CryptoKeyPair(

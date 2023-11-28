@@ -1,7 +1,8 @@
 // 使用 x25519 作为用户 ID
+import 'dart:convert';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
-import 'package:jwk/jwk.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 
 class CryptoUtils {
@@ -13,11 +14,10 @@ class CryptoUtils {
     final wand = await algorithm.newKeyExchangeWandFromKeyPair(
       keypair.getEcdhKeypair(),
     );
-    final pubKey = Jwk.fromJson({
-      'crv': 'X25519',
-      'kty': 'OKP',
-      'x': targetPubKey,
-    }).toPublicKey()!;
+    final pubKey = SimplePublicKey(
+      base64Decode(targetPubKey),
+      type: KeyPairType.x25519,
+    );
     return wand.sharedSecretKey(
       remotePublicKey: pubKey,
     );
@@ -26,18 +26,17 @@ class CryptoUtils {
   static Future<CryptoKeyPair> generate() async {
     final x25510 = X25519();
     final keyPair = await x25510.newKeyPair();
+    final ecdhPrivKey = await keyPair.extract();
 
     final ed25519 = Ed25519();
     final edKeyPair = await ed25519.newKeyPair();
-
-    final ecdhKeypair = (await Jwk.fromKeyPair(keyPair)).toJson();
-    final signKeypair = (await Jwk.fromKeyPair(edKeyPair)).toJson();
+    final signPrivKey = await edKeyPair.extract();
 
     return CryptoKeyPair(
-      ecdhPubKey: ecdhKeypair['x'].toString(),
-      ecdhPrivKey: ecdhKeypair['d'].toString(),
-      signPubKey: signKeypair['x'].toString(),
-      signPrivKey: signKeypair['d'].toString(),
+      ecdhPubKey: base64UrlEncode(ecdhPrivKey.publicKey.bytes),
+      ecdhPrivKey: base64UrlEncode(ecdhPrivKey.bytes),
+      signPubKey: base64UrlEncode(signPrivKey.publicKey.bytes),
+      signPrivKey: base64UrlEncode(signPrivKey.bytes),
     );
   }
 
