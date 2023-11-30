@@ -18,7 +18,7 @@ class _ScopePageState extends State<ScopePage> {
 
   handleSetDefaultScope(BuildContext context) async {
     final controller = context.read<ScopeCollection>();
-    await controller.handleSetDefaultScope(widget.scope);
+    await controller.setDefaultScope(widget.scope);
   }
 
   @override

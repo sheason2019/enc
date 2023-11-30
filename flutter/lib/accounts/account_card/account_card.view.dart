@@ -15,7 +15,7 @@ class AccountCard extends StatelessWidget {
 
   handleDeleteScope(BuildContext context) {
     final controller = context.read<ScopeCollection>();
-    controller.handleDeleteAccount(scope);
+    controller.deleteScope(scope);
   }
 
   @override

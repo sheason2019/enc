@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/alter_username/alter_username.view.dart';
 import 'package:sheason_chat/profile/operations/operations.view.dart';
-import 'package:sheason_chat/replica/export/export.view.dart';
+import 'package:sheason_chat/replica/replica.view.dart';
 import 'package:sheason_chat/router/base_delegate.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -26,11 +26,6 @@ class ProfileView extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            onTap: () => to(delegate, const ExportReplicaPage()),
-            title: const Text('创建账号副本'),
-            subtitle: const Text('将账号复制到其他设备'),
-          ),
-          ListTile(
             onTap: () => to(delegate, const AlterUsernamePage()),
             title: const Text('配置用户名'),
             subtitle: Text(scope.snapshot.username),
@@ -51,6 +46,16 @@ class ProfileView extends StatelessWidget {
             onTap: () => to(delegate, const OperationsPage()),
             title: const Text('Operation Chain'),
             subtitle: const Text('查看同步操作链'),
+          ),
+          ListTile(
+            onTap: () => to(
+              delegate,
+              ReplicaPage(
+                dataDirection: ReplicaDataDirection.push,
+                scope: context.read<Scope?>(),
+              ),
+            ),
+            title: const Text('将账号复制到其他设备'),
           ),
         ],
       ),

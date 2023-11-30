@@ -18,7 +18,7 @@ class ScopeCollection extends ChangeNotifier {
     return path.join(dir.path, 'sheason_chat', 'accounts');
   }
 
-  handleUpdateAccounts() async {
+  updateScopes() async {
     final entries = Directory(await accountsPath).listSync();
     final paths = entries
         .map((e) => e.path)
@@ -37,27 +37,29 @@ class ScopeCollection extends ChangeNotifier {
       scopeMap.remove(delete)?.dispose();
     }
     for (final append in appendSet) {
-      scopeMap[append] = Scope(accountPath: append)..init();
+      final scope = Scope(accountPath: append);
+      scopeMap[append] = scope;
+      await scope.init();
     }
     notifyListeners();
   }
 
-  Future<void> handleCreateAccount() async {
+  Future<void> createScope() async {
     final keypair = await CryptoUtils.generate();
     final secret = AccountSecret()
       ..ecdhPubKey = keypair.ecdhPubKey
       ..ecdhPrivKey = keypair.ecdhPrivKey
       ..signPubKey = keypair.signPubKey
       ..signPrivKey = keypair.signPrivKey;
-    await createAccountBySecret(secret);
+    await createScopeBySecret(secret);
   }
 
-  Future<Scope> createAccountBySecret(AccountSecret secret) async {
+  Future<Scope> createScopeBySecret(AccountSecret secret) async {
     final accountDir = Directory(
       path.join(await accountsPath, secret.signPubKey),
     );
     if (await accountDir.exists()) {
-      await accountDir.delete(recursive: true);
+      throw Exception('Account already exist');
     }
     await accountDir.create(recursive: true);
 
@@ -73,7 +75,7 @@ class ScopeCollection extends ChangeNotifier {
       ..createdAt = Int64(DateTime.now().millisecondsSinceEpoch);
     final snapshotFile = File(path.join(accountDir.path, '.snapshot'));
     await snapshotFile.writeAsBytes(accountSnapshot.writeToBuffer());
-    await handleUpdateAccounts();
+    await updateScopes();
 
     final newAccountPath = path.join(
       await accountsPath,
@@ -82,15 +84,20 @@ class ScopeCollection extends ChangeNotifier {
     return scopeMap[newAccountPath]!;
   }
 
-  Future<void> handleDeleteAccount(Scope scope) async {
+  Future<Scope?> findScope(String signPubkey) async {
+    final p = path.join(await accountsPath, signPubkey);
+    return scopeMap[p];
+  }
+
+  Future<void> deleteScope(Scope scope) async {
     final dir = Directory(
       path.join(await accountsPath, scope.secret.signPubKey),
     );
     await dir.delete(recursive: true);
-    await handleUpdateAccounts();
+    await updateScopes();
   }
 
-  Future<Scope?> handleFindDefaultScope() async {
+  Future<Scope?> findDefaultScope() async {
     final file = File(path.join(await accountsPath, '.active-account'));
     if (await file.exists()) {
       return scopeMap[await file.readAsString()];
@@ -99,7 +106,7 @@ class ScopeCollection extends ChangeNotifier {
     }
   }
 
-  Future<void> handleSetDefaultScope(Scope? scope) async {
+  Future<void> setDefaultScope(Scope? scope) async {
     final file = File(path.join(await accountsPath, '.active-account'));
     if (scope != null) {
       await file.writeAsString(scope.accountPath);

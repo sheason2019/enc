@@ -18,7 +18,6 @@ message AccountSnapshot {
   string username = 2;
   string avatar_url = 3;
   map<string, PortableService> serviceMap = 4;
-  int64 created_at = 10;
 }
 
 message PortableService {}

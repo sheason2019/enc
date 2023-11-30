@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final mainController = MainController(
     onActiveScopeChanged: (scope) async {
-      await collection.handleSetDefaultScope(scope);
+      await collection.setDefaultScope(scope);
       setState(() {
         currentScope = scope;
       });
@@ -30,8 +30,8 @@ class _MyAppState extends State<MyApp> {
   Scope? currentScope;
 
   void init() async {
-    await collection.handleUpdateAccounts();
-    final defaultScope = await collection.handleFindDefaultScope();
+    await collection.updateScopes();
+    final defaultScope = await collection.findDefaultScope();
     await mainController.handleEnterScope(defaultScope);
   }
 
