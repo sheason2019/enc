@@ -32,6 +32,8 @@ class Scope extends ChangeNotifier {
       await snapshotFile.readAsBytes(),
     );
     this.snapshot = snapshot;
+    await handleUpdateSubscribe();
+
     notifyListeners();
   }
 
@@ -69,23 +71,37 @@ class Scope extends ChangeNotifier {
     }
   }
 
-  init() async {
-    // 获取 secret 和 snapshot
-    await handleUpdateSnapshot();
-    await handleUpdateSecret();
-    await handleInitIsar();
-    await handleInitDeviceId();
+  Future<void> handleUpdateSubscribe() async {
+    final removeSet = subscribes.keys.toSet();
+    final appendSet = <String>{};
 
-    // 构建服务器长连接，并注入私有链控制器
     for (final url in snapshot.serviceMap.keys) {
+      if (!removeSet.remove(url)) {
+        appendSet.add(url);
+      }
+    }
+
+    for (final remove in removeSet) {
+      subscribes.remove(remove)?.dispose();
+    }
+    for (final append in appendSet) {
       final subscribe = Subscribe(
         scope: this,
-        url: url,
+        url: append,
         deviceId: deviceId,
       );
       await subscribe.init();
-      subscribes[url] = subscribe;
+      subscribes[append] = subscribe;
     }
+  }
+
+  init() async {
+    // 获取 secret 和 snapshot
+    await handleInitIsar();
+    await handleInitDeviceId();
+    await handleUpdateSecret();
+    await handleUpdateSnapshot();
+
     inited = true;
     notifyListeners();
   }
