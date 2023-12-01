@@ -14,6 +14,14 @@ void main() {
     final alice = await CryptoUtils.generate();
     final bob = await CryptoUtils.generate();
 
+    print(
+      'alice:: '
+      '${alice.signPubKey} '
+      '${alice.signPrivKey} '
+      '${alice.ecdhPubKey} '
+      '${alice.ecdhPrivKey}',
+    );
+
     final originData = 'alice <3 bob'.codeUnits;
     final cipherData = await CryptoUtils.encrypt(
       alice,

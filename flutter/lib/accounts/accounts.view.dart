@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_card/account_card.view.dart';
+import 'package:sheason_chat/accounts/account_list_tile/account_list_tile.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/replica/replica.view.dart';
 import 'package:sheason_chat/scope/scope.collection.dart';
@@ -25,7 +25,7 @@ class AccountsPage extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: scopes.length,
-        itemBuilder: (context, index) => AccountCard(
+        itemBuilder: (context, index) => AccountListTile(
           scope: scopes[index],
         ),
       ),

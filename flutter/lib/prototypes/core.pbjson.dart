@@ -13,6 +13,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use ecryptTypeDescriptor instead')
+const EcryptType$json = {
+  '1': 'EcryptType',
+  '2': [
+    {'1': 'ENCRYPT_TYPE_NONE', '2': 0},
+    {'1': 'ENCRYPT_TYPE_SHARED_SECRET', '2': 1},
+    {'1': 'ENCRYPT_TYPE_DECLARED_SECRET', '2': 2},
+  ],
+};
+
+/// Descriptor for `EcryptType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List ecryptTypeDescriptor = $convert.base64Decode(
+    'CgpFY3J5cHRUeXBlEhUKEUVOQ1JZUFRfVFlQRV9OT05FEAASHgoaRU5DUllQVF9UWVBFX1NIQV'
+    'JFRF9TRUNSRVQQARIgChxFTkNSWVBUX1RZUEVfREVDTEFSRURfU0VDUkVUEAI=');
+
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = {
   '1': 'ConversationType',
@@ -47,34 +62,18 @@ final $typed_data.Uint8List messageTypeDescriptor = $convert.base64Decode(
     '9URVhUEAESFgoSTUVTU0FHRV9UWVBFX0FVRElPEAISFgoSTUVTU0FHRV9UWVBFX0lNQUdFEAMS'
     'FgoSTUVTU0FHRV9UWVBFX1ZJREVPEAQSFQoRTUVTU0FHRV9UWVBFX0ZJTEUQBQ==');
 
-@$core.Deprecated('Use signedBundleContentTypeDescriptor instead')
-const SignedBundleContentType$json = {
-  '1': 'SignedBundleContentType',
+@$core.Deprecated('Use contentTypeDescriptor instead')
+const ContentType$json = {
+  '1': 'ContentType',
   '2': [
-    {'1': 'BUNDLE_TYPE_UNKNOWN', '2': 0},
-    {'1': 'BUNDLE_TYPE_MESSAGE', '2': 1},
+    {'1': 'CONTENT_BUFFER', '2': 0},
+    {'1': 'CONTENT_MESSAGE', '2': 1},
   ],
 };
 
-/// Descriptor for `SignedBundleContentType`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List signedBundleContentTypeDescriptor = $convert.base64Decode(
-    'ChdTaWduZWRCdW5kbGVDb250ZW50VHlwZRIXChNCVU5ETEVfVFlQRV9VTktOT1dOEAASFwoTQl'
-    'VORExFX1RZUEVfTUVTU0FHRRAB');
-
-@$core.Deprecated('Use ecryptTypeDescriptor instead')
-const EcryptType$json = {
-  '1': 'EcryptType',
-  '2': [
-    {'1': 'ENCRYPT_TYPE_NONE', '2': 0},
-    {'1': 'ENCRYPT_TYPE_SHARED_SECRET', '2': 1},
-    {'1': 'ENCRYPT_TYPE_DECLARED_SECRET', '2': 2},
-  ],
-};
-
-/// Descriptor for `EcryptType`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List ecryptTypeDescriptor = $convert.base64Decode(
-    'CgpFY3J5cHRUeXBlEhUKEUVOQ1JZUFRfVFlQRV9OT05FEAASHgoaRU5DUllQVF9UWVBFX1NIQV'
-    'JFRF9TRUNSRVQQARIgChxFTkNSWVBUX1RZUEVfREVDTEFSRURfU0VDUkVUEAI=');
+/// Descriptor for `ContentType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List contentTypeDescriptor = $convert.base64Decode(
+    'CgtDb250ZW50VHlwZRISCg5DT05URU5UX0JVRkZFUhAAEhMKD0NPTlRFTlRfTUVTU0FHRRAB');
 
 @$core.Deprecated('Use accountSecretDescriptor instead')
 const AccountSecret$json = {
@@ -115,7 +114,6 @@ const AccountSnapshot$json = {
     {'1': 'username', '3': 2, '4': 1, '5': 9, '10': 'username'},
     {'1': 'avatar_url', '3': 3, '4': 1, '5': 9, '10': 'avatarUrl'},
     {'1': 'serviceMap', '3': 4, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot.ServiceMapEntry', '10': 'serviceMap'},
-    {'1': 'created_at', '3': 10, '4': 1, '5': 3, '10': 'createdAt'},
   ],
   '3': [AccountSnapshot_ServiceMapEntry$json],
 };
@@ -135,9 +133,9 @@ final $typed_data.Uint8List accountSnapshotDescriptor = $convert.base64Decode(
     'Cg9BY2NvdW50U25hcHNob3QSMAoFaW5kZXgYASABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudE'
     'luZGV4UgVpbmRleBIaCgh1c2VybmFtZRgCIAEoCVIIdXNlcm5hbWUSHQoKYXZhdGFyX3VybBgD'
     'IAEoCVIJYXZhdGFyVXJsEk0KCnNlcnZpY2VNYXAYBCADKAsyLS5zaGVhc29uX2NoYXQuQWNjb3'
-    'VudFNuYXBzaG90LlNlcnZpY2VNYXBFbnRyeVIKc2VydmljZU1hcBIdCgpjcmVhdGVkX2F0GAog'
-    'ASgDUgljcmVhdGVkQXQaXAoPU2VydmljZU1hcEVudHJ5EhAKA2tleRgBIAEoCVIDa2V5EjMKBX'
-    'ZhbHVlGAIgASgLMh0uc2hlYXNvbl9jaGF0LlBvcnRhYmxlU2VydmljZVIFdmFsdWU6AjgB');
+    'VudFNuYXBzaG90LlNlcnZpY2VNYXBFbnRyeVIKc2VydmljZU1hcBpcCg9TZXJ2aWNlTWFwRW50'
+    'cnkSEAoDa2V5GAEgASgJUgNrZXkSMwoFdmFsdWUYAiABKAsyHS5zaGVhc29uX2NoYXQuUG9ydG'
+    'FibGVTZXJ2aWNlUgV2YWx1ZToCOAE=');
 
 @$core.Deprecated('Use portableServiceDescriptor instead')
 const PortableService$json = {
@@ -155,13 +153,19 @@ const PortableSecretBox$json = {
     {'1': 'cipher_data', '3': 1, '4': 1, '5': 12, '10': 'cipherData'},
     {'1': 'nonce', '3': 2, '4': 1, '5': 12, '10': 'nonce'},
     {'1': 'mac', '3': 3, '4': 1, '5': 12, '10': 'mac'},
+    {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'sender'},
+    {'1': 'receiver', '3': 5, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'receiver'},
+    {'1': 'encrypt_type', '3': 6, '4': 1, '5': 14, '6': '.sheason_chat.EcryptType', '10': 'encryptType'},
   ],
 };
 
 /// Descriptor for `PortableSecretBox`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List portableSecretBoxDescriptor = $convert.base64Decode(
     'ChFQb3J0YWJsZVNlY3JldEJveBIfCgtjaXBoZXJfZGF0YRgBIAEoDFIKY2lwaGVyRGF0YRIUCg'
-    'Vub25jZRgCIAEoDFIFbm9uY2USEAoDbWFjGAMgASgMUgNtYWM=');
+    'Vub25jZRgCIAEoDFIFbm9uY2USEAoDbWFjGAMgASgMUgNtYWMSMgoGc2VuZGVyGAQgASgLMhou'
+    'c2hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIGc2VuZGVyEjYKCHJlY2VpdmVyGAUgASgLMhouc2'
+    'hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIIcmVjZWl2ZXISOwoMZW5jcnlwdF90eXBlGAYgASgO'
+    'Mhguc2hlYXNvbl9jaGF0LkVjcnlwdFR5cGVSC2VuY3J5cHRUeXBl');
 
 @$core.Deprecated('Use portableOperationDescriptor instead')
 const PortableOperation$json = {
@@ -185,8 +189,8 @@ const PortableConversation$json = {
   '1': 'PortableConversation',
   '2': [
     {'1': 'type', '3': 1, '4': 1, '5': 14, '6': '.sheason_chat.ConversationType', '10': 'type'},
-    {'1': 'members', '3': 2, '4': 3, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'members'},
-    {'1': 'owner', '3': 3, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'owner'},
+    {'1': 'members', '3': 2, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'members'},
+    {'1': 'owner', '3': 3, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'owner'},
     {'1': 'remote_url', '3': 4, '4': 1, '5': 9, '10': 'remoteUrl'},
     {'1': 'declared_secrets', '3': 5, '4': 3, '5': 11, '6': '.sheason_chat.PortableConversation.DeclaredSecretsEntry', '10': 'declaredSecrets'},
   ],
@@ -206,12 +210,12 @@ const PortableConversation_DeclaredSecretsEntry$json = {
 /// Descriptor for `PortableConversation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List portableConversationDescriptor = $convert.base64Decode(
     'ChRQb3J0YWJsZUNvbnZlcnNhdGlvbhIyCgR0eXBlGAEgASgOMh4uc2hlYXNvbl9jaGF0LkNvbn'
-    'ZlcnNhdGlvblR5cGVSBHR5cGUSNAoHbWVtYmVycxgCIAMoCzIaLnNoZWFzb25fY2hhdC5BY2Nv'
-    'dW50SW5kZXhSB21lbWJlcnMSMAoFb3duZXIYAyABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudE'
-    'luZGV4UgVvd25lchIdCgpyZW1vdGVfdXJsGAQgASgJUglyZW1vdGVVcmwSYgoQZGVjbGFyZWRf'
-    'c2VjcmV0cxgFIAMoCzI3LnNoZWFzb25fY2hhdC5Qb3J0YWJsZUNvbnZlcnNhdGlvbi5EZWNsYX'
-    'JlZFNlY3JldHNFbnRyeVIPZGVjbGFyZWRTZWNyZXRzGkIKFERlY2xhcmVkU2VjcmV0c0VudHJ5'
-    'EhAKA2tleRgBIAEoBVIDa2V5EhQKBXZhbHVlGAIgASgMUgV2YWx1ZToCOAE=');
+    'ZlcnNhdGlvblR5cGVSBHR5cGUSNwoHbWVtYmVycxgCIAMoCzIdLnNoZWFzb25fY2hhdC5BY2Nv'
+    'dW50U25hcHNob3RSB21lbWJlcnMSMwoFb3duZXIYAyABKAsyHS5zaGVhc29uX2NoYXQuQWNjb3'
+    'VudFNuYXBzaG90UgVvd25lchIdCgpyZW1vdGVfdXJsGAQgASgJUglyZW1vdGVVcmwSYgoQZGVj'
+    'bGFyZWRfc2VjcmV0cxgFIAMoCzI3LnNoZWFzb25fY2hhdC5Qb3J0YWJsZUNvbnZlcnNhdGlvbi'
+    '5EZWNsYXJlZFNlY3JldHNFbnRyeVIPZGVjbGFyZWRTZWNyZXRzGkIKFERlY2xhcmVkU2VjcmV0'
+    'c0VudHJ5EhAKA2tleRgBIAEoBVIDa2V5EhQKBXZhbHVlGAIgASgMUgV2YWx1ZToCOAE=');
 
 @$core.Deprecated('Use portableMessageDescriptor instead')
 const PortableMessage$json = {
@@ -220,7 +224,7 @@ const PortableMessage$json = {
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
     {'1': 'message_type', '3': 2, '4': 1, '5': 14, '6': '.sheason_chat.MessageType', '10': 'messageType'},
     {'1': 'content', '3': 3, '4': 1, '5': 9, '10': 'content'},
-    {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'sender'},
+    {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'sender'},
     {'1': 'conversation', '3': 5, '4': 1, '5': 11, '6': '.sheason_chat.PortableConversation', '10': 'conversation'},
     {'1': 'message_states', '3': 6, '4': 3, '5': 11, '6': '.sheason_chat.PortableMessageState', '10': 'messageStates'},
   ],
@@ -230,10 +234,10 @@ const PortableMessage$json = {
 final $typed_data.Uint8List portableMessageDescriptor = $convert.base64Decode(
     'Cg9Qb3J0YWJsZU1lc3NhZ2USEgoEdXVpZBgBIAEoCVIEdXVpZBI8CgxtZXNzYWdlX3R5cGUYAi'
     'ABKA4yGS5zaGVhc29uX2NoYXQuTWVzc2FnZVR5cGVSC21lc3NhZ2VUeXBlEhgKB2NvbnRlbnQY'
-    'AyABKAlSB2NvbnRlbnQSMgoGc2VuZGVyGAQgASgLMhouc2hlYXNvbl9jaGF0LkFjY291bnRJbm'
-    'RleFIGc2VuZGVyEkYKDGNvbnZlcnNhdGlvbhgFIAEoCzIiLnNoZWFzb25fY2hhdC5Qb3J0YWJs'
-    'ZUNvbnZlcnNhdGlvblIMY29udmVyc2F0aW9uEkkKDm1lc3NhZ2Vfc3RhdGVzGAYgAygLMiIuc2'
-    'hlYXNvbl9jaGF0LlBvcnRhYmxlTWVzc2FnZVN0YXRlUg1tZXNzYWdlU3RhdGVz');
+    'AyABKAlSB2NvbnRlbnQSNQoGc2VuZGVyGAQgASgLMh0uc2hlYXNvbl9jaGF0LkFjY291bnRTbm'
+    'Fwc2hvdFIGc2VuZGVyEkYKDGNvbnZlcnNhdGlvbhgFIAEoCzIiLnNoZWFzb25fY2hhdC5Qb3J0'
+    'YWJsZUNvbnZlcnNhdGlvblIMY29udmVyc2F0aW9uEkkKDm1lc3NhZ2Vfc3RhdGVzGAYgAygLMi'
+    'Iuc2hlYXNvbl9jaGF0LlBvcnRhYmxlTWVzc2FnZVN0YXRlUg1tZXNzYWdlU3RhdGVz');
 
 @$core.Deprecated('Use portableMessageStateDescriptor instead')
 const PortableMessageState$json = {
@@ -253,27 +257,22 @@ final $typed_data.Uint8List portableMessageStateDescriptor = $convert.base64Deco
     'cmVjZWl2ZV9hdBgDIAEoA1IJcmVjZWl2ZUF0Eh0KCmNoZWNrZWRfYXQYBCABKANSCWNoZWNrZW'
     'RBdA==');
 
-@$core.Deprecated('Use signedBundleDescriptor instead')
-const SignedBundle$json = {
-  '1': 'SignedBundle',
+@$core.Deprecated('Use signWrapperDescriptor instead')
+const SignWrapper$json = {
+  '1': 'SignWrapper',
   '2': [
-    {'1': 'encrypt_type', '3': 1, '4': 1, '5': 14, '6': '.sheason_chat.EcryptType', '10': 'encryptType'},
-    {'1': 'secret_key', '3': 2, '4': 1, '5': 5, '10': 'secretKey'},
-    {'1': 'sender', '3': 3, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'sender'},
-    {'1': 'receiver', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'receiver'},
-    {'1': 'plain_data', '3': 5, '4': 1, '5': 12, '10': 'plainData'},
-    {'1': 'secret_box', '3': 6, '4': 1, '5': 11, '6': '.sheason_chat.PortableSecretBox', '10': 'secretBox'},
-    {'1': 'content_type', '3': 7, '4': 1, '5': 14, '6': '.sheason_chat.SignedBundleContentType', '10': 'contentType'},
+    {'1': 'signer', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'signer'},
+    {'1': 'buffer', '3': 2, '4': 1, '5': 12, '10': 'buffer'},
+    {'1': 'sign', '3': 3, '4': 1, '5': 12, '10': 'sign'},
+    {'1': 'encrypt', '3': 4, '4': 1, '5': 8, '10': 'encrypt'},
+    {'1': 'content_type', '3': 5, '4': 1, '5': 14, '6': '.sheason_chat.ContentType', '10': 'contentType'},
   ],
 };
 
-/// Descriptor for `SignedBundle`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List signedBundleDescriptor = $convert.base64Decode(
-    'CgxTaWduZWRCdW5kbGUSOwoMZW5jcnlwdF90eXBlGAEgASgOMhguc2hlYXNvbl9jaGF0LkVjcn'
-    'lwdFR5cGVSC2VuY3J5cHRUeXBlEh0KCnNlY3JldF9rZXkYAiABKAVSCXNlY3JldEtleRIyCgZz'
-    'ZW5kZXIYAyABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudEluZGV4UgZzZW5kZXISNgoIcmVjZW'
-    'l2ZXIYBCABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudEluZGV4UghyZWNlaXZlchIdCgpwbGFp'
-    'bl9kYXRhGAUgASgMUglwbGFpbkRhdGESPgoKc2VjcmV0X2JveBgGIAEoCzIfLnNoZWFzb25fY2'
-    'hhdC5Qb3J0YWJsZVNlY3JldEJveFIJc2VjcmV0Qm94EkgKDGNvbnRlbnRfdHlwZRgHIAEoDjIl'
-    'LnNoZWFzb25fY2hhdC5TaWduZWRCdW5kbGVDb250ZW50VHlwZVILY29udGVudFR5cGU=');
+/// Descriptor for `SignWrapper`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List signWrapperDescriptor = $convert.base64Decode(
+    'CgtTaWduV3JhcHBlchIyCgZzaWduZXIYASABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudEluZG'
+    'V4UgZzaWduZXISFgoGYnVmZmVyGAIgASgMUgZidWZmZXISEgoEc2lnbhgDIAEoDFIEc2lnbhIY'
+    'CgdlbmNyeXB0GAQgASgIUgdlbmNyeXB0EjwKDGNvbnRlbnRfdHlwZRgFIAEoDjIZLnNoZWFzb2'
+    '5fY2hhdC5Db250ZW50VHlwZVILY29udGVudFR5cGU=');
 

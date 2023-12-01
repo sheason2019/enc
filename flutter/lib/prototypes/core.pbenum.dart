@@ -13,6 +13,23 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class EcryptType extends $pb.ProtobufEnum {
+  static const EcryptType ENCRYPT_TYPE_NONE = EcryptType._(0, _omitEnumNames ? '' : 'ENCRYPT_TYPE_NONE');
+  static const EcryptType ENCRYPT_TYPE_SHARED_SECRET = EcryptType._(1, _omitEnumNames ? '' : 'ENCRYPT_TYPE_SHARED_SECRET');
+  static const EcryptType ENCRYPT_TYPE_DECLARED_SECRET = EcryptType._(2, _omitEnumNames ? '' : 'ENCRYPT_TYPE_DECLARED_SECRET');
+
+  static const $core.List<EcryptType> values = <EcryptType> [
+    ENCRYPT_TYPE_NONE,
+    ENCRYPT_TYPE_SHARED_SECRET,
+    ENCRYPT_TYPE_DECLARED_SECRET,
+  ];
+
+  static final $core.Map<$core.int, EcryptType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static EcryptType? valueOf($core.int value) => _byValue[value];
+
+  const EcryptType._($core.int v, $core.String n) : super(v, n);
+}
+
 class ConversationType extends $pb.ProtobufEnum {
   static const ConversationType CONVERSATION_UNKNOWN = ConversationType._(0, _omitEnumNames ? '' : 'CONVERSATION_UNKNOWN');
   static const ConversationType CONVERSATION_PRIVATE = ConversationType._(1, _omitEnumNames ? '' : 'CONVERSATION_PRIVATE');
@@ -53,36 +70,19 @@ class MessageType extends $pb.ProtobufEnum {
   const MessageType._($core.int v, $core.String n) : super(v, n);
 }
 
-class SignedBundleContentType extends $pb.ProtobufEnum {
-  static const SignedBundleContentType BUNDLE_TYPE_UNKNOWN = SignedBundleContentType._(0, _omitEnumNames ? '' : 'BUNDLE_TYPE_UNKNOWN');
-  static const SignedBundleContentType BUNDLE_TYPE_MESSAGE = SignedBundleContentType._(1, _omitEnumNames ? '' : 'BUNDLE_TYPE_MESSAGE');
+class ContentType extends $pb.ProtobufEnum {
+  static const ContentType CONTENT_BUFFER = ContentType._(0, _omitEnumNames ? '' : 'CONTENT_BUFFER');
+  static const ContentType CONTENT_MESSAGE = ContentType._(1, _omitEnumNames ? '' : 'CONTENT_MESSAGE');
 
-  static const $core.List<SignedBundleContentType> values = <SignedBundleContentType> [
-    BUNDLE_TYPE_UNKNOWN,
-    BUNDLE_TYPE_MESSAGE,
+  static const $core.List<ContentType> values = <ContentType> [
+    CONTENT_BUFFER,
+    CONTENT_MESSAGE,
   ];
 
-  static final $core.Map<$core.int, SignedBundleContentType> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static SignedBundleContentType? valueOf($core.int value) => _byValue[value];
+  static final $core.Map<$core.int, ContentType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ContentType? valueOf($core.int value) => _byValue[value];
 
-  const SignedBundleContentType._($core.int v, $core.String n) : super(v, n);
-}
-
-class EcryptType extends $pb.ProtobufEnum {
-  static const EcryptType ENCRYPT_TYPE_NONE = EcryptType._(0, _omitEnumNames ? '' : 'ENCRYPT_TYPE_NONE');
-  static const EcryptType ENCRYPT_TYPE_SHARED_SECRET = EcryptType._(1, _omitEnumNames ? '' : 'ENCRYPT_TYPE_SHARED_SECRET');
-  static const EcryptType ENCRYPT_TYPE_DECLARED_SECRET = EcryptType._(2, _omitEnumNames ? '' : 'ENCRYPT_TYPE_DECLARED_SECRET');
-
-  static const $core.List<EcryptType> values = <EcryptType> [
-    ENCRYPT_TYPE_NONE,
-    ENCRYPT_TYPE_SHARED_SECRET,
-    ENCRYPT_TYPE_DECLARED_SECRET,
-  ];
-
-  static final $core.Map<$core.int, EcryptType> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static EcryptType? valueOf($core.int value) => _byValue[value];
-
-  const EcryptType._($core.int v, $core.String n) : super(v, n);
+  const ContentType._($core.int v, $core.String n) : super(v, n);
 }
 
 

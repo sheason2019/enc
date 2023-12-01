@@ -22,16 +22,24 @@ message AccountSnapshot {
 
 message PortableService {}
 
+enum EcryptType {
+  ENCRYPT_TYPE_NONE = 0;
+  ENCRYPT_TYPE_SHARED_SECRET = 1;
+  ENCRYPT_TYPE_DECLARED_SECRET = 2;
+}
+
 message PortableSecretBox {
   bytes cipher_data = 1;
   bytes nonce = 2;
   bytes mac = 3;
+  AccountIndex sender = 4;
+  AccountIndex receiver = 5;
+  EcryptType encrypt_type = 6;
 }
 
 message PortableOperation {
   string client_id = 1; // 设备ID
-  // Opaeration 链表
-  int32 clock = 2;
+  int32 clock = 2; // Opaeration 链表
   string payload = 3;
   PortableSecretBox secret_box = 4;
 }
@@ -44,9 +52,9 @@ enum ConversationType {
 
 message PortableConversation {
   ConversationType type = 1;
-  repeated AccountIndex members = 2;
+  repeated AccountSnapshot members = 2;
   
-  AccountIndex owner = 3;
+  AccountSnapshot owner = 3;
   string remote_url = 4;
   map<int32, bytes> declared_secrets = 5;
 }
@@ -64,7 +72,7 @@ message PortableMessage {
   string uuid = 1;
   MessageType message_type = 2;
   string content = 3;
-  AccountIndex sender = 4;
+  AccountSnapshot sender = 4;
   PortableConversation conversation = 5;
   repeated PortableMessageState message_states = 6;
 }
@@ -76,23 +84,15 @@ message PortableMessageState {
   int64 checked_at = 4;
 }
 
-enum SignedBundleContentType {
-  BUNDLE_TYPE_UNKNOWN = 0;
-  BUNDLE_TYPE_MESSAGE = 1;
+enum ContentType {
+  CONTENT_BUFFER = 0;
+  CONTENT_MESSAGE = 1;
 }
 
-enum EcryptType {
-  ENCRYPT_TYPE_NONE = 0;
-  ENCRYPT_TYPE_SHARED_SECRET = 1;
-  ENCRYPT_TYPE_DECLARED_SECRET = 2;
-}
-
-message SignedBundle {
-  EcryptType encrypt_type = 1;
-  int32 secret_key = 2;
-  AccountIndex sender = 3;
-  AccountIndex receiver = 4;
-  bytes plain_data = 5;
-  PortableSecretBox secret_box = 6;
-  SignedBundleContentType content_type = 7;
+message SignWrapper {
+  AccountIndex signer = 1;
+  bytes buffer = 2;
+  bytes sign = 3;
+  bool encrypt = 4; // 内容是否为 PortableSecretBox
+  ContentType content_type = 5;
 }

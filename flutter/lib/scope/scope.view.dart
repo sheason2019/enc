@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/contacts/contacts.view.dart';
 import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/chat/chat.view.dart';
 import 'package:sheason_chat/profile/profile.view.dart';
@@ -37,10 +38,10 @@ class _ScopePageState extends State<ScopePage> {
     return Scaffold(
       body: IndexedStack(
         index: tabIndex,
-        children: [
-          const ChatView(),
-          Container(),
-          const ProfileView(),
+        children: const [
+          ChatView(),
+          ContactView(),
+          ProfileView(),
         ],
       ),
       bottomNavigationBar: NavigationBar(

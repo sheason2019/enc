@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { sheason_chat } from 'prototypes';
+import { sheason_chat } from './prototypes';
 
 @Injectable()
 export class AppService {

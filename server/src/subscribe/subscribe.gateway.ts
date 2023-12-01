@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import { Account } from '@prisma/client';
 import { AccountService } from 'src/account/account.service';
 import { OperationService } from 'src/operation/operation.service';
-import { sheason_chat } from 'prototypes';
+import { sheason_chat } from 'src/prototypes';
 import { IPullOperation, IPushOperation } from 'src/operation/typings';
 
 @WebSocketGateway({ path: '/subscribe' })
@@ -23,10 +23,16 @@ export class SubscribeGateway {
     const snapshot = sheason_chat.AccountSnapshot.decode(
       Buffer.from(payload.snapshot, 'base64'),
     );
-    await client.join(snapshot.index.signPubKey);
-    const account = await this.accountService.put(snapshot);
+    // 检查账号是否存在，若不存在则 emit pull-snapshot 事件
+    const account = await this.accountService.find(snapshot.index.signPubKey);
+    if (!account) {
+      client.emit('pull-snapshot');
+      return;
+    }
+
+    await client.join(account.signPubkey);
     this.socketMap.set(client, account);
-    return true;
+    client.emit('sync-operation');
   }
 
   @SubscribeMessage('sync-operation')

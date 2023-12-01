@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -71,8 +70,7 @@ class ScopeCollection extends ChangeNotifier {
       ..ecdhPubKey = secret.ecdhPubKey;
     final accountSnapshot = AccountSnapshot()
       ..username = secret.signPubKey
-      ..index = accountIndex
-      ..createdAt = Int64(DateTime.now().millisecondsSinceEpoch);
+      ..index = accountIndex;
     final snapshotFile = File(path.join(accountDir.path, '.snapshot'));
     await snapshotFile.writeAsBytes(accountSnapshot.writeToBuffer());
     await updateScopes();

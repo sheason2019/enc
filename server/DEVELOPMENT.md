@@ -2,7 +2,7 @@
 
 ```shell
 # Generate JavaScript Bundle
-$ npx pbjs -o prototypes/index.js -t static-module ../protobufs/core.proto
+$ npx pbjs -o src/prototypes/index.js -t static-module ../protobufs/core.proto
 # Generate .d.ts file
-$ npx pbts -o ./prototypes/index.d.ts ./prototypes/index.js
+$ npx pbts -o ./src/prototypes/index.d.ts ./src/prototypes/index.js
 ```

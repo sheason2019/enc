@@ -4,9 +4,9 @@ import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
-class AccountCard extends StatelessWidget {
+class AccountListTile extends StatelessWidget {
   final Scope scope;
-  const AccountCard({super.key, required this.scope});
+  const AccountListTile({super.key, required this.scope});
 
   handleEnterScope(BuildContext context) {
     final controller = context.read<MainController>();

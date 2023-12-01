@@ -153,7 +153,6 @@ class AccountSnapshot extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'username')
     ..aOS(3, _omitFieldNames ? '' : 'avatarUrl')
     ..m<$core.String, PortableService>(4, _omitFieldNames ? '' : 'serviceMap', protoName: 'serviceMap', entryClassName: 'AccountSnapshot.ServiceMapEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: PortableService.create, valueDefaultOrMaker: PortableService.getDefault, packageName: const $pb.PackageName('sheason_chat'))
-    ..aInt64(10, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false
   ;
 
@@ -209,15 +208,6 @@ class AccountSnapshot extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $core.Map<$core.String, PortableService> get serviceMap => $_getMap(3);
-
-  @$pb.TagNumber(10)
-  $fixnum.Int64 get createdAt => $_getI64(4);
-  @$pb.TagNumber(10)
-  set createdAt($fixnum.Int64 v) { $_setInt64(4, v); }
-  @$pb.TagNumber(10)
-  $core.bool hasCreatedAt() => $_has(4);
-  @$pb.TagNumber(10)
-  void clearCreatedAt() => clearField(10);
 }
 
 class PortableService extends $pb.GeneratedMessage {
@@ -262,6 +252,9 @@ class PortableSecretBox extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(1, _omitFieldNames ? '' : 'cipherData', $pb.PbFieldType.OY)
     ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'nonce', $pb.PbFieldType.OY)
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'mac', $pb.PbFieldType.OY)
+    ..aOM<AccountIndex>(4, _omitFieldNames ? '' : 'sender', subBuilder: AccountIndex.create)
+    ..aOM<AccountIndex>(5, _omitFieldNames ? '' : 'receiver', subBuilder: AccountIndex.create)
+    ..e<EcryptType>(6, _omitFieldNames ? '' : 'encryptType', $pb.PbFieldType.OE, defaultOrMaker: EcryptType.ENCRYPT_TYPE_NONE, valueOf: EcryptType.valueOf, enumValues: EcryptType.values)
     ..hasRequiredFields = false
   ;
 
@@ -312,6 +305,37 @@ class PortableSecretBox extends $pb.GeneratedMessage {
   $core.bool hasMac() => $_has(2);
   @$pb.TagNumber(3)
   void clearMac() => clearField(3);
+
+  @$pb.TagNumber(4)
+  AccountIndex get sender => $_getN(3);
+  @$pb.TagNumber(4)
+  set sender(AccountIndex v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasSender() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSender() => clearField(4);
+  @$pb.TagNumber(4)
+  AccountIndex ensureSender() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  AccountIndex get receiver => $_getN(4);
+  @$pb.TagNumber(5)
+  set receiver(AccountIndex v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasReceiver() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReceiver() => clearField(5);
+  @$pb.TagNumber(5)
+  AccountIndex ensureReceiver() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  EcryptType get encryptType => $_getN(5);
+  @$pb.TagNumber(6)
+  set encryptType(EcryptType v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasEncryptType() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEncryptType() => clearField(6);
 }
 
 class PortableOperation extends $pb.GeneratedMessage {
@@ -396,8 +420,8 @@ class PortableConversation extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PortableConversation', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
     ..e<ConversationType>(1, _omitFieldNames ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: ConversationType.CONVERSATION_UNKNOWN, valueOf: ConversationType.valueOf, enumValues: ConversationType.values)
-    ..pc<AccountIndex>(2, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM, subBuilder: AccountIndex.create)
-    ..aOM<AccountIndex>(3, _omitFieldNames ? '' : 'owner', subBuilder: AccountIndex.create)
+    ..pc<AccountSnapshot>(2, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM, subBuilder: AccountSnapshot.create)
+    ..aOM<AccountSnapshot>(3, _omitFieldNames ? '' : 'owner', subBuilder: AccountSnapshot.create)
     ..aOS(4, _omitFieldNames ? '' : 'remoteUrl')
     ..m<$core.int, $core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', entryClassName: 'PortableConversation.DeclaredSecretsEntry', keyFieldType: $pb.PbFieldType.O3, valueFieldType: $pb.PbFieldType.OY, packageName: const $pb.PackageName('sheason_chat'))
     ..hasRequiredFields = false
@@ -434,18 +458,18 @@ class PortableConversation extends $pb.GeneratedMessage {
   void clearType() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<AccountIndex> get members => $_getList(1);
+  $core.List<AccountSnapshot> get members => $_getList(1);
 
   @$pb.TagNumber(3)
-  AccountIndex get owner => $_getN(2);
+  AccountSnapshot get owner => $_getN(2);
   @$pb.TagNumber(3)
-  set owner(AccountIndex v) { setField(3, v); }
+  set owner(AccountSnapshot v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasOwner() => $_has(2);
   @$pb.TagNumber(3)
   void clearOwner() => clearField(3);
   @$pb.TagNumber(3)
-  AccountIndex ensureOwner() => $_ensure(2);
+  AccountSnapshot ensureOwner() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.String get remoteUrl => $_getSZ(3);
@@ -470,7 +494,7 @@ class PortableMessage extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'uuid')
     ..e<MessageType>(2, _omitFieldNames ? '' : 'messageType', $pb.PbFieldType.OE, defaultOrMaker: MessageType.MESSAGE_TYPE_UNKNOWN, valueOf: MessageType.valueOf, enumValues: MessageType.values)
     ..aOS(3, _omitFieldNames ? '' : 'content')
-    ..aOM<AccountIndex>(4, _omitFieldNames ? '' : 'sender', subBuilder: AccountIndex.create)
+    ..aOM<AccountSnapshot>(4, _omitFieldNames ? '' : 'sender', subBuilder: AccountSnapshot.create)
     ..aOM<PortableConversation>(5, _omitFieldNames ? '' : 'conversation', subBuilder: PortableConversation.create)
     ..pc<PortableMessageState>(6, _omitFieldNames ? '' : 'messageStates', $pb.PbFieldType.PM, subBuilder: PortableMessageState.create)
     ..hasRequiredFields = false
@@ -525,15 +549,15 @@ class PortableMessage extends $pb.GeneratedMessage {
   void clearContent() => clearField(3);
 
   @$pb.TagNumber(4)
-  AccountIndex get sender => $_getN(3);
+  AccountSnapshot get sender => $_getN(3);
   @$pb.TagNumber(4)
-  set sender(AccountIndex v) { setField(4, v); }
+  set sender(AccountSnapshot v) { setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasSender() => $_has(3);
   @$pb.TagNumber(4)
   void clearSender() => clearField(4);
   @$pb.TagNumber(4)
-  AccountIndex ensureSender() => $_ensure(3);
+  AccountSnapshot ensureSender() => $_ensure(3);
 
   @$pb.TagNumber(5)
   PortableConversation get conversation => $_getN(4);
@@ -624,20 +648,18 @@ class PortableMessageState extends $pb.GeneratedMessage {
   void clearCheckedAt() => clearField(4);
 }
 
-class SignedBundle extends $pb.GeneratedMessage {
-  factory SignedBundle() => create();
-  SignedBundle._() : super();
-  factory SignedBundle.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory SignedBundle.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+class SignWrapper extends $pb.GeneratedMessage {
+  factory SignWrapper() => create();
+  SignWrapper._() : super();
+  factory SignWrapper.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SignWrapper.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SignedBundle', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
-    ..e<EcryptType>(1, _omitFieldNames ? '' : 'encryptType', $pb.PbFieldType.OE, defaultOrMaker: EcryptType.ENCRYPT_TYPE_NONE, valueOf: EcryptType.valueOf, enumValues: EcryptType.values)
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'secretKey', $pb.PbFieldType.O3)
-    ..aOM<AccountIndex>(3, _omitFieldNames ? '' : 'sender', subBuilder: AccountIndex.create)
-    ..aOM<AccountIndex>(4, _omitFieldNames ? '' : 'receiver', subBuilder: AccountIndex.create)
-    ..a<$core.List<$core.int>>(5, _omitFieldNames ? '' : 'plainData', $pb.PbFieldType.OY)
-    ..aOM<PortableSecretBox>(6, _omitFieldNames ? '' : 'secretBox', subBuilder: PortableSecretBox.create)
-    ..e<SignedBundleContentType>(7, _omitFieldNames ? '' : 'contentType', $pb.PbFieldType.OE, defaultOrMaker: SignedBundleContentType.BUNDLE_TYPE_UNKNOWN, valueOf: SignedBundleContentType.valueOf, enumValues: SignedBundleContentType.values)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SignWrapper', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
+    ..aOM<AccountIndex>(1, _omitFieldNames ? '' : 'signer', subBuilder: AccountIndex.create)
+    ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'buffer', $pb.PbFieldType.OY)
+    ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'sign', $pb.PbFieldType.OY)
+    ..aOB(4, _omitFieldNames ? '' : 'encrypt')
+    ..e<ContentType>(5, _omitFieldNames ? '' : 'contentType', $pb.PbFieldType.OE, defaultOrMaker: ContentType.CONTENT_BUFFER, valueOf: ContentType.valueOf, enumValues: ContentType.values)
     ..hasRequiredFields = false
   ;
 
@@ -645,91 +667,69 @@ class SignedBundle extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  SignedBundle clone() => SignedBundle()..mergeFromMessage(this);
+  SignWrapper clone() => SignWrapper()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  SignedBundle copyWith(void Function(SignedBundle) updates) => super.copyWith((message) => updates(message as SignedBundle)) as SignedBundle;
+  SignWrapper copyWith(void Function(SignWrapper) updates) => super.copyWith((message) => updates(message as SignWrapper)) as SignWrapper;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static SignedBundle create() => SignedBundle._();
-  SignedBundle createEmptyInstance() => create();
-  static $pb.PbList<SignedBundle> createRepeated() => $pb.PbList<SignedBundle>();
+  static SignWrapper create() => SignWrapper._();
+  SignWrapper createEmptyInstance() => create();
+  static $pb.PbList<SignWrapper> createRepeated() => $pb.PbList<SignWrapper>();
   @$core.pragma('dart2js:noInline')
-  static SignedBundle getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SignedBundle>(create);
-  static SignedBundle? _defaultInstance;
+  static SignWrapper getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SignWrapper>(create);
+  static SignWrapper? _defaultInstance;
 
   @$pb.TagNumber(1)
-  EcryptType get encryptType => $_getN(0);
+  AccountIndex get signer => $_getN(0);
   @$pb.TagNumber(1)
-  set encryptType(EcryptType v) { setField(1, v); }
+  set signer(AccountIndex v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasEncryptType() => $_has(0);
+  $core.bool hasSigner() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEncryptType() => clearField(1);
+  void clearSigner() => clearField(1);
+  @$pb.TagNumber(1)
+  AccountIndex ensureSigner() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.int get secretKey => $_getIZ(1);
+  $core.List<$core.int> get buffer => $_getN(1);
   @$pb.TagNumber(2)
-  set secretKey($core.int v) { $_setSignedInt32(1, v); }
+  set buffer($core.List<$core.int> v) { $_setBytes(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasSecretKey() => $_has(1);
+  $core.bool hasBuffer() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSecretKey() => clearField(2);
+  void clearBuffer() => clearField(2);
 
   @$pb.TagNumber(3)
-  AccountIndex get sender => $_getN(2);
+  $core.List<$core.int> get sign => $_getN(2);
   @$pb.TagNumber(3)
-  set sender(AccountIndex v) { setField(3, v); }
+  set sign($core.List<$core.int> v) { $_setBytes(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasSender() => $_has(2);
+  $core.bool hasSign() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSender() => clearField(3);
-  @$pb.TagNumber(3)
-  AccountIndex ensureSender() => $_ensure(2);
+  void clearSign() => clearField(3);
 
   @$pb.TagNumber(4)
-  AccountIndex get receiver => $_getN(3);
+  $core.bool get encrypt => $_getBF(3);
   @$pb.TagNumber(4)
-  set receiver(AccountIndex v) { setField(4, v); }
+  set encrypt($core.bool v) { $_setBool(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasReceiver() => $_has(3);
+  $core.bool hasEncrypt() => $_has(3);
   @$pb.TagNumber(4)
-  void clearReceiver() => clearField(4);
-  @$pb.TagNumber(4)
-  AccountIndex ensureReceiver() => $_ensure(3);
+  void clearEncrypt() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.List<$core.int> get plainData => $_getN(4);
+  ContentType get contentType => $_getN(4);
   @$pb.TagNumber(5)
-  set plainData($core.List<$core.int> v) { $_setBytes(4, v); }
+  set contentType(ContentType v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasPlainData() => $_has(4);
+  $core.bool hasContentType() => $_has(4);
   @$pb.TagNumber(5)
-  void clearPlainData() => clearField(5);
-
-  @$pb.TagNumber(6)
-  PortableSecretBox get secretBox => $_getN(5);
-  @$pb.TagNumber(6)
-  set secretBox(PortableSecretBox v) { setField(6, v); }
-  @$pb.TagNumber(6)
-  $core.bool hasSecretBox() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearSecretBox() => clearField(6);
-  @$pb.TagNumber(6)
-  PortableSecretBox ensureSecretBox() => $_ensure(5);
-
-  @$pb.TagNumber(7)
-  SignedBundleContentType get contentType => $_getN(6);
-  @$pb.TagNumber(7)
-  set contentType(SignedBundleContentType v) { setField(7, v); }
-  @$pb.TagNumber(7)
-  $core.bool hasContentType() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearContentType() => clearField(7);
+  void clearContentType() => clearField(5);
 }
 
 

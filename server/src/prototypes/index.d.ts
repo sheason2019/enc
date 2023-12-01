@@ -235,9 +235,6 @@ export namespace sheason_chat {
 
         /** AccountSnapshot serviceMap */
         serviceMap?: ({ [k: string]: sheason_chat.IPortableService }|null);
-
-        /** AccountSnapshot createdAt */
-        createdAt?: (number|Long|null);
     }
 
     /** Represents an AccountSnapshot. */
@@ -260,9 +257,6 @@ export namespace sheason_chat {
 
         /** AccountSnapshot serviceMap. */
         public serviceMap: { [k: string]: sheason_chat.IPortableService };
-
-        /** AccountSnapshot createdAt. */
-        public createdAt: (number|Long);
 
         /**
          * Creates a new AccountSnapshot instance using the specified properties.
@@ -433,6 +427,13 @@ export namespace sheason_chat {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** EcryptType enum. */
+    enum EcryptType {
+        ENCRYPT_TYPE_NONE = 0,
+        ENCRYPT_TYPE_SHARED_SECRET = 1,
+        ENCRYPT_TYPE_DECLARED_SECRET = 2
+    }
+
     /** Properties of a PortableSecretBox. */
     interface IPortableSecretBox {
 
@@ -444,6 +445,15 @@ export namespace sheason_chat {
 
         /** PortableSecretBox mac */
         mac?: (Uint8Array|null);
+
+        /** PortableSecretBox sender */
+        sender?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableSecretBox receiver */
+        receiver?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableSecretBox encryptType */
+        encryptType?: (sheason_chat.EcryptType|null);
     }
 
     /** Represents a PortableSecretBox. */
@@ -463,6 +473,15 @@ export namespace sheason_chat {
 
         /** PortableSecretBox mac. */
         public mac: Uint8Array;
+
+        /** PortableSecretBox sender. */
+        public sender?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableSecretBox receiver. */
+        public receiver?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableSecretBox encryptType. */
+        public encryptType: sheason_chat.EcryptType;
 
         /**
          * Creates a new PortableSecretBox instance using the specified properties.
@@ -671,10 +690,10 @@ export namespace sheason_chat {
         type?: (sheason_chat.ConversationType|null);
 
         /** PortableConversation members */
-        members?: (sheason_chat.IAccountIndex[]|null);
+        members?: (sheason_chat.IAccountSnapshot[]|null);
 
         /** PortableConversation owner */
-        owner?: (sheason_chat.IAccountIndex|null);
+        owner?: (sheason_chat.IAccountSnapshot|null);
 
         /** PortableConversation remoteUrl */
         remoteUrl?: (string|null);
@@ -696,10 +715,10 @@ export namespace sheason_chat {
         public type: sheason_chat.ConversationType;
 
         /** PortableConversation members. */
-        public members: sheason_chat.IAccountIndex[];
+        public members: sheason_chat.IAccountSnapshot[];
 
         /** PortableConversation owner. */
-        public owner?: (sheason_chat.IAccountIndex|null);
+        public owner?: (sheason_chat.IAccountSnapshot|null);
 
         /** PortableConversation remoteUrl. */
         public remoteUrl: string;
@@ -808,7 +827,7 @@ export namespace sheason_chat {
         content?: (string|null);
 
         /** PortableMessage sender */
-        sender?: (sheason_chat.IAccountIndex|null);
+        sender?: (sheason_chat.IAccountSnapshot|null);
 
         /** PortableMessage conversation */
         conversation?: (sheason_chat.IPortableConversation|null);
@@ -836,7 +855,7 @@ export namespace sheason_chat {
         public content: string;
 
         /** PortableMessage sender. */
-        public sender?: (sheason_chat.IAccountIndex|null);
+        public sender?: (sheason_chat.IAccountSnapshot|null);
 
         /** PortableMessage conversation. */
         public conversation?: (sheason_chat.IPortableConversation|null);
@@ -1037,146 +1056,127 @@ export namespace sheason_chat {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** SignedBundleContentType enum. */
-    enum SignedBundleContentType {
-        BUNDLE_TYPE_UNKNOWN = 0,
-        BUNDLE_TYPE_MESSAGE = 1
+    /** ContentType enum. */
+    enum ContentType {
+        CONTENT_BUFFER = 0,
+        CONTENT_MESSAGE = 1
     }
 
-    /** EcryptType enum. */
-    enum EcryptType {
-        ENCRYPT_TYPE_NONE = 0,
-        ENCRYPT_TYPE_SHARED_SECRET = 1,
-        ENCRYPT_TYPE_DECLARED_SECRET = 2
+    /** Properties of a SignWrapper. */
+    interface ISignWrapper {
+
+        /** SignWrapper signer */
+        signer?: (sheason_chat.IAccountIndex|null);
+
+        /** SignWrapper buffer */
+        buffer?: (Uint8Array|null);
+
+        /** SignWrapper sign */
+        sign?: (Uint8Array|null);
+
+        /** SignWrapper encrypt */
+        encrypt?: (boolean|null);
+
+        /** SignWrapper contentType */
+        contentType?: (sheason_chat.ContentType|null);
     }
 
-    /** Properties of a SignedBundle. */
-    interface ISignedBundle {
-
-        /** SignedBundle encryptType */
-        encryptType?: (sheason_chat.EcryptType|null);
-
-        /** SignedBundle secretKey */
-        secretKey?: (number|null);
-
-        /** SignedBundle sender */
-        sender?: (sheason_chat.IAccountIndex|null);
-
-        /** SignedBundle receiver */
-        receiver?: (sheason_chat.IAccountIndex|null);
-
-        /** SignedBundle plainData */
-        plainData?: (Uint8Array|null);
-
-        /** SignedBundle secretBox */
-        secretBox?: (sheason_chat.IPortableSecretBox|null);
-
-        /** SignedBundle contentType */
-        contentType?: (sheason_chat.SignedBundleContentType|null);
-    }
-
-    /** Represents a SignedBundle. */
-    class SignedBundle implements ISignedBundle {
+    /** Represents a SignWrapper. */
+    class SignWrapper implements ISignWrapper {
 
         /**
-         * Constructs a new SignedBundle.
+         * Constructs a new SignWrapper.
          * @param [properties] Properties to set
          */
-        constructor(properties?: sheason_chat.ISignedBundle);
+        constructor(properties?: sheason_chat.ISignWrapper);
 
-        /** SignedBundle encryptType. */
-        public encryptType: sheason_chat.EcryptType;
+        /** SignWrapper signer. */
+        public signer?: (sheason_chat.IAccountIndex|null);
 
-        /** SignedBundle secretKey. */
-        public secretKey: number;
+        /** SignWrapper buffer. */
+        public buffer: Uint8Array;
 
-        /** SignedBundle sender. */
-        public sender?: (sheason_chat.IAccountIndex|null);
+        /** SignWrapper sign. */
+        public sign: Uint8Array;
 
-        /** SignedBundle receiver. */
-        public receiver?: (sheason_chat.IAccountIndex|null);
+        /** SignWrapper encrypt. */
+        public encrypt: boolean;
 
-        /** SignedBundle plainData. */
-        public plainData: Uint8Array;
-
-        /** SignedBundle secretBox. */
-        public secretBox?: (sheason_chat.IPortableSecretBox|null);
-
-        /** SignedBundle contentType. */
-        public contentType: sheason_chat.SignedBundleContentType;
+        /** SignWrapper contentType. */
+        public contentType: sheason_chat.ContentType;
 
         /**
-         * Creates a new SignedBundle instance using the specified properties.
+         * Creates a new SignWrapper instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns SignedBundle instance
+         * @returns SignWrapper instance
          */
-        public static create(properties?: sheason_chat.ISignedBundle): sheason_chat.SignedBundle;
+        public static create(properties?: sheason_chat.ISignWrapper): sheason_chat.SignWrapper;
 
         /**
-         * Encodes the specified SignedBundle message. Does not implicitly {@link sheason_chat.SignedBundle.verify|verify} messages.
-         * @param message SignedBundle message or plain object to encode
+         * Encodes the specified SignWrapper message. Does not implicitly {@link sheason_chat.SignWrapper.verify|verify} messages.
+         * @param message SignWrapper message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: sheason_chat.ISignedBundle, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: sheason_chat.ISignWrapper, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified SignedBundle message, length delimited. Does not implicitly {@link sheason_chat.SignedBundle.verify|verify} messages.
-         * @param message SignedBundle message or plain object to encode
+         * Encodes the specified SignWrapper message, length delimited. Does not implicitly {@link sheason_chat.SignWrapper.verify|verify} messages.
+         * @param message SignWrapper message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: sheason_chat.ISignedBundle, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: sheason_chat.ISignWrapper, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes a SignedBundle message from the specified reader or buffer.
+         * Decodes a SignWrapper message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns SignedBundle
+         * @returns SignWrapper
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): sheason_chat.SignedBundle;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): sheason_chat.SignWrapper;
 
         /**
-         * Decodes a SignedBundle message from the specified reader or buffer, length delimited.
+         * Decodes a SignWrapper message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns SignedBundle
+         * @returns SignWrapper
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): sheason_chat.SignedBundle;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): sheason_chat.SignWrapper;
 
         /**
-         * Verifies a SignedBundle message.
+         * Verifies a SignWrapper message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates a SignedBundle message from a plain object. Also converts values to their respective internal types.
+         * Creates a SignWrapper message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns SignedBundle
+         * @returns SignWrapper
          */
-        public static fromObject(object: { [k: string]: any }): sheason_chat.SignedBundle;
+        public static fromObject(object: { [k: string]: any }): sheason_chat.SignWrapper;
 
         /**
-         * Creates a plain object from a SignedBundle message. Also converts values to other types if specified.
-         * @param message SignedBundle
+         * Creates a plain object from a SignWrapper message. Also converts values to other types if specified.
+         * @param message SignWrapper
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: sheason_chat.SignedBundle, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: sheason_chat.SignWrapper, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this SignedBundle to JSON.
+         * Converts this SignWrapper to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
 
         /**
-         * Gets the default type url for SignedBundle
+         * Gets the default type url for SignWrapper
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

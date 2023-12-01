@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { sheason_chat } from 'prototypes';
+import { sheason_chat } from 'src/prototypes';
 import { Account } from '@prisma/client';
 import { prisma } from 'src/prisma/prisma';
 
@@ -13,13 +13,6 @@ export class AccountService {
         },
       });
       if (!!exist) {
-        const existSnapshot = sheason_chat.AccountSnapshot.decode(
-          exist.snapshot,
-        );
-        if (existSnapshot.createdAt >= snapshot.createdAt) {
-          return exist;
-        }
-
         exist.snapshot = Buffer.from(
           sheason_chat.AccountSnapshot.encode(snapshot).finish(),
         );
@@ -43,6 +36,13 @@ export class AccountService {
           ),
         },
       });
+    });
+  }
+  async find(signPubkey: string): Promise<Account | undefined> {
+    return prisma.account.findFirst({
+      where: {
+        signPubkey,
+      },
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { sheason_chat } from 'prototypes';
+import { sheason_chat } from './prototypes';
 
 @Controller()
 export class AppController {

@@ -535,7 +535,6 @@
              * @property {string|null} [username] AccountSnapshot username
              * @property {string|null} [avatarUrl] AccountSnapshot avatarUrl
              * @property {Object.<string,sheason_chat.IPortableService>|null} [serviceMap] AccountSnapshot serviceMap
-             * @property {number|Long|null} [createdAt] AccountSnapshot createdAt
              */
     
             /**
@@ -587,14 +586,6 @@
             AccountSnapshot.prototype.serviceMap = $util.emptyObject;
     
             /**
-             * AccountSnapshot createdAt.
-             * @member {number|Long} createdAt
-             * @memberof sheason_chat.AccountSnapshot
-             * @instance
-             */
-            AccountSnapshot.prototype.createdAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
-            /**
              * Creates a new AccountSnapshot instance using the specified properties.
              * @function create
              * @memberof sheason_chat.AccountSnapshot
@@ -629,8 +620,6 @@
                         writer.uint32(/* id 4, wireType 2 =*/34).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
                         $root.sheason_chat.PortableService.encode(message.serviceMap[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
                     }
-                if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
-                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.createdAt);
                 return writer;
             };
     
@@ -700,10 +689,6 @@
                             message.serviceMap[key] = value;
                             break;
                         }
-                    case 10: {
-                            message.createdAt = reader.int64();
-                            break;
-                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -760,9 +745,6 @@
                             return "serviceMap." + error;
                     }
                 }
-                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
-                    if (!$util.isInteger(message.createdAt) && !(message.createdAt && $util.isInteger(message.createdAt.low) && $util.isInteger(message.createdAt.high)))
-                        return "createdAt: integer|Long expected";
                 return null;
             };
     
@@ -797,15 +779,6 @@
                         message.serviceMap[keys[i]] = $root.sheason_chat.PortableService.fromObject(object.serviceMap[keys[i]]);
                     }
                 }
-                if (object.createdAt != null)
-                    if ($util.Long)
-                        (message.createdAt = $util.Long.fromValue(object.createdAt)).unsigned = false;
-                    else if (typeof object.createdAt === "string")
-                        message.createdAt = parseInt(object.createdAt, 10);
-                    else if (typeof object.createdAt === "number")
-                        message.createdAt = object.createdAt;
-                    else if (typeof object.createdAt === "object")
-                        message.createdAt = new $util.LongBits(object.createdAt.low >>> 0, object.createdAt.high >>> 0).toNumber();
                 return message;
             };
     
@@ -828,11 +801,6 @@
                     object.index = null;
                     object.username = "";
                     object.avatarUrl = "";
-                    if ($util.Long) {
-                        var long = new $util.Long(0, 0, false);
-                        object.createdAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                    } else
-                        object.createdAt = options.longs === String ? "0" : 0;
                 }
                 if (message.index != null && message.hasOwnProperty("index"))
                     object.index = $root.sheason_chat.AccountIndex.toObject(message.index, options);
@@ -846,11 +814,6 @@
                     for (var j = 0; j < keys2.length; ++j)
                         object.serviceMap[keys2[j]] = $root.sheason_chat.PortableService.toObject(message.serviceMap[keys2[j]], options);
                 }
-                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
-                    if (typeof message.createdAt === "number")
-                        object.createdAt = options.longs === String ? String(message.createdAt) : message.createdAt;
-                    else
-                        object.createdAt = options.longs === String ? $util.Long.prototype.toString.call(message.createdAt) : options.longs === Number ? new $util.LongBits(message.createdAt.low >>> 0, message.createdAt.high >>> 0).toNumber() : message.createdAt;
                 return object;
             };
     
@@ -1058,6 +1021,22 @@
             return PortableService;
         })();
     
+        /**
+         * EcryptType enum.
+         * @name sheason_chat.EcryptType
+         * @enum {number}
+         * @property {number} ENCRYPT_TYPE_NONE=0 ENCRYPT_TYPE_NONE value
+         * @property {number} ENCRYPT_TYPE_SHARED_SECRET=1 ENCRYPT_TYPE_SHARED_SECRET value
+         * @property {number} ENCRYPT_TYPE_DECLARED_SECRET=2 ENCRYPT_TYPE_DECLARED_SECRET value
+         */
+        sheason_chat.EcryptType = (function() {
+            var valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "ENCRYPT_TYPE_NONE"] = 0;
+            values[valuesById[1] = "ENCRYPT_TYPE_SHARED_SECRET"] = 1;
+            values[valuesById[2] = "ENCRYPT_TYPE_DECLARED_SECRET"] = 2;
+            return values;
+        })();
+    
         sheason_chat.PortableSecretBox = (function() {
     
             /**
@@ -1067,6 +1046,9 @@
              * @property {Uint8Array|null} [cipherData] PortableSecretBox cipherData
              * @property {Uint8Array|null} [nonce] PortableSecretBox nonce
              * @property {Uint8Array|null} [mac] PortableSecretBox mac
+             * @property {sheason_chat.IAccountIndex|null} [sender] PortableSecretBox sender
+             * @property {sheason_chat.IAccountIndex|null} [receiver] PortableSecretBox receiver
+             * @property {sheason_chat.EcryptType|null} [encryptType] PortableSecretBox encryptType
              */
     
             /**
@@ -1109,6 +1091,30 @@
             PortableSecretBox.prototype.mac = $util.newBuffer([]);
     
             /**
+             * PortableSecretBox sender.
+             * @member {sheason_chat.IAccountIndex|null|undefined} sender
+             * @memberof sheason_chat.PortableSecretBox
+             * @instance
+             */
+            PortableSecretBox.prototype.sender = null;
+    
+            /**
+             * PortableSecretBox receiver.
+             * @member {sheason_chat.IAccountIndex|null|undefined} receiver
+             * @memberof sheason_chat.PortableSecretBox
+             * @instance
+             */
+            PortableSecretBox.prototype.receiver = null;
+    
+            /**
+             * PortableSecretBox encryptType.
+             * @member {sheason_chat.EcryptType} encryptType
+             * @memberof sheason_chat.PortableSecretBox
+             * @instance
+             */
+            PortableSecretBox.prototype.encryptType = 0;
+    
+            /**
              * Creates a new PortableSecretBox instance using the specified properties.
              * @function create
              * @memberof sheason_chat.PortableSecretBox
@@ -1138,6 +1144,12 @@
                     writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.nonce);
                 if (message.mac != null && Object.hasOwnProperty.call(message, "mac"))
                     writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.mac);
+                if (message.sender != null && Object.hasOwnProperty.call(message, "sender"))
+                    $root.sheason_chat.AccountIndex.encode(message.sender, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.receiver != null && Object.hasOwnProperty.call(message, "receiver"))
+                    $root.sheason_chat.AccountIndex.encode(message.receiver, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.encryptType != null && Object.hasOwnProperty.call(message, "encryptType"))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int32(message.encryptType);
                 return writer;
             };
     
@@ -1184,6 +1196,18 @@
                             message.mac = reader.bytes();
                             break;
                         }
+                    case 4: {
+                            message.sender = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            break;
+                        }
+                    case 5: {
+                            message.receiver = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            break;
+                        }
+                    case 6: {
+                            message.encryptType = reader.int32();
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -1228,6 +1252,25 @@
                 if (message.mac != null && message.hasOwnProperty("mac"))
                     if (!(message.mac && typeof message.mac.length === "number" || $util.isString(message.mac)))
                         return "mac: buffer expected";
+                if (message.sender != null && message.hasOwnProperty("sender")) {
+                    var error = $root.sheason_chat.AccountIndex.verify(message.sender);
+                    if (error)
+                        return "sender." + error;
+                }
+                if (message.receiver != null && message.hasOwnProperty("receiver")) {
+                    var error = $root.sheason_chat.AccountIndex.verify(message.receiver);
+                    if (error)
+                        return "receiver." + error;
+                }
+                if (message.encryptType != null && message.hasOwnProperty("encryptType"))
+                    switch (message.encryptType) {
+                    default:
+                        return "encryptType: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                        break;
+                    }
                 return null;
             };
     
@@ -1258,6 +1301,36 @@
                         $util.base64.decode(object.mac, message.mac = $util.newBuffer($util.base64.length(object.mac)), 0);
                     else if (object.mac.length >= 0)
                         message.mac = object.mac;
+                if (object.sender != null) {
+                    if (typeof object.sender !== "object")
+                        throw TypeError(".sheason_chat.PortableSecretBox.sender: object expected");
+                    message.sender = $root.sheason_chat.AccountIndex.fromObject(object.sender);
+                }
+                if (object.receiver != null) {
+                    if (typeof object.receiver !== "object")
+                        throw TypeError(".sheason_chat.PortableSecretBox.receiver: object expected");
+                    message.receiver = $root.sheason_chat.AccountIndex.fromObject(object.receiver);
+                }
+                switch (object.encryptType) {
+                default:
+                    if (typeof object.encryptType === "number") {
+                        message.encryptType = object.encryptType;
+                        break;
+                    }
+                    break;
+                case "ENCRYPT_TYPE_NONE":
+                case 0:
+                    message.encryptType = 0;
+                    break;
+                case "ENCRYPT_TYPE_SHARED_SECRET":
+                case 1:
+                    message.encryptType = 1;
+                    break;
+                case "ENCRYPT_TYPE_DECLARED_SECRET":
+                case 2:
+                    message.encryptType = 2;
+                    break;
+                }
                 return message;
             };
     
@@ -1296,6 +1369,9 @@
                         if (options.bytes !== Array)
                             object.mac = $util.newBuffer(object.mac);
                     }
+                    object.sender = null;
+                    object.receiver = null;
+                    object.encryptType = options.enums === String ? "ENCRYPT_TYPE_NONE" : 0;
                 }
                 if (message.cipherData != null && message.hasOwnProperty("cipherData"))
                     object.cipherData = options.bytes === String ? $util.base64.encode(message.cipherData, 0, message.cipherData.length) : options.bytes === Array ? Array.prototype.slice.call(message.cipherData) : message.cipherData;
@@ -1303,6 +1379,12 @@
                     object.nonce = options.bytes === String ? $util.base64.encode(message.nonce, 0, message.nonce.length) : options.bytes === Array ? Array.prototype.slice.call(message.nonce) : message.nonce;
                 if (message.mac != null && message.hasOwnProperty("mac"))
                     object.mac = options.bytes === String ? $util.base64.encode(message.mac, 0, message.mac.length) : options.bytes === Array ? Array.prototype.slice.call(message.mac) : message.mac;
+                if (message.sender != null && message.hasOwnProperty("sender"))
+                    object.sender = $root.sheason_chat.AccountIndex.toObject(message.sender, options);
+                if (message.receiver != null && message.hasOwnProperty("receiver"))
+                    object.receiver = $root.sheason_chat.AccountIndex.toObject(message.receiver, options);
+                if (message.encryptType != null && message.hasOwnProperty("encryptType"))
+                    object.encryptType = options.enums === String ? $root.sheason_chat.EcryptType[message.encryptType] === undefined ? message.encryptType : $root.sheason_chat.EcryptType[message.encryptType] : message.encryptType;
                 return object;
             };
     
@@ -1636,8 +1718,8 @@
              * @memberof sheason_chat
              * @interface IPortableConversation
              * @property {sheason_chat.ConversationType|null} [type] PortableConversation type
-             * @property {Array.<sheason_chat.IAccountIndex>|null} [members] PortableConversation members
-             * @property {sheason_chat.IAccountIndex|null} [owner] PortableConversation owner
+             * @property {Array.<sheason_chat.IAccountSnapshot>|null} [members] PortableConversation members
+             * @property {sheason_chat.IAccountSnapshot|null} [owner] PortableConversation owner
              * @property {string|null} [remoteUrl] PortableConversation remoteUrl
              * @property {Object.<string,Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
              */
@@ -1669,7 +1751,7 @@
     
             /**
              * PortableConversation members.
-             * @member {Array.<sheason_chat.IAccountIndex>} members
+             * @member {Array.<sheason_chat.IAccountSnapshot>} members
              * @memberof sheason_chat.PortableConversation
              * @instance
              */
@@ -1677,7 +1759,7 @@
     
             /**
              * PortableConversation owner.
-             * @member {sheason_chat.IAccountIndex|null|undefined} owner
+             * @member {sheason_chat.IAccountSnapshot|null|undefined} owner
              * @memberof sheason_chat.PortableConversation
              * @instance
              */
@@ -1727,9 +1809,9 @@
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
                 if (message.members != null && message.members.length)
                     for (var i = 0; i < message.members.length; ++i)
-                        $root.sheason_chat.AccountIndex.encode(message.members[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        $root.sheason_chat.AccountSnapshot.encode(message.members[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                 if (message.owner != null && Object.hasOwnProperty.call(message, "owner"))
-                    $root.sheason_chat.AccountIndex.encode(message.owner, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    $root.sheason_chat.AccountSnapshot.encode(message.owner, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 if (message.remoteUrl != null && Object.hasOwnProperty.call(message, "remoteUrl"))
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.remoteUrl);
                 if (message.declaredSecrets != null && Object.hasOwnProperty.call(message, "declaredSecrets"))
@@ -1776,11 +1858,11 @@
                     case 2: {
                             if (!(message.members && message.members.length))
                                 message.members = [];
-                            message.members.push($root.sheason_chat.AccountIndex.decode(reader, reader.uint32()));
+                            message.members.push($root.sheason_chat.AccountSnapshot.decode(reader, reader.uint32()));
                             break;
                         }
                     case 3: {
-                            message.owner = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            message.owner = $root.sheason_chat.AccountSnapshot.decode(reader, reader.uint32());
                             break;
                         }
                     case 4: {
@@ -1858,13 +1940,13 @@
                     if (!Array.isArray(message.members))
                         return "members: array expected";
                     for (var i = 0; i < message.members.length; ++i) {
-                        var error = $root.sheason_chat.AccountIndex.verify(message.members[i]);
+                        var error = $root.sheason_chat.AccountSnapshot.verify(message.members[i]);
                         if (error)
                             return "members." + error;
                     }
                 }
                 if (message.owner != null && message.hasOwnProperty("owner")) {
-                    var error = $root.sheason_chat.AccountIndex.verify(message.owner);
+                    var error = $root.sheason_chat.AccountSnapshot.verify(message.owner);
                     if (error)
                         return "owner." + error;
                 }
@@ -1924,13 +2006,13 @@
                     for (var i = 0; i < object.members.length; ++i) {
                         if (typeof object.members[i] !== "object")
                             throw TypeError(".sheason_chat.PortableConversation.members: object expected");
-                        message.members[i] = $root.sheason_chat.AccountIndex.fromObject(object.members[i]);
+                        message.members[i] = $root.sheason_chat.AccountSnapshot.fromObject(object.members[i]);
                     }
                 }
                 if (object.owner != null) {
                     if (typeof object.owner !== "object")
                         throw TypeError(".sheason_chat.PortableConversation.owner: object expected");
-                    message.owner = $root.sheason_chat.AccountIndex.fromObject(object.owner);
+                    message.owner = $root.sheason_chat.AccountSnapshot.fromObject(object.owner);
                 }
                 if (object.remoteUrl != null)
                     message.remoteUrl = String(object.remoteUrl);
@@ -1974,10 +2056,10 @@
                 if (message.members && message.members.length) {
                     object.members = [];
                     for (var j = 0; j < message.members.length; ++j)
-                        object.members[j] = $root.sheason_chat.AccountIndex.toObject(message.members[j], options);
+                        object.members[j] = $root.sheason_chat.AccountSnapshot.toObject(message.members[j], options);
                 }
                 if (message.owner != null && message.hasOwnProperty("owner"))
-                    object.owner = $root.sheason_chat.AccountIndex.toObject(message.owner, options);
+                    object.owner = $root.sheason_chat.AccountSnapshot.toObject(message.owner, options);
                 if (message.remoteUrl != null && message.hasOwnProperty("remoteUrl"))
                     object.remoteUrl = message.remoteUrl;
                 var keys2;
@@ -2049,7 +2131,7 @@
              * @property {string|null} [uuid] PortableMessage uuid
              * @property {sheason_chat.MessageType|null} [messageType] PortableMessage messageType
              * @property {string|null} [content] PortableMessage content
-             * @property {sheason_chat.IAccountIndex|null} [sender] PortableMessage sender
+             * @property {sheason_chat.IAccountSnapshot|null} [sender] PortableMessage sender
              * @property {sheason_chat.IPortableConversation|null} [conversation] PortableMessage conversation
              * @property {Array.<sheason_chat.IPortableMessageState>|null} [messageStates] PortableMessage messageStates
              */
@@ -2096,7 +2178,7 @@
     
             /**
              * PortableMessage sender.
-             * @member {sheason_chat.IAccountIndex|null|undefined} sender
+             * @member {sheason_chat.IAccountSnapshot|null|undefined} sender
              * @memberof sheason_chat.PortableMessage
              * @instance
              */
@@ -2149,7 +2231,7 @@
                 if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.content);
                 if (message.sender != null && Object.hasOwnProperty.call(message, "sender"))
-                    $root.sheason_chat.AccountIndex.encode(message.sender, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    $root.sheason_chat.AccountSnapshot.encode(message.sender, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                 if (message.conversation != null && Object.hasOwnProperty.call(message, "conversation"))
                     $root.sheason_chat.PortableConversation.encode(message.conversation, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 if (message.messageStates != null && message.messageStates.length)
@@ -2202,7 +2284,7 @@
                             break;
                         }
                     case 4: {
-                            message.sender = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            message.sender = $root.sheason_chat.AccountSnapshot.decode(reader, reader.uint32());
                             break;
                         }
                     case 5: {
@@ -2269,7 +2351,7 @@
                     if (!$util.isString(message.content))
                         return "content: string expected";
                 if (message.sender != null && message.hasOwnProperty("sender")) {
-                    var error = $root.sheason_chat.AccountIndex.verify(message.sender);
+                    var error = $root.sheason_chat.AccountSnapshot.verify(message.sender);
                     if (error)
                         return "sender." + error;
                 }
@@ -2341,7 +2423,7 @@
                 if (object.sender != null) {
                     if (typeof object.sender !== "object")
                         throw TypeError(".sheason_chat.PortableMessage.sender: object expected");
-                    message.sender = $root.sheason_chat.AccountIndex.fromObject(object.sender);
+                    message.sender = $root.sheason_chat.AccountSnapshot.fromObject(object.sender);
                 }
                 if (object.conversation != null) {
                     if (typeof object.conversation !== "object")
@@ -2390,7 +2472,7 @@
                 if (message.content != null && message.hasOwnProperty("content"))
                     object.content = message.content;
                 if (message.sender != null && message.hasOwnProperty("sender"))
-                    object.sender = $root.sheason_chat.AccountIndex.toObject(message.sender, options);
+                    object.sender = $root.sheason_chat.AccountSnapshot.toObject(message.sender, options);
                 if (message.conversation != null && message.hasOwnProperty("conversation"))
                     object.conversation = $root.sheason_chat.PortableConversation.toObject(message.conversation, options);
                 if (message.messageStates && message.messageStates.length) {
@@ -2751,59 +2833,41 @@
         })();
     
         /**
-         * SignedBundleContentType enum.
-         * @name sheason_chat.SignedBundleContentType
+         * ContentType enum.
+         * @name sheason_chat.ContentType
          * @enum {number}
-         * @property {number} BUNDLE_TYPE_UNKNOWN=0 BUNDLE_TYPE_UNKNOWN value
-         * @property {number} BUNDLE_TYPE_MESSAGE=1 BUNDLE_TYPE_MESSAGE value
+         * @property {number} CONTENT_BUFFER=0 CONTENT_BUFFER value
+         * @property {number} CONTENT_MESSAGE=1 CONTENT_MESSAGE value
          */
-        sheason_chat.SignedBundleContentType = (function() {
+        sheason_chat.ContentType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "BUNDLE_TYPE_UNKNOWN"] = 0;
-            values[valuesById[1] = "BUNDLE_TYPE_MESSAGE"] = 1;
+            values[valuesById[0] = "CONTENT_BUFFER"] = 0;
+            values[valuesById[1] = "CONTENT_MESSAGE"] = 1;
             return values;
         })();
     
-        /**
-         * EcryptType enum.
-         * @name sheason_chat.EcryptType
-         * @enum {number}
-         * @property {number} ENCRYPT_TYPE_NONE=0 ENCRYPT_TYPE_NONE value
-         * @property {number} ENCRYPT_TYPE_SHARED_SECRET=1 ENCRYPT_TYPE_SHARED_SECRET value
-         * @property {number} ENCRYPT_TYPE_DECLARED_SECRET=2 ENCRYPT_TYPE_DECLARED_SECRET value
-         */
-        sheason_chat.EcryptType = (function() {
-            var valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "ENCRYPT_TYPE_NONE"] = 0;
-            values[valuesById[1] = "ENCRYPT_TYPE_SHARED_SECRET"] = 1;
-            values[valuesById[2] = "ENCRYPT_TYPE_DECLARED_SECRET"] = 2;
-            return values;
-        })();
-    
-        sheason_chat.SignedBundle = (function() {
+        sheason_chat.SignWrapper = (function() {
     
             /**
-             * Properties of a SignedBundle.
+             * Properties of a SignWrapper.
              * @memberof sheason_chat
-             * @interface ISignedBundle
-             * @property {sheason_chat.EcryptType|null} [encryptType] SignedBundle encryptType
-             * @property {number|null} [secretKey] SignedBundle secretKey
-             * @property {sheason_chat.IAccountIndex|null} [sender] SignedBundle sender
-             * @property {sheason_chat.IAccountIndex|null} [receiver] SignedBundle receiver
-             * @property {Uint8Array|null} [plainData] SignedBundle plainData
-             * @property {sheason_chat.IPortableSecretBox|null} [secretBox] SignedBundle secretBox
-             * @property {sheason_chat.SignedBundleContentType|null} [contentType] SignedBundle contentType
+             * @interface ISignWrapper
+             * @property {sheason_chat.IAccountIndex|null} [signer] SignWrapper signer
+             * @property {Uint8Array|null} [buffer] SignWrapper buffer
+             * @property {Uint8Array|null} [sign] SignWrapper sign
+             * @property {boolean|null} [encrypt] SignWrapper encrypt
+             * @property {sheason_chat.ContentType|null} [contentType] SignWrapper contentType
              */
     
             /**
-             * Constructs a new SignedBundle.
+             * Constructs a new SignWrapper.
              * @memberof sheason_chat
-             * @classdesc Represents a SignedBundle.
-             * @implements ISignedBundle
+             * @classdesc Represents a SignWrapper.
+             * @implements ISignWrapper
              * @constructor
-             * @param {sheason_chat.ISignedBundle=} [properties] Properties to set
+             * @param {sheason_chat.ISignWrapper=} [properties] Properties to set
              */
-            function SignedBundle(properties) {
+            function SignWrapper(properties) {
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -2811,158 +2875,130 @@
             }
     
             /**
-             * SignedBundle encryptType.
-             * @member {sheason_chat.EcryptType} encryptType
-             * @memberof sheason_chat.SignedBundle
+             * SignWrapper signer.
+             * @member {sheason_chat.IAccountIndex|null|undefined} signer
+             * @memberof sheason_chat.SignWrapper
              * @instance
              */
-            SignedBundle.prototype.encryptType = 0;
+            SignWrapper.prototype.signer = null;
     
             /**
-             * SignedBundle secretKey.
-             * @member {number} secretKey
-             * @memberof sheason_chat.SignedBundle
+             * SignWrapper buffer.
+             * @member {Uint8Array} buffer
+             * @memberof sheason_chat.SignWrapper
              * @instance
              */
-            SignedBundle.prototype.secretKey = 0;
+            SignWrapper.prototype.buffer = $util.newBuffer([]);
     
             /**
-             * SignedBundle sender.
-             * @member {sheason_chat.IAccountIndex|null|undefined} sender
-             * @memberof sheason_chat.SignedBundle
+             * SignWrapper sign.
+             * @member {Uint8Array} sign
+             * @memberof sheason_chat.SignWrapper
              * @instance
              */
-            SignedBundle.prototype.sender = null;
+            SignWrapper.prototype.sign = $util.newBuffer([]);
     
             /**
-             * SignedBundle receiver.
-             * @member {sheason_chat.IAccountIndex|null|undefined} receiver
-             * @memberof sheason_chat.SignedBundle
+             * SignWrapper encrypt.
+             * @member {boolean} encrypt
+             * @memberof sheason_chat.SignWrapper
              * @instance
              */
-            SignedBundle.prototype.receiver = null;
+            SignWrapper.prototype.encrypt = false;
     
             /**
-             * SignedBundle plainData.
-             * @member {Uint8Array} plainData
-             * @memberof sheason_chat.SignedBundle
+             * SignWrapper contentType.
+             * @member {sheason_chat.ContentType} contentType
+             * @memberof sheason_chat.SignWrapper
              * @instance
              */
-            SignedBundle.prototype.plainData = $util.newBuffer([]);
+            SignWrapper.prototype.contentType = 0;
     
             /**
-             * SignedBundle secretBox.
-             * @member {sheason_chat.IPortableSecretBox|null|undefined} secretBox
-             * @memberof sheason_chat.SignedBundle
-             * @instance
-             */
-            SignedBundle.prototype.secretBox = null;
-    
-            /**
-             * SignedBundle contentType.
-             * @member {sheason_chat.SignedBundleContentType} contentType
-             * @memberof sheason_chat.SignedBundle
-             * @instance
-             */
-            SignedBundle.prototype.contentType = 0;
-    
-            /**
-             * Creates a new SignedBundle instance using the specified properties.
+             * Creates a new SignWrapper instance using the specified properties.
              * @function create
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
-             * @param {sheason_chat.ISignedBundle=} [properties] Properties to set
-             * @returns {sheason_chat.SignedBundle} SignedBundle instance
+             * @param {sheason_chat.ISignWrapper=} [properties] Properties to set
+             * @returns {sheason_chat.SignWrapper} SignWrapper instance
              */
-            SignedBundle.create = function create(properties) {
-                return new SignedBundle(properties);
+            SignWrapper.create = function create(properties) {
+                return new SignWrapper(properties);
             };
     
             /**
-             * Encodes the specified SignedBundle message. Does not implicitly {@link sheason_chat.SignedBundle.verify|verify} messages.
+             * Encodes the specified SignWrapper message. Does not implicitly {@link sheason_chat.SignWrapper.verify|verify} messages.
              * @function encode
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
-             * @param {sheason_chat.ISignedBundle} message SignedBundle message or plain object to encode
+             * @param {sheason_chat.ISignWrapper} message SignWrapper message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            SignedBundle.encode = function encode(message, writer) {
+            SignWrapper.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.encryptType != null && Object.hasOwnProperty.call(message, "encryptType"))
-                    writer.uint32(/* id 1, wireType 0 =*/8).int32(message.encryptType);
-                if (message.secretKey != null && Object.hasOwnProperty.call(message, "secretKey"))
-                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.secretKey);
-                if (message.sender != null && Object.hasOwnProperty.call(message, "sender"))
-                    $root.sheason_chat.AccountIndex.encode(message.sender, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if (message.receiver != null && Object.hasOwnProperty.call(message, "receiver"))
-                    $root.sheason_chat.AccountIndex.encode(message.receiver, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                if (message.plainData != null && Object.hasOwnProperty.call(message, "plainData"))
-                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.plainData);
-                if (message.secretBox != null && Object.hasOwnProperty.call(message, "secretBox"))
-                    $root.sheason_chat.PortableSecretBox.encode(message.secretBox, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.signer != null && Object.hasOwnProperty.call(message, "signer"))
+                    $root.sheason_chat.AccountIndex.encode(message.signer, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.buffer != null && Object.hasOwnProperty.call(message, "buffer"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.buffer);
+                if (message.sign != null && Object.hasOwnProperty.call(message, "sign"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.sign);
+                if (message.encrypt != null && Object.hasOwnProperty.call(message, "encrypt"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.encrypt);
                 if (message.contentType != null && Object.hasOwnProperty.call(message, "contentType"))
-                    writer.uint32(/* id 7, wireType 0 =*/56).int32(message.contentType);
+                    writer.uint32(/* id 5, wireType 0 =*/40).int32(message.contentType);
                 return writer;
             };
     
             /**
-             * Encodes the specified SignedBundle message, length delimited. Does not implicitly {@link sheason_chat.SignedBundle.verify|verify} messages.
+             * Encodes the specified SignWrapper message, length delimited. Does not implicitly {@link sheason_chat.SignWrapper.verify|verify} messages.
              * @function encodeDelimited
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
-             * @param {sheason_chat.ISignedBundle} message SignedBundle message or plain object to encode
+             * @param {sheason_chat.ISignWrapper} message SignWrapper message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            SignedBundle.encodeDelimited = function encodeDelimited(message, writer) {
+            SignWrapper.encodeDelimited = function encodeDelimited(message, writer) {
                 return this.encode(message, writer).ldelim();
             };
     
             /**
-             * Decodes a SignedBundle message from the specified reader or buffer.
+             * Decodes a SignWrapper message from the specified reader or buffer.
              * @function decode
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
              * @param {number} [length] Message length if known beforehand
-             * @returns {sheason_chat.SignedBundle} SignedBundle
+             * @returns {sheason_chat.SignWrapper} SignWrapper
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            SignedBundle.decode = function decode(reader, length) {
+            SignWrapper.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.SignedBundle();
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.SignWrapper();
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
                     case 1: {
-                            message.encryptType = reader.int32();
+                            message.signer = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
                             break;
                         }
                     case 2: {
-                            message.secretKey = reader.int32();
+                            message.buffer = reader.bytes();
                             break;
                         }
                     case 3: {
-                            message.sender = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            message.sign = reader.bytes();
                             break;
                         }
                     case 4: {
-                            message.receiver = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            message.encrypt = reader.bool();
                             break;
                         }
                     case 5: {
-                            message.plainData = reader.bytes();
-                            break;
-                        }
-                    case 6: {
-                            message.secretBox = $root.sheason_chat.PortableSecretBox.decode(reader, reader.uint32());
-                            break;
-                        }
-                    case 7: {
                             message.contentType = reader.int32();
                             break;
                         }
@@ -2975,62 +3011,46 @@
             };
     
             /**
-             * Decodes a SignedBundle message from the specified reader or buffer, length delimited.
+             * Decodes a SignWrapper message from the specified reader or buffer, length delimited.
              * @function decodeDelimited
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {sheason_chat.SignedBundle} SignedBundle
+             * @returns {sheason_chat.SignWrapper} SignWrapper
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            SignedBundle.decodeDelimited = function decodeDelimited(reader) {
+            SignWrapper.decodeDelimited = function decodeDelimited(reader) {
                 if (!(reader instanceof $Reader))
                     reader = new $Reader(reader);
                 return this.decode(reader, reader.uint32());
             };
     
             /**
-             * Verifies a SignedBundle message.
+             * Verifies a SignWrapper message.
              * @function verify
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            SignedBundle.verify = function verify(message) {
+            SignWrapper.verify = function verify(message) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
-                if (message.encryptType != null && message.hasOwnProperty("encryptType"))
-                    switch (message.encryptType) {
-                    default:
-                        return "encryptType: enum value expected";
-                    case 0:
-                    case 1:
-                    case 2:
-                        break;
-                    }
-                if (message.secretKey != null && message.hasOwnProperty("secretKey"))
-                    if (!$util.isInteger(message.secretKey))
-                        return "secretKey: integer expected";
-                if (message.sender != null && message.hasOwnProperty("sender")) {
-                    var error = $root.sheason_chat.AccountIndex.verify(message.sender);
+                if (message.signer != null && message.hasOwnProperty("signer")) {
+                    var error = $root.sheason_chat.AccountIndex.verify(message.signer);
                     if (error)
-                        return "sender." + error;
+                        return "signer." + error;
                 }
-                if (message.receiver != null && message.hasOwnProperty("receiver")) {
-                    var error = $root.sheason_chat.AccountIndex.verify(message.receiver);
-                    if (error)
-                        return "receiver." + error;
-                }
-                if (message.plainData != null && message.hasOwnProperty("plainData"))
-                    if (!(message.plainData && typeof message.plainData.length === "number" || $util.isString(message.plainData)))
-                        return "plainData: buffer expected";
-                if (message.secretBox != null && message.hasOwnProperty("secretBox")) {
-                    var error = $root.sheason_chat.PortableSecretBox.verify(message.secretBox);
-                    if (error)
-                        return "secretBox." + error;
-                }
+                if (message.buffer != null && message.hasOwnProperty("buffer"))
+                    if (!(message.buffer && typeof message.buffer.length === "number" || $util.isString(message.buffer)))
+                        return "buffer: buffer expected";
+                if (message.sign != null && message.hasOwnProperty("sign"))
+                    if (!(message.sign && typeof message.sign.length === "number" || $util.isString(message.sign)))
+                        return "sign: buffer expected";
+                if (message.encrypt != null && message.hasOwnProperty("encrypt"))
+                    if (typeof message.encrypt !== "boolean")
+                        return "encrypt: boolean expected";
                 if (message.contentType != null && message.hasOwnProperty("contentType"))
                     switch (message.contentType) {
                     default:
@@ -3043,59 +3063,34 @@
             };
     
             /**
-             * Creates a SignedBundle message from a plain object. Also converts values to their respective internal types.
+             * Creates a SignWrapper message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {sheason_chat.SignedBundle} SignedBundle
+             * @returns {sheason_chat.SignWrapper} SignWrapper
              */
-            SignedBundle.fromObject = function fromObject(object) {
-                if (object instanceof $root.sheason_chat.SignedBundle)
+            SignWrapper.fromObject = function fromObject(object) {
+                if (object instanceof $root.sheason_chat.SignWrapper)
                     return object;
-                var message = new $root.sheason_chat.SignedBundle();
-                switch (object.encryptType) {
-                default:
-                    if (typeof object.encryptType === "number") {
-                        message.encryptType = object.encryptType;
-                        break;
-                    }
-                    break;
-                case "ENCRYPT_TYPE_NONE":
-                case 0:
-                    message.encryptType = 0;
-                    break;
-                case "ENCRYPT_TYPE_SHARED_SECRET":
-                case 1:
-                    message.encryptType = 1;
-                    break;
-                case "ENCRYPT_TYPE_DECLARED_SECRET":
-                case 2:
-                    message.encryptType = 2;
-                    break;
+                var message = new $root.sheason_chat.SignWrapper();
+                if (object.signer != null) {
+                    if (typeof object.signer !== "object")
+                        throw TypeError(".sheason_chat.SignWrapper.signer: object expected");
+                    message.signer = $root.sheason_chat.AccountIndex.fromObject(object.signer);
                 }
-                if (object.secretKey != null)
-                    message.secretKey = object.secretKey | 0;
-                if (object.sender != null) {
-                    if (typeof object.sender !== "object")
-                        throw TypeError(".sheason_chat.SignedBundle.sender: object expected");
-                    message.sender = $root.sheason_chat.AccountIndex.fromObject(object.sender);
-                }
-                if (object.receiver != null) {
-                    if (typeof object.receiver !== "object")
-                        throw TypeError(".sheason_chat.SignedBundle.receiver: object expected");
-                    message.receiver = $root.sheason_chat.AccountIndex.fromObject(object.receiver);
-                }
-                if (object.plainData != null)
-                    if (typeof object.plainData === "string")
-                        $util.base64.decode(object.plainData, message.plainData = $util.newBuffer($util.base64.length(object.plainData)), 0);
-                    else if (object.plainData.length >= 0)
-                        message.plainData = object.plainData;
-                if (object.secretBox != null) {
-                    if (typeof object.secretBox !== "object")
-                        throw TypeError(".sheason_chat.SignedBundle.secretBox: object expected");
-                    message.secretBox = $root.sheason_chat.PortableSecretBox.fromObject(object.secretBox);
-                }
+                if (object.buffer != null)
+                    if (typeof object.buffer === "string")
+                        $util.base64.decode(object.buffer, message.buffer = $util.newBuffer($util.base64.length(object.buffer)), 0);
+                    else if (object.buffer.length >= 0)
+                        message.buffer = object.buffer;
+                if (object.sign != null)
+                    if (typeof object.sign === "string")
+                        $util.base64.decode(object.sign, message.sign = $util.newBuffer($util.base64.length(object.sign)), 0);
+                    else if (object.sign.length >= 0)
+                        message.sign = object.sign;
+                if (object.encrypt != null)
+                    message.encrypt = Boolean(object.encrypt);
                 switch (object.contentType) {
                 default:
                     if (typeof object.contentType === "number") {
@@ -3103,11 +3098,11 @@
                         break;
                     }
                     break;
-                case "BUNDLE_TYPE_UNKNOWN":
+                case "CONTENT_BUFFER":
                 case 0:
                     message.contentType = 0;
                     break;
-                case "BUNDLE_TYPE_MESSAGE":
+                case "CONTENT_MESSAGE":
                 case 1:
                     message.contentType = 1;
                     break;
@@ -3116,77 +3111,77 @@
             };
     
             /**
-             * Creates a plain object from a SignedBundle message. Also converts values to other types if specified.
+             * Creates a plain object from a SignWrapper message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
-             * @param {sheason_chat.SignedBundle} message SignedBundle
+             * @param {sheason_chat.SignWrapper} message SignWrapper
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            SignedBundle.toObject = function toObject(message, options) {
+            SignWrapper.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 var object = {};
                 if (options.defaults) {
-                    object.encryptType = options.enums === String ? "ENCRYPT_TYPE_NONE" : 0;
-                    object.secretKey = 0;
-                    object.sender = null;
-                    object.receiver = null;
+                    object.signer = null;
                     if (options.bytes === String)
-                        object.plainData = "";
+                        object.buffer = "";
                     else {
-                        object.plainData = [];
+                        object.buffer = [];
                         if (options.bytes !== Array)
-                            object.plainData = $util.newBuffer(object.plainData);
+                            object.buffer = $util.newBuffer(object.buffer);
                     }
-                    object.secretBox = null;
-                    object.contentType = options.enums === String ? "BUNDLE_TYPE_UNKNOWN" : 0;
+                    if (options.bytes === String)
+                        object.sign = "";
+                    else {
+                        object.sign = [];
+                        if (options.bytes !== Array)
+                            object.sign = $util.newBuffer(object.sign);
+                    }
+                    object.encrypt = false;
+                    object.contentType = options.enums === String ? "CONTENT_BUFFER" : 0;
                 }
-                if (message.encryptType != null && message.hasOwnProperty("encryptType"))
-                    object.encryptType = options.enums === String ? $root.sheason_chat.EcryptType[message.encryptType] === undefined ? message.encryptType : $root.sheason_chat.EcryptType[message.encryptType] : message.encryptType;
-                if (message.secretKey != null && message.hasOwnProperty("secretKey"))
-                    object.secretKey = message.secretKey;
-                if (message.sender != null && message.hasOwnProperty("sender"))
-                    object.sender = $root.sheason_chat.AccountIndex.toObject(message.sender, options);
-                if (message.receiver != null && message.hasOwnProperty("receiver"))
-                    object.receiver = $root.sheason_chat.AccountIndex.toObject(message.receiver, options);
-                if (message.plainData != null && message.hasOwnProperty("plainData"))
-                    object.plainData = options.bytes === String ? $util.base64.encode(message.plainData, 0, message.plainData.length) : options.bytes === Array ? Array.prototype.slice.call(message.plainData) : message.plainData;
-                if (message.secretBox != null && message.hasOwnProperty("secretBox"))
-                    object.secretBox = $root.sheason_chat.PortableSecretBox.toObject(message.secretBox, options);
+                if (message.signer != null && message.hasOwnProperty("signer"))
+                    object.signer = $root.sheason_chat.AccountIndex.toObject(message.signer, options);
+                if (message.buffer != null && message.hasOwnProperty("buffer"))
+                    object.buffer = options.bytes === String ? $util.base64.encode(message.buffer, 0, message.buffer.length) : options.bytes === Array ? Array.prototype.slice.call(message.buffer) : message.buffer;
+                if (message.sign != null && message.hasOwnProperty("sign"))
+                    object.sign = options.bytes === String ? $util.base64.encode(message.sign, 0, message.sign.length) : options.bytes === Array ? Array.prototype.slice.call(message.sign) : message.sign;
+                if (message.encrypt != null && message.hasOwnProperty("encrypt"))
+                    object.encrypt = message.encrypt;
                 if (message.contentType != null && message.hasOwnProperty("contentType"))
-                    object.contentType = options.enums === String ? $root.sheason_chat.SignedBundleContentType[message.contentType] === undefined ? message.contentType : $root.sheason_chat.SignedBundleContentType[message.contentType] : message.contentType;
+                    object.contentType = options.enums === String ? $root.sheason_chat.ContentType[message.contentType] === undefined ? message.contentType : $root.sheason_chat.ContentType[message.contentType] : message.contentType;
                 return object;
             };
     
             /**
-             * Converts this SignedBundle to JSON.
+             * Converts this SignWrapper to JSON.
              * @function toJSON
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            SignedBundle.prototype.toJSON = function toJSON() {
+            SignWrapper.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
     
             /**
-             * Gets the default type url for SignedBundle
+             * Gets the default type url for SignWrapper
              * @function getTypeUrl
-             * @memberof sheason_chat.SignedBundle
+             * @memberof sheason_chat.SignWrapper
              * @static
              * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns {string} The default type url
              */
-            SignedBundle.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            SignWrapper.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
                 if (typeUrlPrefix === undefined) {
                     typeUrlPrefix = "type.googleapis.com";
                 }
-                return typeUrlPrefix + "/sheason_chat.SignedBundle";
+                return typeUrlPrefix + "/sheason_chat.SignWrapper";
             };
     
-            return SignedBundle;
+            return SignWrapper;
         })();
     
         return sheason_chat;

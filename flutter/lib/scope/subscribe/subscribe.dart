@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:sheason_chat/cyprto/crypto_keypair.dart';
+import 'package:sheason_chat/cyprto/crypto_utils.dart';
+import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/operation_cipher/operation_cipher.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -31,14 +35,10 @@ class Subscribe {
     );
 
     socket.onConnect((data) {
-      socket.emitWithAck(
-        'subscribe',
-        {
-          'deviceId': deviceId,
-          'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
-        },
-        ack: (data) => syncOperation(),
-      );
+      socket.emitWithAck('subscribe', {
+        'deviceId': deviceId,
+        'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
+      });
     });
 
     socket.on('pull-operation', (data) async {
@@ -89,6 +89,29 @@ class Subscribe {
       await scope.operator.apply(operations);
     });
     socket.on('sync-operation', (data) => syncOperation());
+    socket.on('pull-snapshot', (data) async {
+      final buffer = scope.snapshot.writeToBuffer();
+      final sign = await CryptoUtils.createSignature(
+        CryptoKeyPair.fromSecret(scope.secret),
+        buffer,
+      );
+
+      final wrapper = SignWrapper()
+        ..buffer = buffer
+        ..signer = scope.snapshot.index
+        ..sign = sign.bytes;
+
+      await dio.put(
+        '$url/${scope.snapshot.index.signPubKey}',
+        data: FormData.fromMap({
+          'snapshot': base64Encode(wrapper.writeToBuffer()),
+        }),
+      );
+      socket.emitWithAck('subscribe', {
+        'deviceId': deviceId,
+        'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
+      });
+    });
 
     socket.connect();
   }
