@@ -2,13 +2,16 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:protobuf/protobuf.dart';
+import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 part 'base.part.dart';
-part 'create_service_strategy.part.dart';
+part 'put_service_strategy.part.dart';
 part 'username_strategy.part.dart';
+part 'put_contact_strategy.part.dart';
+part 'put_conversation_strategy.dart';
 
 class BatchOperate {
   BatchOperate._();

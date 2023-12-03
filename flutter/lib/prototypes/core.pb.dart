@@ -424,6 +424,7 @@ class PortableConversation extends $pb.GeneratedMessage {
     ..aOM<AccountSnapshot>(3, _omitFieldNames ? '' : 'owner', subBuilder: AccountSnapshot.create)
     ..aOS(4, _omitFieldNames ? '' : 'remoteUrl')
     ..m<$core.int, $core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', entryClassName: 'PortableConversation.DeclaredSecretsEntry', keyFieldType: $pb.PbFieldType.O3, valueFieldType: $pb.PbFieldType.OY, packageName: const $pb.PackageName('sheason_chat'))
+    ..aOM<AccountIndex>(6, _omitFieldNames ? '' : 'agent', subBuilder: AccountIndex.create)
     ..hasRequiredFields = false
   ;
 
@@ -482,6 +483,17 @@ class PortableConversation extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(5)
   $core.Map<$core.int, $core.List<$core.int>> get declaredSecrets => $_getMap(4);
+
+  @$pb.TagNumber(6)
+  AccountIndex get agent => $_getN(5);
+  @$pb.TagNumber(6)
+  set agent(AccountIndex v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasAgent() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAgent() => clearField(6);
+  @$pb.TagNumber(6)
+  AccountIndex ensureAgent() => $_ensure(5);
 }
 
 class PortableMessage extends $pb.GeneratedMessage {

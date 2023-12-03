@@ -1,12 +1,12 @@
 part of 'batch_operate.dart';
 
-class _CreateServiceStrategy implements _StrategyBase {
+class _PutServiceStrategy implements _StrategyBase {
   @override
   final Operation operation;
   @override
   final Scope scope;
 
-  _CreateServiceStrategy({required this.operation, required this.scope});
+  _PutServiceStrategy({required this.operation, required this.scope});
 
   @override
   Future<void> apply() async {

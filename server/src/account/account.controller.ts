@@ -1,4 +1,5 @@
 import {
+  Get,
   Put,
   Body,
   Param,
@@ -10,6 +11,7 @@ import { AccountService } from './account.service';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
 import { sheason_chat } from 'src/prototypes';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { prisma } from 'src/prisma/prisma';
 
 @Controller()
 export class AccountController {
@@ -41,7 +43,28 @@ export class AccountController {
       );
     }
 
-    await this.accountService.put(snapshot);
+    await this.accountService.put(
+      snapshot,
+      Buffer.from(warpper.buffer),
+      Buffer.from(warpper.sign),
+    );
     return signPubkey;
+  }
+
+  @Get(':signPubkey')
+  async handleGet(@Param('signPubkey') signPubkey: string) {
+    const account = await prisma.account.findFirst({
+      where: {
+        signPubkey,
+      },
+    });
+    if (!account) {
+      throw new HttpException('Cannot find account', 404);
+    }
+
+    return {
+      snapshot: account.snapshot.toString('base64'),
+      signature: account.signature.toString('base64') ?? '',
+    };
   }
 }

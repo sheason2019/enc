@@ -193,6 +193,7 @@ const PortableConversation$json = {
     {'1': 'owner', '3': 3, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'owner'},
     {'1': 'remote_url', '3': 4, '4': 1, '5': 9, '10': 'remoteUrl'},
     {'1': 'declared_secrets', '3': 5, '4': 3, '5': 11, '6': '.sheason_chat.PortableConversation.DeclaredSecretsEntry', '10': 'declaredSecrets'},
+    {'1': 'agent', '3': 6, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'agent'},
   ],
   '3': [PortableConversation_DeclaredSecretsEntry$json],
 };
@@ -214,8 +215,9 @@ final $typed_data.Uint8List portableConversationDescriptor = $convert.base64Deco
     'dW50U25hcHNob3RSB21lbWJlcnMSMwoFb3duZXIYAyABKAsyHS5zaGVhc29uX2NoYXQuQWNjb3'
     'VudFNuYXBzaG90UgVvd25lchIdCgpyZW1vdGVfdXJsGAQgASgJUglyZW1vdGVVcmwSYgoQZGVj'
     'bGFyZWRfc2VjcmV0cxgFIAMoCzI3LnNoZWFzb25fY2hhdC5Qb3J0YWJsZUNvbnZlcnNhdGlvbi'
-    '5EZWNsYXJlZFNlY3JldHNFbnRyeVIPZGVjbGFyZWRTZWNyZXRzGkIKFERlY2xhcmVkU2VjcmV0'
-    'c0VudHJ5EhAKA2tleRgBIAEoBVIDa2V5EhQKBXZhbHVlGAIgASgMUgV2YWx1ZToCOAE=');
+    '5EZWNsYXJlZFNlY3JldHNFbnRyeVIPZGVjbGFyZWRTZWNyZXRzEjAKBWFnZW50GAYgASgLMhou'
+    'c2hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIFYWdlbnQaQgoURGVjbGFyZWRTZWNyZXRzRW50cn'
+    'kSEAoDa2V5GAEgASgFUgNrZXkSFAoFdmFsdWUYAiABKAxSBXZhbHVlOgI4AQ==');
 
 @$core.Deprecated('Use portableMessageDescriptor instead')
 const PortableMessage$json = {

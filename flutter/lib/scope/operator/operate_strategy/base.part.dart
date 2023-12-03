@@ -12,8 +12,12 @@ abstract class _StrategyBase {
     switch (map['type']) {
       case 'account/username':
         return _UsernameStrategy(scope: scope, operation: operation);
-      case 'account/service/create':
-        return _CreateServiceStrategy(scope: scope, operation: operation);
+      case 'account/service/put':
+        return _PutServiceStrategy(scope: scope, operation: operation);
+      case 'contact/put':
+        return _PutContactStrategy(operation: operation, scope: scope);
+      case 'conversation/put':
+        return _PutConversationStrategy(operation: operation, scope: scope);
       default:
         throw UnimplementedError('Unknown strategy type: ${map['type']}');
     }

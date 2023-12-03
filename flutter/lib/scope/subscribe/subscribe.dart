@@ -90,23 +90,7 @@ class Subscribe {
     });
     socket.on('sync-operation', (data) => syncOperation());
     socket.on('pull-snapshot', (data) async {
-      final buffer = scope.snapshot.writeToBuffer();
-      final sign = await CryptoUtils.createSignature(
-        CryptoKeyPair.fromSecret(scope.secret),
-        buffer,
-      );
-
-      final wrapper = SignWrapper()
-        ..buffer = buffer
-        ..signer = scope.snapshot.index
-        ..sign = sign.bytes;
-
-      await dio.put(
-        '$url/${scope.snapshot.index.signPubKey}',
-        data: FormData.fromMap({
-          'snapshot': base64Encode(wrapper.writeToBuffer()),
-        }),
-      );
+      await handleUploadSnapshot();
       socket.emitWithAck('subscribe', {
         'deviceId': deviceId,
         'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
@@ -141,6 +125,26 @@ class Subscribe {
 
   handleSendMessage() async {
     socket.emit('message', 'Hello world');
+  }
+
+  handleUploadSnapshot() async {
+    final buffer = scope.snapshot.writeToBuffer();
+    final sign = await CryptoUtils.createSignature(
+      CryptoKeyPair.fromSecret(scope.secret),
+      buffer,
+    );
+
+    final wrapper = SignWrapper()
+      ..buffer = buffer
+      ..signer = scope.snapshot.index
+      ..sign = sign.bytes;
+
+    await dio.put(
+      '$url/${scope.snapshot.index.signPubKey}',
+      data: FormData.fromMap({
+        'snapshot': base64Encode(wrapper.writeToBuffer()),
+      }),
+    );
   }
 
   dispose() {

@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/services/create/create.view.dart';
+import 'package:sheason_chat/profile/services/detail/detail.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});
+
+  toDetail(BuildContext context, String url) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(ServiceDetailPage(url: url));
+    delegate.notify();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class ServicesPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: serviceUrls.length,
         itemBuilder: (context, index) => ListTile(
-          onTap: () {},
+          onTap: () => toDetail(context, serviceUrls[index]),
           title: Text(serviceUrls[index]),
         ),
       ),

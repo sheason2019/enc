@@ -19,7 +19,7 @@ class ConfirmCreateServicePage extends StatelessWidget {
     final scope = context.read<Scope>();
     final delegate = context.read<MainController>().rootDelegate;
     final operation = await scope.operator.createOperation(jsonEncode({
-      'type': 'account/service/create',
+      'type': 'account/service/put',
       'payload': {
         'url': url,
         'service': base64Encode(service.writeToBuffer()),

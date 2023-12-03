@@ -5,7 +5,11 @@ import { prisma } from 'src/prisma/prisma';
 
 @Injectable()
 export class AccountService {
-  async put(snapshot: sheason_chat.AccountSnapshot): Promise<Account> {
+  async put(
+    snapshot: sheason_chat.AccountSnapshot,
+    buffer: Buffer,
+    signature: Buffer,
+  ): Promise<Account> {
     return prisma.$transaction(async (tx) => {
       const exist = await tx.account.findFirst({
         where: {
@@ -13,15 +17,14 @@ export class AccountService {
         },
       });
       if (!!exist) {
-        exist.snapshot = Buffer.from(
-          sheason_chat.AccountSnapshot.encode(snapshot).finish(),
-        );
+        exist.snapshot = buffer;
         await tx.account.update({
           where: {
             id: exist.id,
           },
           data: {
-            snapshot: exist.snapshot,
+            snapshot: buffer,
+            signature,
           },
         });
         return exist;
@@ -31,9 +34,8 @@ export class AccountService {
         data: {
           signPubkey: snapshot.index.signPubKey,
           ecdhPubkey: snapshot.index.ecdhPubKey,
-          snapshot: Buffer.from(
-            sheason_chat.AccountSnapshot.encode(snapshot).finish(),
-          ),
+          snapshot: buffer,
+          signature,
         },
       });
     });

@@ -57,6 +57,7 @@ message PortableConversation {
   AccountSnapshot owner = 3;
   string remote_url = 4;
   map<int32, bytes> declared_secrets = 5;
+  AccountIndex agent = 6;
 }
 
 enum MessageType {
