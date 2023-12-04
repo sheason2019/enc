@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/accounts.view.dart';
 import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
+import 'package:sheason_chat/chat/anchors/anchors.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 
 class ChatView extends StatelessWidget {
@@ -56,6 +57,7 @@ class ChatView extends StatelessWidget {
           ),
         ],
       ),
+      body: const ConversationAnchorsView(),
     );
   }
 }

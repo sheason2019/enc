@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:sheason_chat/built_model/conversation_anchor.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operator.dart';
@@ -16,6 +17,7 @@ class Scope extends ChangeNotifier {
 
   var secret = AccountSecret();
   var snapshot = AccountSnapshot();
+  var anchor = ConversationAnchor();
   var inited = false;
   final subscribes = <String, Subscribe>{};
 
@@ -41,6 +43,26 @@ class Scope extends ChangeNotifier {
     final snapshotFile = File(path.join(accountPath, '.snapshot'));
     await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
     this.snapshot = snapshot;
+    notifyListeners();
+  }
+
+  Future<void> handleUpdateConversationAnchor() async {
+    final anchorFile = File(path.join(accountPath, '.conversation-anchor'));
+    if (!await anchorFile.exists()) return;
+
+    final anchor = ConversationAnchor.fromJson(
+      await anchorFile.readAsString(),
+    );
+    this.anchor = anchor;
+    notifyListeners();
+  }
+
+  Future<void> handleSetConversationAnchor(
+    ConversationAnchor anchor,
+  ) async {
+    final anchorFile = File(path.join(accountPath, '.conversation-anchor'));
+    await anchorFile.writeAsString(anchor.toJson());
+    this.anchor = anchor;
     notifyListeners();
   }
 
@@ -101,6 +123,7 @@ class Scope extends ChangeNotifier {
     await handleInitDeviceId();
     await handleUpdateSecret();
     await handleUpdateSnapshot();
+    await handleUpdateConversationAnchor();
 
     inited = true;
     notifyListeners();

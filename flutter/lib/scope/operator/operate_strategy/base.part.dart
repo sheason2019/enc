@@ -18,6 +18,11 @@ abstract class _StrategyBase {
         return _PutContactStrategy(operation: operation, scope: scope);
       case 'conversation/put':
         return _PutConversationStrategy(operation: operation, scope: scope);
+      case 'conversation-anchor/put':
+        return _PutConversationAnchorStrategy(
+          operation: operation,
+          scope: scope,
+        );
       default:
         throw UnimplementedError('Unknown strategy type: ${map['type']}');
     }

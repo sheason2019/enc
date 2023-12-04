@@ -12,6 +12,7 @@ part 'put_service_strategy.part.dart';
 part 'username_strategy.part.dart';
 part 'put_contact_strategy.part.dart';
 part 'put_conversation_strategy.dart';
+part 'put_conversation_anchor.part.dart';
 
 class BatchOperate {
   BatchOperate._();

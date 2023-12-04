@@ -66,8 +66,14 @@ class ContactListTile extends StatelessWidget {
         return ListTile(
           onTap: () => handleClick(context, account),
           leading: const CircleAvatar(),
-          title: Text(account.username),
-          subtitle: Text(account.index.signPubKey),
+          title: Text(
+            account.username,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            account.index.signPubKey,
+            overflow: TextOverflow.ellipsis,
+          ),
         );
       },
     );

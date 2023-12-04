@@ -62,13 +62,19 @@ class ContactDetailPage extends StatelessWidget {
         children: [
           ListTile(
             leading: const CircleAvatar(),
-            title: Text(snapshot.username),
-            subtitle: Text(snapshot.index.signPubKey),
+            title: Text(
+              snapshot.username,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              snapshot.index.signPubKey,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           ListTile(
             onTap: () => toPrivateConversation(context),
             title: const Text('发起会话'),
-          )
+          ),
         ],
       ),
     );

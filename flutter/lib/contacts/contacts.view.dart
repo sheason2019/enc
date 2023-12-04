@@ -27,8 +27,14 @@ class ContactView extends StatelessWidget {
           children: [
             TabBar(
               tabs: [
-                const Text('联系人').padding(vertical: 6),
-                const Text('群聊').padding(vertical: 6),
+                const Text(
+                  '联系人',
+                  overflow: TextOverflow.ellipsis,
+                ).padding(vertical: 6),
+                const Text(
+                  '群聊',
+                  overflow: TextOverflow.ellipsis,
+                ).padding(vertical: 6),
               ],
             ),
             Expanded(
@@ -43,6 +49,7 @@ class ContactView extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: const ValueKey('search contact'),
         onPressed: () => toSearch(context),
         child: const Icon(Icons.search),
       ),
