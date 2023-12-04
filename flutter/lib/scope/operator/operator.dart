@@ -1,26 +1,16 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/operation_factory/operation_factory.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
-import 'operate_strategy/batch_operate.dart';
+import 'batch_operate.dart';
 
 class Operator {
   final Scope scope;
+  late final factory = OperationFactory(scope);
 
   Operator({required this.scope});
-
-  Future<PortableOperation> createOperation(String payload) async {
-    final maxClock = scope.db.operations.clock.max();
-    final selectCurrentClock = scope.db.operations.selectOnly()
-      ..addColumns([maxClock]);
-    final record = await selectCurrentClock.getSingleOrNull();
-    final currentClock = record?.read(maxClock) ?? 0;
-    return PortableOperation()
-      ..clientId = scope.deviceId
-      ..clock = currentClock + 1
-      ..payload = payload;
-  }
 
   Future<void> apply(List<PortableOperation> operations) async {
     await scope.db.transaction(() async {
@@ -53,8 +43,7 @@ class Operator {
         OperationsCompanion.insert(
           clientId: operation.clientId,
           clock: operation.clock,
-          payload: operation.payload,
-          apply: '',
+          info: operation,
         ),
       );
     }
@@ -63,7 +52,7 @@ class Operator {
   Future<List<Operation>> _getRevertList() async {
     // 查询最早未被应用的 Operation
     final select = scope.db.operations.select();
-    select.where((tbl) => tbl.apply.equals(''));
+    select.where((tbl) => tbl.atoms.isNull());
     select.orderBy([
       (tbl) => OrderingTerm.asc(tbl.clock),
       (tbl) => OrderingTerm.asc(tbl.clientId),
@@ -79,7 +68,7 @@ class Operator {
             tbl.clientId.isBiggerThanValue(operation.clientId)
       ]),
     );
-    selectRevert.where((tbl) => tbl.apply.isNotValue(''));
+    selectRevert.where((tbl) => tbl.atoms.isNotNull());
     selectRevert.orderBy([
       (tbl) => OrderingTerm.desc(tbl.clock),
       (tbl) => OrderingTerm.desc(tbl.clientId),
@@ -89,7 +78,7 @@ class Operator {
 
   Future<List<Operation>> _getApplyList() async {
     final select = scope.db.operations.select();
-    select.where((tbl) => tbl.apply.equals(''));
+    select.where((tbl) => tbl.atoms.isNull());
     select.orderBy([
       (tbl) => OrderingTerm.asc(tbl.clock),
       (tbl) => OrderingTerm.asc(tbl.clientId),

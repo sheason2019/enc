@@ -7,9 +7,9 @@ import 'package:sheason_chat/schema/contact.dart';
 import 'package:sheason_chat/schema/conversation.dart';
 import 'package:sheason_chat/schema/conversation_contact.dart';
 import 'package:sheason_chat/schema/migrations/migration_delegate.dart';
-import 'package:sheason_chat/schema/migrations/migrations/1_create_contact_and_conversation.dart';
 import 'package:sheason_chat/schema/operation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 
 part 'database.g.dart';
 
@@ -26,9 +26,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(this.accountPath) : super(_openConnection(accountPath));
 
   @override
-  int get schemaVersion => MigrationDelegate.use(
-        CreateContactAndConversationMigration(),
-      );
+  int get schemaVersion => MigrationDelegate.use(null);
 
   @override
   MigrationStrategy get migration {

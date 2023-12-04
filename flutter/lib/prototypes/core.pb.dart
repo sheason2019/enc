@@ -347,8 +347,8 @@ class PortableOperation extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PortableOperation', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'clientId')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'clock', $pb.PbFieldType.O3)
-    ..aOS(3, _omitFieldNames ? '' : 'payload')
-    ..aOM<PortableSecretBox>(4, _omitFieldNames ? '' : 'secretBox', subBuilder: PortableSecretBox.create)
+    ..e<OperationType>(5, _omitFieldNames ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: OperationType.UNKNOWN_OPEARTION, valueOf: OperationType.valueOf, enumValues: OperationType.values)
+    ..aOS(6, _omitFieldNames ? '' : 'content')
     ..hasRequiredFields = false
   ;
 
@@ -391,25 +391,23 @@ class PortableOperation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearClock() => clearField(2);
 
-  @$pb.TagNumber(3)
-  $core.String get payload => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set payload($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasPayload() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearPayload() => clearField(3);
+  @$pb.TagNumber(5)
+  OperationType get type => $_getN(2);
+  @$pb.TagNumber(5)
+  set type(OperationType v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasType() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearType() => clearField(5);
 
-  @$pb.TagNumber(4)
-  PortableSecretBox get secretBox => $_getN(3);
-  @$pb.TagNumber(4)
-  set secretBox(PortableSecretBox v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasSecretBox() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearSecretBox() => clearField(4);
-  @$pb.TagNumber(4)
-  PortableSecretBox ensureSecretBox() => $_ensure(3);
+  @$pb.TagNumber(6)
+  $core.String get content => $_getSZ(3);
+  @$pb.TagNumber(6)
+  set content($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasContent() => $_has(3);
+  @$pb.TagNumber(6)
+  void clearContent() => clearField(6);
 }
 
 class PortableConversation extends $pb.GeneratedMessage {

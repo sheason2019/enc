@@ -1,14 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/schema/migrations/migration_base.dart';
-import 'package:sheason_chat/schema/migrations/migrations/1_create_contact_and_conversation.dart';
 
 class MigrationDelegate {
   MigrationDelegate._();
 
-  static final migrations = <MigrationBase>[
-    CreateContactAndConversationMigration(),
-  ];
+  static final migrations = <MigrationBase>[];
 
   static int use(MigrationBase? mig) {
     if (mig == null) return 1;

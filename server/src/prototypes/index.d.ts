@@ -561,6 +561,16 @@ export namespace sheason_chat {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** OperationType enum. */
+    enum OperationType {
+        UNKNOWN_OPEARTION = 0,
+        PUT_USERNAME = 1,
+        PUT_SERVICE = 2,
+        PUT_CONTACT = 3,
+        PUT_CONVERSATION = 4,
+        PUT_CONVERSATION_ANCHOR = 5
+    }
+
     /** Properties of a PortableOperation. */
     interface IPortableOperation {
 
@@ -570,11 +580,11 @@ export namespace sheason_chat {
         /** PortableOperation clock */
         clock?: (number|null);
 
-        /** PortableOperation payload */
-        payload?: (string|null);
+        /** PortableOperation type */
+        type?: (sheason_chat.OperationType|null);
 
-        /** PortableOperation secretBox */
-        secretBox?: (sheason_chat.IPortableSecretBox|null);
+        /** PortableOperation content */
+        content?: (string|null);
     }
 
     /** Represents a PortableOperation. */
@@ -592,11 +602,11 @@ export namespace sheason_chat {
         /** PortableOperation clock. */
         public clock: number;
 
-        /** PortableOperation payload. */
-        public payload: string;
+        /** PortableOperation type. */
+        public type: sheason_chat.OperationType;
 
-        /** PortableOperation secretBox. */
-        public secretBox?: (sheason_chat.IPortableSecretBox|null);
+        /** PortableOperation content. */
+        public content: string;
 
         /**
          * Creates a new PortableOperation instance using the specified properties.
@@ -700,6 +710,9 @@ export namespace sheason_chat {
 
         /** PortableConversation declaredSecrets */
         declaredSecrets?: ({ [k: string]: Uint8Array }|null);
+
+        /** PortableConversation agent */
+        agent?: (sheason_chat.IAccountIndex|null);
     }
 
     /** Represents a PortableConversation. */
@@ -725,6 +738,9 @@ export namespace sheason_chat {
 
         /** PortableConversation declaredSecrets. */
         public declaredSecrets: { [k: string]: Uint8Array };
+
+        /** PortableConversation agent. */
+        public agent?: (sheason_chat.IAccountIndex|null);
 
         /**
          * Creates a new PortableConversation instance using the specified properties.
@@ -1059,7 +1075,8 @@ export namespace sheason_chat {
     /** ContentType enum. */
     enum ContentType {
         CONTENT_BUFFER = 0,
-        CONTENT_MESSAGE = 1
+        CONTENT_MESSAGE = 1,
+        CONTENT_OPERATION = 2
     }
 
     /** Properties of a SignWrapper. */

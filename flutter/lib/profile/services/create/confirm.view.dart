@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
@@ -18,13 +16,7 @@ class ConfirmCreateServicePage extends StatelessWidget {
   handleCreateService(BuildContext context) async {
     final scope = context.read<Scope>();
     final delegate = context.read<MainController>().rootDelegate;
-    final operation = await scope.operator.createOperation(jsonEncode({
-      'type': 'account/service/put',
-      'payload': {
-        'url': url,
-        'service': base64Encode(service.writeToBuffer()),
-      },
-    }));
+    final operation = await scope.operator.factory.service(url);
     await scope.operator.apply([operation]);
     delegate.pages.removeLast();
     delegate.pages.removeLast();

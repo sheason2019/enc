@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/input/input.view.dart';
+import 'package:sheason_chat/chat/room/title/title.view.dart';
 import 'package:sheason_chat/extensions/conversation/conversation.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -23,12 +23,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       final portable = await widget.conversation.toPortableConversation(
         scope,
       );
-      final operation = await scope.operator.createOperation(jsonEncode({
-        'type': 'conversation-anchor/put',
-        'payload': {
-          'conversation': base64Encode(portable.writeToBuffer()),
-        },
-      }));
+      final operation = await scope.operator.factory.conversationAnchor(
+        portable,
+      );
       await scope.operator.apply([operation]);
     }
   }
@@ -41,9 +38,18 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Room Page. ID: ${widget.conversation.id}'),
+    return Provider.value(
+      value: widget.conversation,
+      builder: (context, _) => Scaffold(
+        appBar: AppBar(
+          title: const ChatRoomPageTitle(),
+        ),
+        body: Column(
+          children: [
+            Expanded(child: Container()),
+            const ChatRoomPageInput(),
+          ],
+        ),
       ),
     );
   }

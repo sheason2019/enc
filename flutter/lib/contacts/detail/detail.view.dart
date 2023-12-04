@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,12 +32,7 @@ class ContactDetailPage extends StatelessWidget {
       return conversation;
     }
 
-    final operation = await scope.operator.createOperation(jsonEncode({
-      'type': 'conversation/put',
-      'payload': {
-        'conversation': base64Encode(portable.writeToBuffer()),
-      },
-    }));
+    final operation = await scope.operator.factory.conversation(portable);
     await scope.operator.apply([operation]);
     return select.getSingle();
   }

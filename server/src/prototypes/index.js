@@ -1417,6 +1417,28 @@
             return PortableSecretBox;
         })();
     
+        /**
+         * OperationType enum.
+         * @name sheason_chat.OperationType
+         * @enum {number}
+         * @property {number} UNKNOWN_OPEARTION=0 UNKNOWN_OPEARTION value
+         * @property {number} PUT_USERNAME=1 PUT_USERNAME value
+         * @property {number} PUT_SERVICE=2 PUT_SERVICE value
+         * @property {number} PUT_CONTACT=3 PUT_CONTACT value
+         * @property {number} PUT_CONVERSATION=4 PUT_CONVERSATION value
+         * @property {number} PUT_CONVERSATION_ANCHOR=5 PUT_CONVERSATION_ANCHOR value
+         */
+        sheason_chat.OperationType = (function() {
+            var valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "UNKNOWN_OPEARTION"] = 0;
+            values[valuesById[1] = "PUT_USERNAME"] = 1;
+            values[valuesById[2] = "PUT_SERVICE"] = 2;
+            values[valuesById[3] = "PUT_CONTACT"] = 3;
+            values[valuesById[4] = "PUT_CONVERSATION"] = 4;
+            values[valuesById[5] = "PUT_CONVERSATION_ANCHOR"] = 5;
+            return values;
+        })();
+    
         sheason_chat.PortableOperation = (function() {
     
             /**
@@ -1425,8 +1447,8 @@
              * @interface IPortableOperation
              * @property {string|null} [clientId] PortableOperation clientId
              * @property {number|null} [clock] PortableOperation clock
-             * @property {string|null} [payload] PortableOperation payload
-             * @property {sheason_chat.IPortableSecretBox|null} [secretBox] PortableOperation secretBox
+             * @property {sheason_chat.OperationType|null} [type] PortableOperation type
+             * @property {string|null} [content] PortableOperation content
              */
     
             /**
@@ -1461,20 +1483,20 @@
             PortableOperation.prototype.clock = 0;
     
             /**
-             * PortableOperation payload.
-             * @member {string} payload
+             * PortableOperation type.
+             * @member {sheason_chat.OperationType} type
              * @memberof sheason_chat.PortableOperation
              * @instance
              */
-            PortableOperation.prototype.payload = "";
+            PortableOperation.prototype.type = 0;
     
             /**
-             * PortableOperation secretBox.
-             * @member {sheason_chat.IPortableSecretBox|null|undefined} secretBox
+             * PortableOperation content.
+             * @member {string} content
              * @memberof sheason_chat.PortableOperation
              * @instance
              */
-            PortableOperation.prototype.secretBox = null;
+            PortableOperation.prototype.content = "";
     
             /**
              * Creates a new PortableOperation instance using the specified properties.
@@ -1504,10 +1526,10 @@
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.clientId);
                 if (message.clock != null && Object.hasOwnProperty.call(message, "clock"))
                     writer.uint32(/* id 2, wireType 0 =*/16).int32(message.clock);
-                if (message.payload != null && Object.hasOwnProperty.call(message, "payload"))
-                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.payload);
-                if (message.secretBox != null && Object.hasOwnProperty.call(message, "secretBox"))
-                    $root.sheason_chat.PortableSecretBox.encode(message.secretBox, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int32(message.type);
+                if (message.content != null && Object.hasOwnProperty.call(message, "content"))
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.content);
                 return writer;
             };
     
@@ -1550,12 +1572,12 @@
                             message.clock = reader.int32();
                             break;
                         }
-                    case 3: {
-                            message.payload = reader.string();
+                    case 5: {
+                            message.type = reader.int32();
                             break;
                         }
-                    case 4: {
-                            message.secretBox = $root.sheason_chat.PortableSecretBox.decode(reader, reader.uint32());
+                    case 6: {
+                            message.content = reader.string();
                             break;
                         }
                     default:
@@ -1599,14 +1621,21 @@
                 if (message.clock != null && message.hasOwnProperty("clock"))
                     if (!$util.isInteger(message.clock))
                         return "clock: integer expected";
-                if (message.payload != null && message.hasOwnProperty("payload"))
-                    if (!$util.isString(message.payload))
-                        return "payload: string expected";
-                if (message.secretBox != null && message.hasOwnProperty("secretBox")) {
-                    var error = $root.sheason_chat.PortableSecretBox.verify(message.secretBox);
-                    if (error)
-                        return "secretBox." + error;
-                }
+                if (message.type != null && message.hasOwnProperty("type"))
+                    switch (message.type) {
+                    default:
+                        return "type: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        break;
+                    }
+                if (message.content != null && message.hasOwnProperty("content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
                 return null;
             };
     
@@ -1626,13 +1655,40 @@
                     message.clientId = String(object.clientId);
                 if (object.clock != null)
                     message.clock = object.clock | 0;
-                if (object.payload != null)
-                    message.payload = String(object.payload);
-                if (object.secretBox != null) {
-                    if (typeof object.secretBox !== "object")
-                        throw TypeError(".sheason_chat.PortableOperation.secretBox: object expected");
-                    message.secretBox = $root.sheason_chat.PortableSecretBox.fromObject(object.secretBox);
+                switch (object.type) {
+                default:
+                    if (typeof object.type === "number") {
+                        message.type = object.type;
+                        break;
+                    }
+                    break;
+                case "UNKNOWN_OPEARTION":
+                case 0:
+                    message.type = 0;
+                    break;
+                case "PUT_USERNAME":
+                case 1:
+                    message.type = 1;
+                    break;
+                case "PUT_SERVICE":
+                case 2:
+                    message.type = 2;
+                    break;
+                case "PUT_CONTACT":
+                case 3:
+                    message.type = 3;
+                    break;
+                case "PUT_CONVERSATION":
+                case 4:
+                    message.type = 4;
+                    break;
+                case "PUT_CONVERSATION_ANCHOR":
+                case 5:
+                    message.type = 5;
+                    break;
                 }
+                if (object.content != null)
+                    message.content = String(object.content);
                 return message;
             };
     
@@ -1652,17 +1708,17 @@
                 if (options.defaults) {
                     object.clientId = "";
                     object.clock = 0;
-                    object.payload = "";
-                    object.secretBox = null;
+                    object.type = options.enums === String ? "UNKNOWN_OPEARTION" : 0;
+                    object.content = "";
                 }
                 if (message.clientId != null && message.hasOwnProperty("clientId"))
                     object.clientId = message.clientId;
                 if (message.clock != null && message.hasOwnProperty("clock"))
                     object.clock = message.clock;
-                if (message.payload != null && message.hasOwnProperty("payload"))
-                    object.payload = message.payload;
-                if (message.secretBox != null && message.hasOwnProperty("secretBox"))
-                    object.secretBox = $root.sheason_chat.PortableSecretBox.toObject(message.secretBox, options);
+                if (message.type != null && message.hasOwnProperty("type"))
+                    object.type = options.enums === String ? $root.sheason_chat.OperationType[message.type] === undefined ? message.type : $root.sheason_chat.OperationType[message.type] : message.type;
+                if (message.content != null && message.hasOwnProperty("content"))
+                    object.content = message.content;
                 return object;
             };
     
@@ -1722,6 +1778,7 @@
              * @property {sheason_chat.IAccountSnapshot|null} [owner] PortableConversation owner
              * @property {string|null} [remoteUrl] PortableConversation remoteUrl
              * @property {Object.<string,Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
+             * @property {sheason_chat.IAccountIndex|null} [agent] PortableConversation agent
              */
     
             /**
@@ -1782,6 +1839,14 @@
             PortableConversation.prototype.declaredSecrets = $util.emptyObject;
     
             /**
+             * PortableConversation agent.
+             * @member {sheason_chat.IAccountIndex|null|undefined} agent
+             * @memberof sheason_chat.PortableConversation
+             * @instance
+             */
+            PortableConversation.prototype.agent = null;
+    
+            /**
              * Creates a new PortableConversation instance using the specified properties.
              * @function create
              * @memberof sheason_chat.PortableConversation
@@ -1817,6 +1882,8 @@
                 if (message.declaredSecrets != null && Object.hasOwnProperty.call(message, "declaredSecrets"))
                     for (var keys = Object.keys(message.declaredSecrets), i = 0; i < keys.length; ++i)
                         writer.uint32(/* id 5, wireType 2 =*/42).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]).uint32(/* id 2, wireType 2 =*/18).bytes(message.declaredSecrets[keys[i]]).ldelim();
+                if (message.agent != null && Object.hasOwnProperty.call(message, "agent"))
+                    $root.sheason_chat.AccountIndex.encode(message.agent, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                 return writer;
             };
     
@@ -1892,6 +1959,10 @@
                             message.declaredSecrets[key] = value;
                             break;
                         }
+                    case 6: {
+                            message.agent = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -1964,6 +2035,11 @@
                             return "declaredSecrets: buffer{k:int32} expected";
                     }
                 }
+                if (message.agent != null && message.hasOwnProperty("agent")) {
+                    var error = $root.sheason_chat.AccountIndex.verify(message.agent);
+                    if (error)
+                        return "agent." + error;
+                }
                 return null;
             };
     
@@ -2026,6 +2102,11 @@
                         else if (object.declaredSecrets[keys[i]].length >= 0)
                             message.declaredSecrets[keys[i]] = object.declaredSecrets[keys[i]];
                 }
+                if (object.agent != null) {
+                    if (typeof object.agent !== "object")
+                        throw TypeError(".sheason_chat.PortableConversation.agent: object expected");
+                    message.agent = $root.sheason_chat.AccountIndex.fromObject(object.agent);
+                }
                 return message;
             };
     
@@ -2050,6 +2131,7 @@
                     object.type = options.enums === String ? "CONVERSATION_UNKNOWN" : 0;
                     object.owner = null;
                     object.remoteUrl = "";
+                    object.agent = null;
                 }
                 if (message.type != null && message.hasOwnProperty("type"))
                     object.type = options.enums === String ? $root.sheason_chat.ConversationType[message.type] === undefined ? message.type : $root.sheason_chat.ConversationType[message.type] : message.type;
@@ -2068,6 +2150,8 @@
                     for (var j = 0; j < keys2.length; ++j)
                         object.declaredSecrets[keys2[j]] = options.bytes === String ? $util.base64.encode(message.declaredSecrets[keys2[j]], 0, message.declaredSecrets[keys2[j]].length) : options.bytes === Array ? Array.prototype.slice.call(message.declaredSecrets[keys2[j]]) : message.declaredSecrets[keys2[j]];
                 }
+                if (message.agent != null && message.hasOwnProperty("agent"))
+                    object.agent = $root.sheason_chat.AccountIndex.toObject(message.agent, options);
                 return object;
             };
     
@@ -2838,11 +2922,13 @@
          * @enum {number}
          * @property {number} CONTENT_BUFFER=0 CONTENT_BUFFER value
          * @property {number} CONTENT_MESSAGE=1 CONTENT_MESSAGE value
+         * @property {number} CONTENT_OPERATION=2 CONTENT_OPERATION value
          */
         sheason_chat.ContentType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "CONTENT_BUFFER"] = 0;
             values[valuesById[1] = "CONTENT_MESSAGE"] = 1;
+            values[valuesById[2] = "CONTENT_OPERATION"] = 2;
             return values;
         })();
     
@@ -3057,6 +3143,7 @@
                         return "contentType: enum value expected";
                     case 0:
                     case 1:
+                    case 2:
                         break;
                     }
                 return null;
@@ -3105,6 +3192,10 @@
                 case "CONTENT_MESSAGE":
                 case 1:
                     message.contentType = 1;
+                    break;
+                case "CONTENT_OPERATION":
+                case 2:
+                    message.contentType = 2;
                     break;
                 }
                 return message;

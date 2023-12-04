@@ -29,19 +29,20 @@ class $OperationsTable extends Operations
   late final GeneratedColumn<int> clock = GeneratedColumn<int>(
       'clock', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _payloadMeta =
-      const VerificationMeta('payload');
+  static const VerificationMeta _infoMeta = const VerificationMeta('info');
   @override
-  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
-      'payload', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _applyMeta = const VerificationMeta('apply');
+  late final GeneratedColumnWithTypeConverter<PortableOperation, Uint8List>
+      info = GeneratedColumn<Uint8List>('info', aliasedName, false,
+              type: DriftSqlType.blob, requiredDuringInsert: true)
+          .withConverter<PortableOperation>($OperationsTable.$converterinfo);
+  static const VerificationMeta _atomsMeta = const VerificationMeta('atoms');
   @override
-  late final GeneratedColumn<String> apply = GeneratedColumn<String>(
-      'apply', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<List<OperateAtom>?, String>
+      atoms = GeneratedColumn<String>('atoms', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<List<OperateAtom>?>($OperationsTable.$converteratomsn);
   @override
-  List<GeneratedColumn> get $columns => [id, clientId, clock, payload, apply];
+  List<GeneratedColumn> get $columns => [id, clientId, clock, info, atoms];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -67,18 +68,8 @@ class $OperationsTable extends Operations
     } else if (isInserting) {
       context.missing(_clockMeta);
     }
-    if (data.containsKey('payload')) {
-      context.handle(_payloadMeta,
-          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
-    } else if (isInserting) {
-      context.missing(_payloadMeta);
-    }
-    if (data.containsKey('apply')) {
-      context.handle(
-          _applyMeta, apply.isAcceptableOrUnknown(data['apply']!, _applyMeta));
-    } else if (isInserting) {
-      context.missing(_applyMeta);
-    }
+    context.handle(_infoMeta, const VerificationResult.success());
+    context.handle(_atomsMeta, const VerificationResult.success());
     return context;
   }
 
@@ -94,10 +85,11 @@ class $OperationsTable extends Operations
           .read(DriftSqlType.string, data['${effectivePrefix}client_id'])!,
       clock: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}clock'])!,
-      payload: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
-      apply: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}apply'])!,
+      info: $OperationsTable.$converterinfo.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}info'])!),
+      atoms: $OperationsTable.$converteratomsn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}atoms'])),
     );
   }
 
@@ -105,28 +97,41 @@ class $OperationsTable extends Operations
   $OperationsTable createAlias(String alias) {
     return $OperationsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<PortableOperation, Uint8List> $converterinfo =
+      PortableOperationTypeConverter();
+  static TypeConverter<List<OperateAtom>, String> $converteratoms =
+      OperateAtomTypeConverter();
+  static TypeConverter<List<OperateAtom>?, String?> $converteratomsn =
+      NullAwareTypeConverter.wrap($converteratoms);
 }
 
 class Operation extends DataClass implements Insertable<Operation> {
   final int id;
   final String clientId;
   final int clock;
-  final String payload;
-  final String apply;
+  final PortableOperation info;
+  final List<OperateAtom>? atoms;
   const Operation(
       {required this.id,
       required this.clientId,
       required this.clock,
-      required this.payload,
-      required this.apply});
+      required this.info,
+      this.atoms});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['client_id'] = Variable<String>(clientId);
     map['clock'] = Variable<int>(clock);
-    map['payload'] = Variable<String>(payload);
-    map['apply'] = Variable<String>(apply);
+    {
+      final converter = $OperationsTable.$converterinfo;
+      map['info'] = Variable<Uint8List>(converter.toSql(info));
+    }
+    if (!nullToAbsent || atoms != null) {
+      final converter = $OperationsTable.$converteratomsn;
+      map['atoms'] = Variable<String>(converter.toSql(atoms));
+    }
     return map;
   }
 
@@ -135,8 +140,9 @@ class Operation extends DataClass implements Insertable<Operation> {
       id: Value(id),
       clientId: Value(clientId),
       clock: Value(clock),
-      payload: Value(payload),
-      apply: Value(apply),
+      info: Value(info),
+      atoms:
+          atoms == null && nullToAbsent ? const Value.absent() : Value(atoms),
     );
   }
 
@@ -147,8 +153,8 @@ class Operation extends DataClass implements Insertable<Operation> {
       id: serializer.fromJson<int>(json['id']),
       clientId: serializer.fromJson<String>(json['clientId']),
       clock: serializer.fromJson<int>(json['clock']),
-      payload: serializer.fromJson<String>(json['payload']),
-      apply: serializer.fromJson<String>(json['apply']),
+      info: serializer.fromJson<PortableOperation>(json['info']),
+      atoms: serializer.fromJson<List<OperateAtom>?>(json['atoms']),
     );
   }
   @override
@@ -158,8 +164,8 @@ class Operation extends DataClass implements Insertable<Operation> {
       'id': serializer.toJson<int>(id),
       'clientId': serializer.toJson<String>(clientId),
       'clock': serializer.toJson<int>(clock),
-      'payload': serializer.toJson<String>(payload),
-      'apply': serializer.toJson<String>(apply),
+      'info': serializer.toJson<PortableOperation>(info),
+      'atoms': serializer.toJson<List<OperateAtom>?>(atoms),
     };
   }
 
@@ -167,14 +173,14 @@ class Operation extends DataClass implements Insertable<Operation> {
           {int? id,
           String? clientId,
           int? clock,
-          String? payload,
-          String? apply}) =>
+          PortableOperation? info,
+          Value<List<OperateAtom>?> atoms = const Value.absent()}) =>
       Operation(
         id: id ?? this.id,
         clientId: clientId ?? this.clientId,
         clock: clock ?? this.clock,
-        payload: payload ?? this.payload,
-        apply: apply ?? this.apply,
+        info: info ?? this.info,
+        atoms: atoms.present ? atoms.value : this.atoms,
       );
   @override
   String toString() {
@@ -182,14 +188,14 @@ class Operation extends DataClass implements Insertable<Operation> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('clock: $clock, ')
-          ..write('payload: $payload, ')
-          ..write('apply: $apply')
+          ..write('info: $info, ')
+          ..write('atoms: $atoms')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, clientId, clock, payload, apply);
+  int get hashCode => Object.hash(id, clientId, clock, info, atoms);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -197,46 +203,45 @@ class Operation extends DataClass implements Insertable<Operation> {
           other.id == this.id &&
           other.clientId == this.clientId &&
           other.clock == this.clock &&
-          other.payload == this.payload &&
-          other.apply == this.apply);
+          other.info == this.info &&
+          other.atoms == this.atoms);
 }
 
 class OperationsCompanion extends UpdateCompanion<Operation> {
   final Value<int> id;
   final Value<String> clientId;
   final Value<int> clock;
-  final Value<String> payload;
-  final Value<String> apply;
+  final Value<PortableOperation> info;
+  final Value<List<OperateAtom>?> atoms;
   const OperationsCompanion({
     this.id = const Value.absent(),
     this.clientId = const Value.absent(),
     this.clock = const Value.absent(),
-    this.payload = const Value.absent(),
-    this.apply = const Value.absent(),
+    this.info = const Value.absent(),
+    this.atoms = const Value.absent(),
   });
   OperationsCompanion.insert({
     this.id = const Value.absent(),
     required String clientId,
     required int clock,
-    required String payload,
-    required String apply,
+    required PortableOperation info,
+    this.atoms = const Value.absent(),
   })  : clientId = Value(clientId),
         clock = Value(clock),
-        payload = Value(payload),
-        apply = Value(apply);
+        info = Value(info);
   static Insertable<Operation> custom({
     Expression<int>? id,
     Expression<String>? clientId,
     Expression<int>? clock,
-    Expression<String>? payload,
-    Expression<String>? apply,
+    Expression<Uint8List>? info,
+    Expression<String>? atoms,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (clientId != null) 'client_id': clientId,
       if (clock != null) 'clock': clock,
-      if (payload != null) 'payload': payload,
-      if (apply != null) 'apply': apply,
+      if (info != null) 'info': info,
+      if (atoms != null) 'atoms': atoms,
     });
   }
 
@@ -244,14 +249,14 @@ class OperationsCompanion extends UpdateCompanion<Operation> {
       {Value<int>? id,
       Value<String>? clientId,
       Value<int>? clock,
-      Value<String>? payload,
-      Value<String>? apply}) {
+      Value<PortableOperation>? info,
+      Value<List<OperateAtom>?>? atoms}) {
     return OperationsCompanion(
       id: id ?? this.id,
       clientId: clientId ?? this.clientId,
       clock: clock ?? this.clock,
-      payload: payload ?? this.payload,
-      apply: apply ?? this.apply,
+      info: info ?? this.info,
+      atoms: atoms ?? this.atoms,
     );
   }
 
@@ -267,11 +272,15 @@ class OperationsCompanion extends UpdateCompanion<Operation> {
     if (clock.present) {
       map['clock'] = Variable<int>(clock.value);
     }
-    if (payload.present) {
-      map['payload'] = Variable<String>(payload.value);
+    if (info.present) {
+      final converter = $OperationsTable.$converterinfo;
+
+      map['info'] = Variable<Uint8List>(converter.toSql(info.value));
     }
-    if (apply.present) {
-      map['apply'] = Variable<String>(apply.value);
+    if (atoms.present) {
+      final converter = $OperationsTable.$converteratomsn;
+
+      map['atoms'] = Variable<String>(converter.toSql(atoms.value));
     }
     return map;
   }
@@ -282,8 +291,8 @@ class OperationsCompanion extends UpdateCompanion<Operation> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('clock: $clock, ')
-          ..write('payload: $payload, ')
-          ..write('apply: $apply')
+          ..write('info: $info, ')
+          ..write('atoms: $atoms')
           ..write(')'))
         .toString();
   }

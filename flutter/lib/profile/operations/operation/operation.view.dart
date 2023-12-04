@@ -27,7 +27,7 @@ class OperationListTile extends StatelessWidget {
         if (snapshot.hasData) {
           final data = snapshot.data!;
           title = '${data.clientId}/${data.clock}';
-          subtitle = data.apply;
+          subtitle = data.info.type.name;
         }
 
         return ListTile(

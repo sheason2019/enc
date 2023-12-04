@@ -28,6 +28,25 @@ final $typed_data.Uint8List ecryptTypeDescriptor = $convert.base64Decode(
     'CgpFY3J5cHRUeXBlEhUKEUVOQ1JZUFRfVFlQRV9OT05FEAASHgoaRU5DUllQVF9UWVBFX1NIQV'
     'JFRF9TRUNSRVQQARIgChxFTkNSWVBUX1RZUEVfREVDTEFSRURfU0VDUkVUEAI=');
 
+@$core.Deprecated('Use operationTypeDescriptor instead')
+const OperationType$json = {
+  '1': 'OperationType',
+  '2': [
+    {'1': 'UNKNOWN_OPEARTION', '2': 0},
+    {'1': 'PUT_USERNAME', '2': 1},
+    {'1': 'PUT_SERVICE', '2': 2},
+    {'1': 'PUT_CONTACT', '2': 3},
+    {'1': 'PUT_CONVERSATION', '2': 4},
+    {'1': 'PUT_CONVERSATION_ANCHOR', '2': 5},
+  ],
+};
+
+/// Descriptor for `OperationType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List operationTypeDescriptor = $convert.base64Decode(
+    'Cg1PcGVyYXRpb25UeXBlEhUKEVVOS05PV05fT1BFQVJUSU9OEAASEAoMUFVUX1VTRVJOQU1FEA'
+    'ESDwoLUFVUX1NFUlZJQ0UQAhIPCgtQVVRfQ09OVEFDVBADEhQKEFBVVF9DT05WRVJTQVRJT04Q'
+    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAF');
+
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = {
   '1': 'ConversationType',
@@ -68,12 +87,14 @@ const ContentType$json = {
   '2': [
     {'1': 'CONTENT_BUFFER', '2': 0},
     {'1': 'CONTENT_MESSAGE', '2': 1},
+    {'1': 'CONTENT_OPERATION', '2': 2},
   ],
 };
 
 /// Descriptor for `ContentType`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List contentTypeDescriptor = $convert.base64Decode(
-    'CgtDb250ZW50VHlwZRISCg5DT05URU5UX0JVRkZFUhAAEhMKD0NPTlRFTlRfTUVTU0FHRRAB');
+    'CgtDb250ZW50VHlwZRISCg5DT05URU5UX0JVRkZFUhAAEhMKD0NPTlRFTlRfTUVTU0FHRRABEh'
+    'UKEUNPTlRFTlRfT1BFUkFUSU9OEAI=');
 
 @$core.Deprecated('Use accountSecretDescriptor instead')
 const AccountSecret$json = {
@@ -173,16 +194,16 @@ const PortableOperation$json = {
   '2': [
     {'1': 'client_id', '3': 1, '4': 1, '5': 9, '10': 'clientId'},
     {'1': 'clock', '3': 2, '4': 1, '5': 5, '10': 'clock'},
-    {'1': 'payload', '3': 3, '4': 1, '5': 9, '10': 'payload'},
-    {'1': 'secret_box', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.PortableSecretBox', '10': 'secretBox'},
+    {'1': 'type', '3': 5, '4': 1, '5': 14, '6': '.sheason_chat.OperationType', '10': 'type'},
+    {'1': 'content', '3': 6, '4': 1, '5': 9, '10': 'content'},
   ],
 };
 
 /// Descriptor for `PortableOperation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List portableOperationDescriptor = $convert.base64Decode(
     'ChFQb3J0YWJsZU9wZXJhdGlvbhIbCgljbGllbnRfaWQYASABKAlSCGNsaWVudElkEhQKBWNsb2'
-    'NrGAIgASgFUgVjbG9jaxIYCgdwYXlsb2FkGAMgASgJUgdwYXlsb2FkEj4KCnNlY3JldF9ib3gY'
-    'BCABKAsyHy5zaGVhc29uX2NoYXQuUG9ydGFibGVTZWNyZXRCb3hSCXNlY3JldEJveA==');
+    'NrGAIgASgFUgVjbG9jaxIvCgR0eXBlGAUgASgOMhsuc2hlYXNvbl9jaGF0Lk9wZXJhdGlvblR5'
+    'cGVSBHR5cGUSGAoHY29udGVudBgGIAEoCVIHY29udGVudA==');
 
 @$core.Deprecated('Use portableConversationDescriptor instead')
 const PortableConversation$json = {

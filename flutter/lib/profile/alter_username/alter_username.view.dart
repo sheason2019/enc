@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
@@ -27,12 +25,7 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
   Future<void> handleSubmit() async {
     final delegate = context.read<MainController>().rootDelegate;
     final newName = textController.text;
-    final operation = await scope.operator.createOperation(jsonEncode({
-      'type': 'account/username',
-      'payload': {
-        'username': newName,
-      },
-    }));
+    final operation = await scope.operator.factory.username(newName);
     await scope.operator.apply([operation]);
     delegate.pages.removeLast();
     delegate.notify();

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
@@ -63,29 +62,18 @@ class Subscribe {
         scope,
         operations,
       );
-      final pushData = cipherOperations
-          .map(
-            (e) => {
-              'clientId': e.clientId,
-              'clock': e.clock,
-              'data': base64Encode(e.writeToBuffer()),
-            },
-          )
-          .toList();
-      if (pushData.isNotEmpty) {
+      if (cipherOperations.isNotEmpty) {
         socket.emit(
           'push-operation',
-          {'operations': pushData},
+          {'operations': cipherOperations},
         );
       }
     });
     socket.on('push-operation', (data) async {
-      debugPrint('push operation $data');
-      final operations = (data['operations'] as List)
-          .map((e) => base64Decode(e['data']))
-          .map((e) => PortableOperation.fromBuffer(e))
-          .toList();
-      await OperationCipher.decrypt(scope, operations);
+      final operations = await OperationCipher.decrypt(
+        scope,
+        data['operations'],
+      );
       await scope.operator.apply(operations);
     });
     socket.on('sync-operation', (data) => syncOperation());

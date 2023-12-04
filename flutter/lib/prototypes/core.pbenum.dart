@@ -30,6 +30,29 @@ class EcryptType extends $pb.ProtobufEnum {
   const EcryptType._($core.int v, $core.String n) : super(v, n);
 }
 
+class OperationType extends $pb.ProtobufEnum {
+  static const OperationType UNKNOWN_OPEARTION = OperationType._(0, _omitEnumNames ? '' : 'UNKNOWN_OPEARTION');
+  static const OperationType PUT_USERNAME = OperationType._(1, _omitEnumNames ? '' : 'PUT_USERNAME');
+  static const OperationType PUT_SERVICE = OperationType._(2, _omitEnumNames ? '' : 'PUT_SERVICE');
+  static const OperationType PUT_CONTACT = OperationType._(3, _omitEnumNames ? '' : 'PUT_CONTACT');
+  static const OperationType PUT_CONVERSATION = OperationType._(4, _omitEnumNames ? '' : 'PUT_CONVERSATION');
+  static const OperationType PUT_CONVERSATION_ANCHOR = OperationType._(5, _omitEnumNames ? '' : 'PUT_CONVERSATION_ANCHOR');
+
+  static const $core.List<OperationType> values = <OperationType> [
+    UNKNOWN_OPEARTION,
+    PUT_USERNAME,
+    PUT_SERVICE,
+    PUT_CONTACT,
+    PUT_CONVERSATION,
+    PUT_CONVERSATION_ANCHOR,
+  ];
+
+  static final $core.Map<$core.int, OperationType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static OperationType? valueOf($core.int value) => _byValue[value];
+
+  const OperationType._($core.int v, $core.String n) : super(v, n);
+}
+
 class ConversationType extends $pb.ProtobufEnum {
   static const ConversationType CONVERSATION_UNKNOWN = ConversationType._(0, _omitEnumNames ? '' : 'CONVERSATION_UNKNOWN');
   static const ConversationType CONVERSATION_PRIVATE = ConversationType._(1, _omitEnumNames ? '' : 'CONVERSATION_PRIVATE');
@@ -73,10 +96,12 @@ class MessageType extends $pb.ProtobufEnum {
 class ContentType extends $pb.ProtobufEnum {
   static const ContentType CONTENT_BUFFER = ContentType._(0, _omitEnumNames ? '' : 'CONTENT_BUFFER');
   static const ContentType CONTENT_MESSAGE = ContentType._(1, _omitEnumNames ? '' : 'CONTENT_MESSAGE');
+  static const ContentType CONTENT_OPERATION = ContentType._(2, _omitEnumNames ? '' : 'CONTENT_OPERATION');
 
   static const $core.List<ContentType> values = <ContentType> [
     CONTENT_BUFFER,
     CONTENT_MESSAGE,
+    CONTENT_OPERATION,
   ];
 
   static final $core.Map<$core.int, ContentType> _byValue = $pb.ProtobufEnum.initByValue(values);

@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:sheason_chat/built_model/conversation_anchor.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operator.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
+
+import '../models/conversation_anchor.dart';
 
 class Scope extends ChangeNotifier {
   final String accountPath;
@@ -17,7 +19,7 @@ class Scope extends ChangeNotifier {
 
   var secret = AccountSecret();
   var snapshot = AccountSnapshot();
-  var anchor = ConversationAnchor();
+  var anchor = ConversationAnchor(list: []);
   var inited = false;
   final subscribes = <String, Subscribe>{};
 
@@ -51,7 +53,7 @@ class Scope extends ChangeNotifier {
     if (!await anchorFile.exists()) return;
 
     final anchor = ConversationAnchor.fromJson(
-      await anchorFile.readAsString(),
+      jsonDecode(await anchorFile.readAsString()),
     );
     this.anchor = anchor;
     notifyListeners();
@@ -61,7 +63,7 @@ class Scope extends ChangeNotifier {
     ConversationAnchor anchor,
   ) async {
     final anchorFile = File(path.join(accountPath, '.conversation-anchor'));
-    await anchorFile.writeAsString(anchor.toJson());
+    await anchorFile.writeAsString(jsonEncode(anchor.toJson()));
     this.anchor = anchor;
     notifyListeners();
   }

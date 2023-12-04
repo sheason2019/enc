@@ -37,11 +37,20 @@ message PortableSecretBox {
   EcryptType encrypt_type = 6;
 }
 
+enum OperationType {
+  UNKNOWN_OPEARTION = 0;
+  PUT_USERNAME = 1;
+  PUT_SERVICE = 2;
+  PUT_CONTACT = 3;
+  PUT_CONVERSATION = 4;
+  PUT_CONVERSATION_ANCHOR = 5;
+}
+
 message PortableOperation {
   string client_id = 1; // 设备ID
   int32 clock = 2; // Opaeration 链表
-  string payload = 3;
-  PortableSecretBox secret_box = 4;
+  OperationType type = 5;
+  string content = 6;
 }
 
 enum ConversationType {
@@ -88,6 +97,7 @@ message PortableMessageState {
 enum ContentType {
   CONTENT_BUFFER = 0;
   CONTENT_MESSAGE = 1;
+  CONTENT_OPERATION = 2;
 }
 
 message SignWrapper {
