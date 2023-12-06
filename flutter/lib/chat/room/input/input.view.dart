@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/room.controller.dart';
+import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ChatRoomPageInput extends StatefulWidget {
@@ -19,6 +22,11 @@ class _ChatRoomPageInputState extends State<ChatRoomPageInput> {
 
   handleSendMessage() {
     debugPrint('handle send message ${inputController.text}');
+    final controller = context.read<ChatRoomController>();
+    controller.sendMessage(
+      messageType: MessageType.MESSAGE_TYPE_TEXT,
+      content: inputController.text,
+    );
     inputController.clear();
   }
 

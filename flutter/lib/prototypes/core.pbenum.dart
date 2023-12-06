@@ -37,6 +37,7 @@ class OperationType extends $pb.ProtobufEnum {
   static const OperationType PUT_CONTACT = OperationType._(3, _omitEnumNames ? '' : 'PUT_CONTACT');
   static const OperationType PUT_CONVERSATION = OperationType._(4, _omitEnumNames ? '' : 'PUT_CONVERSATION');
   static const OperationType PUT_CONVERSATION_ANCHOR = OperationType._(5, _omitEnumNames ? '' : 'PUT_CONVERSATION_ANCHOR');
+  static const OperationType PUT_MESSAGE = OperationType._(6, _omitEnumNames ? '' : 'PUT_MESSAGE');
 
   static const $core.List<OperationType> values = <OperationType> [
     UNKNOWN_OPEARTION,
@@ -45,6 +46,7 @@ class OperationType extends $pb.ProtobufEnum {
     PUT_CONTACT,
     PUT_CONVERSATION,
     PUT_CONVERSATION_ANCHOR,
+    PUT_MESSAGE,
   ];
 
   static final $core.Map<$core.int, OperationType> _byValue = $pb.ProtobufEnum.initByValue(values);
@@ -77,6 +79,7 @@ class MessageType extends $pb.ProtobufEnum {
   static const MessageType MESSAGE_TYPE_IMAGE = MessageType._(3, _omitEnumNames ? '' : 'MESSAGE_TYPE_IMAGE');
   static const MessageType MESSAGE_TYPE_VIDEO = MessageType._(4, _omitEnumNames ? '' : 'MESSAGE_TYPE_VIDEO');
   static const MessageType MESSAGE_TYPE_FILE = MessageType._(5, _omitEnumNames ? '' : 'MESSAGE_TYPE_FILE');
+  static const MessageType MESSAGE_TYPE_STATE_ONLY = MessageType._(101, _omitEnumNames ? '' : 'MESSAGE_TYPE_STATE_ONLY');
 
   static const $core.List<MessageType> values = <MessageType> [
     MESSAGE_TYPE_UNKNOWN,
@@ -85,6 +88,7 @@ class MessageType extends $pb.ProtobufEnum {
     MESSAGE_TYPE_IMAGE,
     MESSAGE_TYPE_VIDEO,
     MESSAGE_TYPE_FILE,
+    MESSAGE_TYPE_STATE_ONLY,
   ];
 
   static final $core.Map<$core.int, MessageType> _byValue = $pb.ProtobufEnum.initByValue(values);

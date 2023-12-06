@@ -18,7 +18,7 @@ class PutContactAtomProceeder implements AtomProceeder<AccountSnapshot> {
       // update
       final update = scope.db.contacts.update();
       update.where((tbl) => tbl.id.equals(exist.id));
-      await update.replace(ContactsCompanion(
+      await update.write(ContactsCompanion(
         snapshot: Value(snapshot),
       ));
     } else {

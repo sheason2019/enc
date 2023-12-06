@@ -38,6 +38,7 @@ const OperationType$json = {
     {'1': 'PUT_CONTACT', '2': 3},
     {'1': 'PUT_CONVERSATION', '2': 4},
     {'1': 'PUT_CONVERSATION_ANCHOR', '2': 5},
+    {'1': 'PUT_MESSAGE', '2': 6},
   ],
 };
 
@@ -45,7 +46,7 @@ const OperationType$json = {
 final $typed_data.Uint8List operationTypeDescriptor = $convert.base64Decode(
     'Cg1PcGVyYXRpb25UeXBlEhUKEVVOS05PV05fT1BFQVJUSU9OEAASEAoMUFVUX1VTRVJOQU1FEA'
     'ESDwoLUFVUX1NFUlZJQ0UQAhIPCgtQVVRfQ09OVEFDVBADEhQKEFBVVF9DT05WRVJTQVRJT04Q'
-    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAF');
+    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAFEg8KC1BVVF9NRVNTQUdFEAY=');
 
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = {
@@ -72,6 +73,7 @@ const MessageType$json = {
     {'1': 'MESSAGE_TYPE_IMAGE', '2': 3},
     {'1': 'MESSAGE_TYPE_VIDEO', '2': 4},
     {'1': 'MESSAGE_TYPE_FILE', '2': 5},
+    {'1': 'MESSAGE_TYPE_STATE_ONLY', '2': 101},
   ],
 };
 
@@ -79,7 +81,8 @@ const MessageType$json = {
 final $typed_data.Uint8List messageTypeDescriptor = $convert.base64Decode(
     'CgtNZXNzYWdlVHlwZRIYChRNRVNTQUdFX1RZUEVfVU5LTk9XThAAEhUKEU1FU1NBR0VfVFlQRV'
     '9URVhUEAESFgoSTUVTU0FHRV9UWVBFX0FVRElPEAISFgoSTUVTU0FHRV9UWVBFX0lNQUdFEAMS'
-    'FgoSTUVTU0FHRV9UWVBFX1ZJREVPEAQSFQoRTUVTU0FHRV9UWVBFX0ZJTEUQBQ==');
+    'FgoSTUVTU0FHRV9UWVBFX1ZJREVPEAQSFQoRTUVTU0FHRV9UWVBFX0ZJTEUQBRIbChdNRVNTQU'
+    'dFX1RZUEVfU1RBVEVfT05MWRBl');
 
 @$core.Deprecated('Use contentTypeDescriptor instead')
 const ContentType$json = {
@@ -250,6 +253,7 @@ const PortableMessage$json = {
     {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'sender'},
     {'1': 'conversation', '3': 5, '4': 1, '5': 11, '6': '.sheason_chat.PortableConversation', '10': 'conversation'},
     {'1': 'message_states', '3': 6, '4': 3, '5': 11, '6': '.sheason_chat.PortableMessageState', '10': 'messageStates'},
+    {'1': 'created_at', '3': 7, '4': 1, '5': 3, '10': 'createdAt'},
   ],
 };
 
@@ -260,13 +264,14 @@ final $typed_data.Uint8List portableMessageDescriptor = $convert.base64Decode(
     'AyABKAlSB2NvbnRlbnQSNQoGc2VuZGVyGAQgASgLMh0uc2hlYXNvbl9jaGF0LkFjY291bnRTbm'
     'Fwc2hvdFIGc2VuZGVyEkYKDGNvbnZlcnNhdGlvbhgFIAEoCzIiLnNoZWFzb25fY2hhdC5Qb3J0'
     'YWJsZUNvbnZlcnNhdGlvblIMY29udmVyc2F0aW9uEkkKDm1lc3NhZ2Vfc3RhdGVzGAYgAygLMi'
-    'Iuc2hlYXNvbl9jaGF0LlBvcnRhYmxlTWVzc2FnZVN0YXRlUg1tZXNzYWdlU3RhdGVz');
+    'Iuc2hlYXNvbl9jaGF0LlBvcnRhYmxlTWVzc2FnZVN0YXRlUg1tZXNzYWdlU3RhdGVzEh0KCmNy'
+    'ZWF0ZWRfYXQYByABKANSCWNyZWF0ZWRBdA==');
 
 @$core.Deprecated('Use portableMessageStateDescriptor instead')
 const PortableMessageState$json = {
   '1': 'PortableMessageState',
   '2': [
-    {'1': 'account', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'account'},
+    {'1': 'account_index', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'accountIndex'},
     {'1': 'created_at', '3': 2, '4': 1, '5': 3, '10': 'createdAt'},
     {'1': 'receive_at', '3': 3, '4': 1, '5': 3, '10': 'receiveAt'},
     {'1': 'checked_at', '3': 4, '4': 1, '5': 3, '10': 'checkedAt'},
@@ -275,10 +280,10 @@ const PortableMessageState$json = {
 
 /// Descriptor for `PortableMessageState`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List portableMessageStateDescriptor = $convert.base64Decode(
-    'ChRQb3J0YWJsZU1lc3NhZ2VTdGF0ZRI0CgdhY2NvdW50GAEgASgLMhouc2hlYXNvbl9jaGF0Lk'
-    'FjY291bnRJbmRleFIHYWNjb3VudBIdCgpjcmVhdGVkX2F0GAIgASgDUgljcmVhdGVkQXQSHQoK'
-    'cmVjZWl2ZV9hdBgDIAEoA1IJcmVjZWl2ZUF0Eh0KCmNoZWNrZWRfYXQYBCABKANSCWNoZWNrZW'
-    'RBdA==');
+    'ChRQb3J0YWJsZU1lc3NhZ2VTdGF0ZRI/Cg1hY2NvdW50X2luZGV4GAEgASgLMhouc2hlYXNvbl'
+    '9jaGF0LkFjY291bnRJbmRleFIMYWNjb3VudEluZGV4Eh0KCmNyZWF0ZWRfYXQYAiABKANSCWNy'
+    'ZWF0ZWRBdBIdCgpyZWNlaXZlX2F0GAMgASgDUglyZWNlaXZlQXQSHQoKY2hlY2tlZF9hdBgEIA'
+    'EoA1IJY2hlY2tlZEF0');
 
 @$core.Deprecated('Use signWrapperDescriptor instead')
 const SignWrapper$json = {

@@ -11,5 +11,11 @@ enum OperateAtomType {
   putConversation,
   @JsonValue('put-conversation-anchor')
   putConversationAnchor,
+  @JsonValue('put-message')
+  putMessage,
+  @JsonValue('put-message-state')
+  putMessageState,
+  @JsonValue('put-message-signature')
+  putMessageSignature,
   ;
 }

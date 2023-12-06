@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
@@ -144,17 +143,13 @@ class ReplicaController extends ChangeNotifier {
   // 由 Pusher 发送
   void handleSendSecret() async {
     final secretBox = await CryptoUtils.encrypt(
-      keypair,
-      target!.index.ecdhPubKey,
+      scope!,
+      target!.index,
       scope!.secret.writeToBuffer(),
     );
-    final portableSecretBox = PortableSecretBox()
-      ..cipherData = secretBox.cipherText
-      ..nonce = secretBox.nonce
-      ..mac = secretBox.mac.bytes;
     socket!.emit('exchange', {
       'type': 'secret',
-      'secretBox': base64Encode(portableSecretBox.writeToBuffer()),
+      'secretBox': base64Encode(secretBox.writeToBuffer()),
     });
     statusNotifier.value = ReplicaStatus.success;
   }
@@ -163,15 +158,13 @@ class ReplicaController extends ChangeNotifier {
     final portableSecretBox = PortableSecretBox.fromBuffer(
       base64Decode(data['secretBox']),
     );
-    final secretBox = SecretBox(
-      portableSecretBox.cipherData,
-      nonce: portableSecretBox.nonce,
-      mac: Mac(portableSecretBox.mac),
-    );
-    final plainData = await CryptoUtils.decrypt(
-      keypair,
-      target!.index.ecdhPubKey,
-      secretBox,
+    final plainData = await CryptoUtils.secretDecrypt(
+      AccountSecret()
+        ..signPrivKey = keypair.signPrivKey
+        ..signPubKey = keypair.signPubKey
+        ..ecdhPrivKey = keypair.ecdhPrivKey
+        ..ecdhPubKey = keypair.ecdhPubKey,
+      portableSecretBox,
     );
     final secret = AccountSecret.fromBuffer(plainData);
 

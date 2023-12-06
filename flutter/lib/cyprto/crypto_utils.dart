@@ -1,8 +1,9 @@
 // 使用 x25519 作为用户 ID
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter/foundation.dart';
 import 'package:jwk/jwk.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
+import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 
 class CryptoUtils {
   static Future<SecretKey> _sharedSecret(
@@ -41,42 +42,52 @@ class CryptoUtils {
     );
   }
 
-  static Future<SecretBox> encrypt(
-    CryptoKeyPair keypair,
-    String targetEcdhPubkey,
+  static Future<PortableSecretBox> encrypt(
+    Scope scope,
+    AccountIndex target,
     List<int> plainData,
   ) async {
-    final secret = await _sharedSecret(keypair, targetEcdhPubkey);
+    final keypair = CryptoKeyPair.fromSecret(scope.secret);
+
+    final secret = await _sharedSecret(keypair, target.ecdhPubKey);
     final algorithm = Chacha20.poly1305Aead();
     final wand = await algorithm.newCipherWandFromSecretKey(secret);
-    return wand.encrypt(plainData);
+    final secretBox = await wand.encrypt(plainData);
+
+    return PortableSecretBox()
+      ..cipherData = secretBox.cipherText
+      ..nonce = secretBox.nonce
+      ..mac = secretBox.mac.bytes
+      ..sender = scope.snapshot.index
+      ..receiver = target;
   }
 
   static Future<List<int>> decrypt(
-    CryptoKeyPair keypair,
-    String targetEcdhPubkey,
-    SecretBox box,
+    Scope scope,
+    PortableSecretBox secretBox,
   ) async {
-    final secret = await _sharedSecret(keypair, targetEcdhPubkey);
-    final algorithm = Chacha20.poly1305Aead();
-    final wand = await algorithm.newCipherWandFromSecretKey(secret);
-    return wand.decrypt(box);
+    return secretDecrypt(scope.secret, secretBox);
   }
 
   static Future<List<int>> secretDecrypt(
-    Uint8List secret,
-    SecretBox secretBox,
+    AccountSecret secret,
+    PortableSecretBox secretBox,
   ) async {
-    return compute((args) async {
-      final secret = args.$1;
-      final secretBox = args.$2;
+    final keypair = CryptoKeyPair.fromSecret(secret);
+    if (secret.ecdhPubKey != secretBox.receiver.ecdhPubKey) {
+      throw Exception('Current account is not secret box receiver');
+    }
 
-      final algorithm = Chacha20.poly1305Aead();
-      final wand = await algorithm.newCipherWandFromSecretKey(
-        SecretKey(secret),
-      );
-      return wand.decrypt(secretBox);
-    }, (secret, secretBox));
+    final secretKey = await _sharedSecret(keypair, secretBox.sender.ecdhPubKey);
+    final algorithm = Chacha20.poly1305Aead();
+    final wand = await algorithm.newCipherWandFromSecretKey(secretKey);
+    return wand.decrypt(
+      SecretBox(
+        secretBox.cipherData,
+        nonce: secretBox.nonce,
+        mac: Mac(secretBox.mac),
+      ),
+    );
   }
 
   static Future<Signature> createSignature(

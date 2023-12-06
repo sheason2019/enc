@@ -568,7 +568,8 @@ export namespace sheason_chat {
         PUT_SERVICE = 2,
         PUT_CONTACT = 3,
         PUT_CONVERSATION = 4,
-        PUT_CONVERSATION_ANCHOR = 5
+        PUT_CONVERSATION_ANCHOR = 5,
+        PUT_MESSAGE = 6
     }
 
     /** Properties of a PortableOperation. */
@@ -827,7 +828,8 @@ export namespace sheason_chat {
         MESSAGE_TYPE_AUDIO = 2,
         MESSAGE_TYPE_IMAGE = 3,
         MESSAGE_TYPE_VIDEO = 4,
-        MESSAGE_TYPE_FILE = 5
+        MESSAGE_TYPE_FILE = 5,
+        MESSAGE_TYPE_STATE_ONLY = 101
     }
 
     /** Properties of a PortableMessage. */
@@ -850,6 +852,9 @@ export namespace sheason_chat {
 
         /** PortableMessage messageStates */
         messageStates?: (sheason_chat.IPortableMessageState[]|null);
+
+        /** PortableMessage createdAt */
+        createdAt?: (number|Long|null);
     }
 
     /** Represents a PortableMessage. */
@@ -878,6 +883,9 @@ export namespace sheason_chat {
 
         /** PortableMessage messageStates. */
         public messageStates: sheason_chat.IPortableMessageState[];
+
+        /** PortableMessage createdAt. */
+        public createdAt: (number|Long);
 
         /**
          * Creates a new PortableMessage instance using the specified properties.
@@ -960,8 +968,8 @@ export namespace sheason_chat {
     /** Properties of a PortableMessageState. */
     interface IPortableMessageState {
 
-        /** PortableMessageState account */
-        account?: (sheason_chat.IAccountIndex|null);
+        /** PortableMessageState accountIndex */
+        accountIndex?: (sheason_chat.IAccountIndex|null);
 
         /** PortableMessageState createdAt */
         createdAt?: (number|Long|null);
@@ -982,8 +990,8 @@ export namespace sheason_chat {
          */
         constructor(properties?: sheason_chat.IPortableMessageState);
 
-        /** PortableMessageState account. */
-        public account?: (sheason_chat.IAccountIndex|null);
+        /** PortableMessageState accountIndex. */
+        public accountIndex?: (sheason_chat.IAccountIndex|null);
 
         /** PortableMessageState createdAt. */
         public createdAt: (number|Long);

@@ -1039,6 +1039,878 @@ class ConversationContactsCompanion
   }
 }
 
+class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MessagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _conversationIdMeta =
+      const VerificationMeta('conversationId');
+  @override
+  late final GeneratedColumn<int> conversationId = GeneratedColumn<int>(
+      'conversation_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _contactIdMeta =
+      const VerificationMeta('contactId');
+  @override
+  late final GeneratedColumn<int> contactId = GeneratedColumn<int>(
+      'contact_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _messageTypeMeta =
+      const VerificationMeta('messageType');
+  @override
+  late final GeneratedColumnWithTypeConverter<MessageType, int> messageType =
+      GeneratedColumn<int>('message_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<MessageType>($MessagesTable.$convertermessageType);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _contentMeta =
+      const VerificationMeta('content');
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+      'content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, conversationId, contactId, messageType, uuid, content, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'messages';
+  @override
+  VerificationContext validateIntegrity(Insertable<Message> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+          _conversationIdMeta,
+          conversationId.isAcceptableOrUnknown(
+              data['conversation_id']!, _conversationIdMeta));
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('contact_id')) {
+      context.handle(_contactIdMeta,
+          contactId.isAcceptableOrUnknown(data['contact_id']!, _contactIdMeta));
+    } else if (isInserting) {
+      context.missing(_contactIdMeta);
+    }
+    context.handle(_messageTypeMeta, const VerificationResult.success());
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(_contentMeta,
+          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Message map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Message(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      conversationId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}conversation_id'])!,
+      contactId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}contact_id'])!,
+      messageType: $MessagesTable.$convertermessageType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}message_type'])!),
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid'])!,
+      content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $MessagesTable createAlias(String alias) {
+    return $MessagesTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<MessageType, int> $convertermessageType =
+      MessageTypeConverter();
+}
+
+class Message extends DataClass implements Insertable<Message> {
+  final int id;
+  final int conversationId;
+  final int contactId;
+  final MessageType messageType;
+  final String uuid;
+  final String content;
+  final DateTime createdAt;
+  const Message(
+      {required this.id,
+      required this.conversationId,
+      required this.contactId,
+      required this.messageType,
+      required this.uuid,
+      required this.content,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['conversation_id'] = Variable<int>(conversationId);
+    map['contact_id'] = Variable<int>(contactId);
+    {
+      final converter = $MessagesTable.$convertermessageType;
+      map['message_type'] = Variable<int>(converter.toSql(messageType));
+    }
+    map['uuid'] = Variable<String>(uuid);
+    map['content'] = Variable<String>(content);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  MessagesCompanion toCompanion(bool nullToAbsent) {
+    return MessagesCompanion(
+      id: Value(id),
+      conversationId: Value(conversationId),
+      contactId: Value(contactId),
+      messageType: Value(messageType),
+      uuid: Value(uuid),
+      content: Value(content),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Message.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Message(
+      id: serializer.fromJson<int>(json['id']),
+      conversationId: serializer.fromJson<int>(json['conversationId']),
+      contactId: serializer.fromJson<int>(json['contactId']),
+      messageType: serializer.fromJson<MessageType>(json['messageType']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      content: serializer.fromJson<String>(json['content']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'conversationId': serializer.toJson<int>(conversationId),
+      'contactId': serializer.toJson<int>(contactId),
+      'messageType': serializer.toJson<MessageType>(messageType),
+      'uuid': serializer.toJson<String>(uuid),
+      'content': serializer.toJson<String>(content),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Message copyWith(
+          {int? id,
+          int? conversationId,
+          int? contactId,
+          MessageType? messageType,
+          String? uuid,
+          String? content,
+          DateTime? createdAt}) =>
+      Message(
+        id: id ?? this.id,
+        conversationId: conversationId ?? this.conversationId,
+        contactId: contactId ?? this.contactId,
+        messageType: messageType ?? this.messageType,
+        uuid: uuid ?? this.uuid,
+        content: content ?? this.content,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Message(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('contactId: $contactId, ')
+          ..write('messageType: $messageType, ')
+          ..write('uuid: $uuid, ')
+          ..write('content: $content, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, conversationId, contactId, messageType, uuid, content, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Message &&
+          other.id == this.id &&
+          other.conversationId == this.conversationId &&
+          other.contactId == this.contactId &&
+          other.messageType == this.messageType &&
+          other.uuid == this.uuid &&
+          other.content == this.content &&
+          other.createdAt == this.createdAt);
+}
+
+class MessagesCompanion extends UpdateCompanion<Message> {
+  final Value<int> id;
+  final Value<int> conversationId;
+  final Value<int> contactId;
+  final Value<MessageType> messageType;
+  final Value<String> uuid;
+  final Value<String> content;
+  final Value<DateTime> createdAt;
+  const MessagesCompanion({
+    this.id = const Value.absent(),
+    this.conversationId = const Value.absent(),
+    this.contactId = const Value.absent(),
+    this.messageType = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.content = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  MessagesCompanion.insert({
+    this.id = const Value.absent(),
+    required int conversationId,
+    required int contactId,
+    required MessageType messageType,
+    required String uuid,
+    required String content,
+    required DateTime createdAt,
+  })  : conversationId = Value(conversationId),
+        contactId = Value(contactId),
+        messageType = Value(messageType),
+        uuid = Value(uuid),
+        content = Value(content),
+        createdAt = Value(createdAt);
+  static Insertable<Message> custom({
+    Expression<int>? id,
+    Expression<int>? conversationId,
+    Expression<int>? contactId,
+    Expression<int>? messageType,
+    Expression<String>? uuid,
+    Expression<String>? content,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (contactId != null) 'contact_id': contactId,
+      if (messageType != null) 'message_type': messageType,
+      if (uuid != null) 'uuid': uuid,
+      if (content != null) 'content': content,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  MessagesCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? conversationId,
+      Value<int>? contactId,
+      Value<MessageType>? messageType,
+      Value<String>? uuid,
+      Value<String>? content,
+      Value<DateTime>? createdAt}) {
+    return MessagesCompanion(
+      id: id ?? this.id,
+      conversationId: conversationId ?? this.conversationId,
+      contactId: contactId ?? this.contactId,
+      messageType: messageType ?? this.messageType,
+      uuid: uuid ?? this.uuid,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<int>(conversationId.value);
+    }
+    if (contactId.present) {
+      map['contact_id'] = Variable<int>(contactId.value);
+    }
+    if (messageType.present) {
+      final converter = $MessagesTable.$convertermessageType;
+
+      map['message_type'] = Variable<int>(converter.toSql(messageType.value));
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessagesCompanion(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('contactId: $contactId, ')
+          ..write('messageType: $messageType, ')
+          ..write('uuid: $uuid, ')
+          ..write('content: $content, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MessageStatesTable extends MessageStates
+    with TableInfo<$MessageStatesTable, MessageState> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MessageStatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _contactIdMeta =
+      const VerificationMeta('contactId');
+  @override
+  late final GeneratedColumn<int> contactId = GeneratedColumn<int>(
+      'contact_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _messageIdMeta =
+      const VerificationMeta('messageId');
+  @override
+  late final GeneratedColumn<int> messageId = GeneratedColumn<int>(
+      'message_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _receiveAtMeta =
+      const VerificationMeta('receiveAt');
+  @override
+  late final GeneratedColumn<DateTime> receiveAt = GeneratedColumn<DateTime>(
+      'receive_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _checkedAtMeta =
+      const VerificationMeta('checkedAt');
+  @override
+  late final GeneratedColumn<DateTime> checkedAt = GeneratedColumn<DateTime>(
+      'checked_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, contactId, messageId, createdAt, receiveAt, checkedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'message_states';
+  @override
+  VerificationContext validateIntegrity(Insertable<MessageState> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('contact_id')) {
+      context.handle(_contactIdMeta,
+          contactId.isAcceptableOrUnknown(data['contact_id']!, _contactIdMeta));
+    } else if (isInserting) {
+      context.missing(_contactIdMeta);
+    }
+    if (data.containsKey('message_id')) {
+      context.handle(_messageIdMeta,
+          messageId.isAcceptableOrUnknown(data['message_id']!, _messageIdMeta));
+    } else if (isInserting) {
+      context.missing(_messageIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('receive_at')) {
+      context.handle(_receiveAtMeta,
+          receiveAt.isAcceptableOrUnknown(data['receive_at']!, _receiveAtMeta));
+    }
+    if (data.containsKey('checked_at')) {
+      context.handle(_checkedAtMeta,
+          checkedAt.isAcceptableOrUnknown(data['checked_at']!, _checkedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MessageState map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MessageState(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      contactId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}contact_id'])!,
+      messageId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}message_id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
+      receiveAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}receive_at']),
+      checkedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}checked_at']),
+    );
+  }
+
+  @override
+  $MessageStatesTable createAlias(String alias) {
+    return $MessageStatesTable(attachedDatabase, alias);
+  }
+}
+
+class MessageState extends DataClass implements Insertable<MessageState> {
+  final int id;
+  final int contactId;
+  final int messageId;
+  final DateTime? createdAt;
+  final DateTime? receiveAt;
+  final DateTime? checkedAt;
+  const MessageState(
+      {required this.id,
+      required this.contactId,
+      required this.messageId,
+      this.createdAt,
+      this.receiveAt,
+      this.checkedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['contact_id'] = Variable<int>(contactId);
+    map['message_id'] = Variable<int>(messageId);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || receiveAt != null) {
+      map['receive_at'] = Variable<DateTime>(receiveAt);
+    }
+    if (!nullToAbsent || checkedAt != null) {
+      map['checked_at'] = Variable<DateTime>(checkedAt);
+    }
+    return map;
+  }
+
+  MessageStatesCompanion toCompanion(bool nullToAbsent) {
+    return MessageStatesCompanion(
+      id: Value(id),
+      contactId: Value(contactId),
+      messageId: Value(messageId),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      receiveAt: receiveAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiveAt),
+      checkedAt: checkedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(checkedAt),
+    );
+  }
+
+  factory MessageState.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MessageState(
+      id: serializer.fromJson<int>(json['id']),
+      contactId: serializer.fromJson<int>(json['contactId']),
+      messageId: serializer.fromJson<int>(json['messageId']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      receiveAt: serializer.fromJson<DateTime?>(json['receiveAt']),
+      checkedAt: serializer.fromJson<DateTime?>(json['checkedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'contactId': serializer.toJson<int>(contactId),
+      'messageId': serializer.toJson<int>(messageId),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'receiveAt': serializer.toJson<DateTime?>(receiveAt),
+      'checkedAt': serializer.toJson<DateTime?>(checkedAt),
+    };
+  }
+
+  MessageState copyWith(
+          {int? id,
+          int? contactId,
+          int? messageId,
+          Value<DateTime?> createdAt = const Value.absent(),
+          Value<DateTime?> receiveAt = const Value.absent(),
+          Value<DateTime?> checkedAt = const Value.absent()}) =>
+      MessageState(
+        id: id ?? this.id,
+        contactId: contactId ?? this.contactId,
+        messageId: messageId ?? this.messageId,
+        createdAt: createdAt.present ? createdAt.value : this.createdAt,
+        receiveAt: receiveAt.present ? receiveAt.value : this.receiveAt,
+        checkedAt: checkedAt.present ? checkedAt.value : this.checkedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MessageState(')
+          ..write('id: $id, ')
+          ..write('contactId: $contactId, ')
+          ..write('messageId: $messageId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('receiveAt: $receiveAt, ')
+          ..write('checkedAt: $checkedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, contactId, messageId, createdAt, receiveAt, checkedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MessageState &&
+          other.id == this.id &&
+          other.contactId == this.contactId &&
+          other.messageId == this.messageId &&
+          other.createdAt == this.createdAt &&
+          other.receiveAt == this.receiveAt &&
+          other.checkedAt == this.checkedAt);
+}
+
+class MessageStatesCompanion extends UpdateCompanion<MessageState> {
+  final Value<int> id;
+  final Value<int> contactId;
+  final Value<int> messageId;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> receiveAt;
+  final Value<DateTime?> checkedAt;
+  const MessageStatesCompanion({
+    this.id = const Value.absent(),
+    this.contactId = const Value.absent(),
+    this.messageId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.receiveAt = const Value.absent(),
+    this.checkedAt = const Value.absent(),
+  });
+  MessageStatesCompanion.insert({
+    this.id = const Value.absent(),
+    required int contactId,
+    required int messageId,
+    this.createdAt = const Value.absent(),
+    this.receiveAt = const Value.absent(),
+    this.checkedAt = const Value.absent(),
+  })  : contactId = Value(contactId),
+        messageId = Value(messageId);
+  static Insertable<MessageState> custom({
+    Expression<int>? id,
+    Expression<int>? contactId,
+    Expression<int>? messageId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? receiveAt,
+    Expression<DateTime>? checkedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (contactId != null) 'contact_id': contactId,
+      if (messageId != null) 'message_id': messageId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (receiveAt != null) 'receive_at': receiveAt,
+      if (checkedAt != null) 'checked_at': checkedAt,
+    });
+  }
+
+  MessageStatesCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? contactId,
+      Value<int>? messageId,
+      Value<DateTime?>? createdAt,
+      Value<DateTime?>? receiveAt,
+      Value<DateTime?>? checkedAt}) {
+    return MessageStatesCompanion(
+      id: id ?? this.id,
+      contactId: contactId ?? this.contactId,
+      messageId: messageId ?? this.messageId,
+      createdAt: createdAt ?? this.createdAt,
+      receiveAt: receiveAt ?? this.receiveAt,
+      checkedAt: checkedAt ?? this.checkedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (contactId.present) {
+      map['contact_id'] = Variable<int>(contactId.value);
+    }
+    if (messageId.present) {
+      map['message_id'] = Variable<int>(messageId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (receiveAt.present) {
+      map['receive_at'] = Variable<DateTime>(receiveAt.value);
+    }
+    if (checkedAt.present) {
+      map['checked_at'] = Variable<DateTime>(checkedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageStatesCompanion(')
+          ..write('id: $id, ')
+          ..write('contactId: $contactId, ')
+          ..write('messageId: $messageId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('receiveAt: $receiveAt, ')
+          ..write('checkedAt: $checkedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MessageSignaturesTable extends MessageSignatures
+    with TableInfo<$MessageSignaturesTable, MessageSignature> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MessageSignaturesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _signatureMeta =
+      const VerificationMeta('signature');
+  @override
+  late final GeneratedColumn<Uint8List> signature = GeneratedColumn<Uint8List>(
+      'signature', aliasedName, false,
+      type: DriftSqlType.blob, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, signature];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'message_signatures';
+  @override
+  VerificationContext validateIntegrity(Insertable<MessageSignature> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('signature')) {
+      context.handle(_signatureMeta,
+          signature.isAcceptableOrUnknown(data['signature']!, _signatureMeta));
+    } else if (isInserting) {
+      context.missing(_signatureMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MessageSignature map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MessageSignature(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      signature: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}signature'])!,
+    );
+  }
+
+  @override
+  $MessageSignaturesTable createAlias(String alias) {
+    return $MessageSignaturesTable(attachedDatabase, alias);
+  }
+}
+
+class MessageSignature extends DataClass
+    implements Insertable<MessageSignature> {
+  final int id;
+  final Uint8List signature;
+  const MessageSignature({required this.id, required this.signature});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['signature'] = Variable<Uint8List>(signature);
+    return map;
+  }
+
+  MessageSignaturesCompanion toCompanion(bool nullToAbsent) {
+    return MessageSignaturesCompanion(
+      id: Value(id),
+      signature: Value(signature),
+    );
+  }
+
+  factory MessageSignature.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MessageSignature(
+      id: serializer.fromJson<int>(json['id']),
+      signature: serializer.fromJson<Uint8List>(json['signature']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'signature': serializer.toJson<Uint8List>(signature),
+    };
+  }
+
+  MessageSignature copyWith({int? id, Uint8List? signature}) =>
+      MessageSignature(
+        id: id ?? this.id,
+        signature: signature ?? this.signature,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MessageSignature(')
+          ..write('id: $id, ')
+          ..write('signature: $signature')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, $driftBlobEquality.hash(signature));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MessageSignature &&
+          other.id == this.id &&
+          $driftBlobEquality.equals(other.signature, this.signature));
+}
+
+class MessageSignaturesCompanion extends UpdateCompanion<MessageSignature> {
+  final Value<int> id;
+  final Value<Uint8List> signature;
+  const MessageSignaturesCompanion({
+    this.id = const Value.absent(),
+    this.signature = const Value.absent(),
+  });
+  MessageSignaturesCompanion.insert({
+    this.id = const Value.absent(),
+    required Uint8List signature,
+  }) : signature = Value(signature);
+  static Insertable<MessageSignature> custom({
+    Expression<int>? id,
+    Expression<Uint8List>? signature,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (signature != null) 'signature': signature,
+    });
+  }
+
+  MessageSignaturesCompanion copyWith(
+      {Value<int>? id, Value<Uint8List>? signature}) {
+    return MessageSignaturesCompanion(
+      id: id ?? this.id,
+      signature: signature ?? this.signature,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (signature.present) {
+      map['signature'] = Variable<Uint8List>(signature.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageSignaturesCompanion(')
+          ..write('id: $id, ')
+          ..write('signature: $signature')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $OperationsTable operations = $OperationsTable(this);
@@ -1046,10 +1918,21 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ConversationsTable conversations = $ConversationsTable(this);
   late final $ConversationContactsTable conversationContacts =
       $ConversationContactsTable(this);
+  late final $MessagesTable messages = $MessagesTable(this);
+  late final $MessageStatesTable messageStates = $MessageStatesTable(this);
+  late final $MessageSignaturesTable messageSignatures =
+      $MessageSignaturesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [operations, contacts, conversations, conversationContacts];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        operations,
+        contacts,
+        conversations,
+        conversationContacts,
+        messages,
+        messageStates,
+        messageSignatures
+      ];
 }

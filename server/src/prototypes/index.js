@@ -1427,6 +1427,7 @@
          * @property {number} PUT_CONTACT=3 PUT_CONTACT value
          * @property {number} PUT_CONVERSATION=4 PUT_CONVERSATION value
          * @property {number} PUT_CONVERSATION_ANCHOR=5 PUT_CONVERSATION_ANCHOR value
+         * @property {number} PUT_MESSAGE=6 PUT_MESSAGE value
          */
         sheason_chat.OperationType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -1436,6 +1437,7 @@
             values[valuesById[3] = "PUT_CONTACT"] = 3;
             values[valuesById[4] = "PUT_CONVERSATION"] = 4;
             values[valuesById[5] = "PUT_CONVERSATION_ANCHOR"] = 5;
+            values[valuesById[6] = "PUT_MESSAGE"] = 6;
             return values;
         })();
     
@@ -1631,6 +1633,7 @@
                     case 3:
                     case 4:
                     case 5:
+                    case 6:
                         break;
                     }
                 if (message.content != null && message.hasOwnProperty("content"))
@@ -1685,6 +1688,10 @@
                 case "PUT_CONVERSATION_ANCHOR":
                 case 5:
                     message.type = 5;
+                    break;
+                case "PUT_MESSAGE":
+                case 6:
+                    message.type = 6;
                     break;
                 }
                 if (object.content != null)
@@ -2194,6 +2201,7 @@
          * @property {number} MESSAGE_TYPE_IMAGE=3 MESSAGE_TYPE_IMAGE value
          * @property {number} MESSAGE_TYPE_VIDEO=4 MESSAGE_TYPE_VIDEO value
          * @property {number} MESSAGE_TYPE_FILE=5 MESSAGE_TYPE_FILE value
+         * @property {number} MESSAGE_TYPE_STATE_ONLY=101 MESSAGE_TYPE_STATE_ONLY value
          */
         sheason_chat.MessageType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -2203,6 +2211,7 @@
             values[valuesById[3] = "MESSAGE_TYPE_IMAGE"] = 3;
             values[valuesById[4] = "MESSAGE_TYPE_VIDEO"] = 4;
             values[valuesById[5] = "MESSAGE_TYPE_FILE"] = 5;
+            values[valuesById[101] = "MESSAGE_TYPE_STATE_ONLY"] = 101;
             return values;
         })();
     
@@ -2218,6 +2227,7 @@
              * @property {sheason_chat.IAccountSnapshot|null} [sender] PortableMessage sender
              * @property {sheason_chat.IPortableConversation|null} [conversation] PortableMessage conversation
              * @property {Array.<sheason_chat.IPortableMessageState>|null} [messageStates] PortableMessage messageStates
+             * @property {number|Long|null} [createdAt] PortableMessage createdAt
              */
     
             /**
@@ -2285,6 +2295,14 @@
             PortableMessage.prototype.messageStates = $util.emptyArray;
     
             /**
+             * PortableMessage createdAt.
+             * @member {number|Long} createdAt
+             * @memberof sheason_chat.PortableMessage
+             * @instance
+             */
+            PortableMessage.prototype.createdAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
              * Creates a new PortableMessage instance using the specified properties.
              * @function create
              * @memberof sheason_chat.PortableMessage
@@ -2321,6 +2339,8 @@
                 if (message.messageStates != null && message.messageStates.length)
                     for (var i = 0; i < message.messageStates.length; ++i)
                         $root.sheason_chat.PortableMessageState.encode(message.messageStates[i], writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.createdAt);
                 return writer;
             };
     
@@ -2381,6 +2401,10 @@
                             message.messageStates.push($root.sheason_chat.PortableMessageState.decode(reader, reader.uint32()));
                             break;
                         }
+                    case 7: {
+                            message.createdAt = reader.int64();
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -2429,6 +2453,7 @@
                     case 3:
                     case 4:
                     case 5:
+                    case 101:
                         break;
                     }
                 if (message.content != null && message.hasOwnProperty("content"))
@@ -2453,6 +2478,9 @@
                             return "messageStates." + error;
                     }
                 }
+                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
+                    if (!$util.isInteger(message.createdAt) && !(message.createdAt && $util.isInteger(message.createdAt.low) && $util.isInteger(message.createdAt.high)))
+                        return "createdAt: integer|Long expected";
                 return null;
             };
     
@@ -2501,6 +2529,10 @@
                 case 5:
                     message.messageType = 5;
                     break;
+                case "MESSAGE_TYPE_STATE_ONLY":
+                case 101:
+                    message.messageType = 101;
+                    break;
                 }
                 if (object.content != null)
                     message.content = String(object.content);
@@ -2524,6 +2556,15 @@
                         message.messageStates[i] = $root.sheason_chat.PortableMessageState.fromObject(object.messageStates[i]);
                     }
                 }
+                if (object.createdAt != null)
+                    if ($util.Long)
+                        (message.createdAt = $util.Long.fromValue(object.createdAt)).unsigned = false;
+                    else if (typeof object.createdAt === "string")
+                        message.createdAt = parseInt(object.createdAt, 10);
+                    else if (typeof object.createdAt === "number")
+                        message.createdAt = object.createdAt;
+                    else if (typeof object.createdAt === "object")
+                        message.createdAt = new $util.LongBits(object.createdAt.low >>> 0, object.createdAt.high >>> 0).toNumber();
                 return message;
             };
     
@@ -2548,6 +2589,11 @@
                     object.content = "";
                     object.sender = null;
                     object.conversation = null;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.createdAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.createdAt = options.longs === String ? "0" : 0;
                 }
                 if (message.uuid != null && message.hasOwnProperty("uuid"))
                     object.uuid = message.uuid;
@@ -2564,6 +2610,11 @@
                     for (var j = 0; j < message.messageStates.length; ++j)
                         object.messageStates[j] = $root.sheason_chat.PortableMessageState.toObject(message.messageStates[j], options);
                 }
+                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
+                    if (typeof message.createdAt === "number")
+                        object.createdAt = options.longs === String ? String(message.createdAt) : message.createdAt;
+                    else
+                        object.createdAt = options.longs === String ? $util.Long.prototype.toString.call(message.createdAt) : options.longs === Number ? new $util.LongBits(message.createdAt.low >>> 0, message.createdAt.high >>> 0).toNumber() : message.createdAt;
                 return object;
             };
     
@@ -2602,7 +2653,7 @@
              * Properties of a PortableMessageState.
              * @memberof sheason_chat
              * @interface IPortableMessageState
-             * @property {sheason_chat.IAccountIndex|null} [account] PortableMessageState account
+             * @property {sheason_chat.IAccountIndex|null} [accountIndex] PortableMessageState accountIndex
              * @property {number|Long|null} [createdAt] PortableMessageState createdAt
              * @property {number|Long|null} [receiveAt] PortableMessageState receiveAt
              * @property {number|Long|null} [checkedAt] PortableMessageState checkedAt
@@ -2624,12 +2675,12 @@
             }
     
             /**
-             * PortableMessageState account.
-             * @member {sheason_chat.IAccountIndex|null|undefined} account
+             * PortableMessageState accountIndex.
+             * @member {sheason_chat.IAccountIndex|null|undefined} accountIndex
              * @memberof sheason_chat.PortableMessageState
              * @instance
              */
-            PortableMessageState.prototype.account = null;
+            PortableMessageState.prototype.accountIndex = null;
     
             /**
              * PortableMessageState createdAt.
@@ -2679,8 +2730,8 @@
             PortableMessageState.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.account != null && Object.hasOwnProperty.call(message, "account"))
-                    $root.sheason_chat.AccountIndex.encode(message.account, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.accountIndex != null && Object.hasOwnProperty.call(message, "accountIndex"))
+                    $root.sheason_chat.AccountIndex.encode(message.accountIndex, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                 if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
                     writer.uint32(/* id 2, wireType 0 =*/16).int64(message.createdAt);
                 if (message.receiveAt != null && Object.hasOwnProperty.call(message, "receiveAt"))
@@ -2722,7 +2773,7 @@
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
                     case 1: {
-                            message.account = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
+                            message.accountIndex = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
                             break;
                         }
                     case 2: {
@@ -2772,10 +2823,10 @@
             PortableMessageState.verify = function verify(message) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
-                if (message.account != null && message.hasOwnProperty("account")) {
-                    var error = $root.sheason_chat.AccountIndex.verify(message.account);
+                if (message.accountIndex != null && message.hasOwnProperty("accountIndex")) {
+                    var error = $root.sheason_chat.AccountIndex.verify(message.accountIndex);
                     if (error)
-                        return "account." + error;
+                        return "accountIndex." + error;
                 }
                 if (message.createdAt != null && message.hasOwnProperty("createdAt"))
                     if (!$util.isInteger(message.createdAt) && !(message.createdAt && $util.isInteger(message.createdAt.low) && $util.isInteger(message.createdAt.high)))
@@ -2801,10 +2852,10 @@
                 if (object instanceof $root.sheason_chat.PortableMessageState)
                     return object;
                 var message = new $root.sheason_chat.PortableMessageState();
-                if (object.account != null) {
-                    if (typeof object.account !== "object")
-                        throw TypeError(".sheason_chat.PortableMessageState.account: object expected");
-                    message.account = $root.sheason_chat.AccountIndex.fromObject(object.account);
+                if (object.accountIndex != null) {
+                    if (typeof object.accountIndex !== "object")
+                        throw TypeError(".sheason_chat.PortableMessageState.accountIndex: object expected");
+                    message.accountIndex = $root.sheason_chat.AccountIndex.fromObject(object.accountIndex);
                 }
                 if (object.createdAt != null)
                     if ($util.Long)
@@ -2850,7 +2901,7 @@
                     options = {};
                 var object = {};
                 if (options.defaults) {
-                    object.account = null;
+                    object.accountIndex = null;
                     if ($util.Long) {
                         var long = new $util.Long(0, 0, false);
                         object.createdAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
@@ -2867,8 +2918,8 @@
                     } else
                         object.checkedAt = options.longs === String ? "0" : 0;
                 }
-                if (message.account != null && message.hasOwnProperty("account"))
-                    object.account = $root.sheason_chat.AccountIndex.toObject(message.account, options);
+                if (message.accountIndex != null && message.hasOwnProperty("accountIndex"))
+                    object.accountIndex = $root.sheason_chat.AccountIndex.toObject(message.accountIndex, options);
                 if (message.createdAt != null && message.hasOwnProperty("createdAt"))
                     if (typeof message.createdAt === "number")
                         object.createdAt = options.longs === String ? String(message.createdAt) : message.createdAt;

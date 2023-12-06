@@ -507,6 +507,7 @@ class PortableMessage extends $pb.GeneratedMessage {
     ..aOM<AccountSnapshot>(4, _omitFieldNames ? '' : 'sender', subBuilder: AccountSnapshot.create)
     ..aOM<PortableConversation>(5, _omitFieldNames ? '' : 'conversation', subBuilder: PortableConversation.create)
     ..pc<PortableMessageState>(6, _omitFieldNames ? '' : 'messageStates', $pb.PbFieldType.PM, subBuilder: PortableMessageState.create)
+    ..aInt64(7, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false
   ;
 
@@ -582,6 +583,15 @@ class PortableMessage extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(6)
   $core.List<PortableMessageState> get messageStates => $_getList(5);
+
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get createdAt => $_getI64(6);
+  @$pb.TagNumber(7)
+  set createdAt($fixnum.Int64 v) { $_setInt64(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasCreatedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCreatedAt() => clearField(7);
 }
 
 class PortableMessageState extends $pb.GeneratedMessage {
@@ -591,7 +601,7 @@ class PortableMessageState extends $pb.GeneratedMessage {
   factory PortableMessageState.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PortableMessageState', package: const $pb.PackageName(_omitMessageNames ? '' : 'sheason_chat'), createEmptyInstance: create)
-    ..aOM<AccountIndex>(1, _omitFieldNames ? '' : 'account', subBuilder: AccountIndex.create)
+    ..aOM<AccountIndex>(1, _omitFieldNames ? '' : 'accountIndex', subBuilder: AccountIndex.create)
     ..aInt64(2, _omitFieldNames ? '' : 'createdAt')
     ..aInt64(3, _omitFieldNames ? '' : 'receiveAt')
     ..aInt64(4, _omitFieldNames ? '' : 'checkedAt')
@@ -620,15 +630,15 @@ class PortableMessageState extends $pb.GeneratedMessage {
   static PortableMessageState? _defaultInstance;
 
   @$pb.TagNumber(1)
-  AccountIndex get account => $_getN(0);
+  AccountIndex get accountIndex => $_getN(0);
   @$pb.TagNumber(1)
-  set account(AccountIndex v) { setField(1, v); }
+  set accountIndex(AccountIndex v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasAccount() => $_has(0);
+  $core.bool hasAccountIndex() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAccount() => clearField(1);
+  void clearAccountIndex() => clearField(1);
   @$pb.TagNumber(1)
-  AccountIndex ensureAccount() => $_ensure(0);
+  AccountIndex ensureAccountIndex() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get createdAt => $_getI64(1);

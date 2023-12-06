@@ -5,6 +5,7 @@ import { AccountService } from 'src/account/account.service';
 import { OperationService } from 'src/operation/operation.service';
 import { sheason_chat } from 'src/prototypes';
 import { IPullOperation, IPushOperation } from 'src/operation/typings';
+import { prisma } from 'src/prisma/prisma';
 
 @WebSocketGateway({ path: '/subscribe' })
 export class SubscribeGateway {
@@ -44,9 +45,8 @@ export class SubscribeGateway {
 
     const diffMap = await this.operationService.diff(account, payload);
     console.log('account id', account.id, 'diff map::', diffMap);
-    if (diffMap.push.length > 0) {
-      client.emit('push-operation', { operations: diffMap.push });
-    }
+
+    client.emit('push-operation', { operations: diffMap.push });
     if (Object.keys(diffMap.pull).length > 0) {
       client.emit('pull-operation', diffMap.pull);
     }
@@ -69,5 +69,27 @@ export class SubscribeGateway {
     if (applyList.length > 0) {
       client.broadcast.to(account.signPubkey).emit('sync-operation');
     }
+  }
+
+  @SubscribeMessage('sync-message')
+  async handleSyncMessage(client: Socket, payload: { signatures: string[] }) {
+    const account = this.socketMap.get(client);
+    if (!account) {
+      throw new Error('Cannot find account by socket client');
+    }
+
+    console.log('sync message', payload);
+    const records = await prisma.message.findMany({
+      where: {
+        account,
+        signature: {
+          notIn: payload.signatures.map((e) => Buffer.from(e, 'base64')),
+        },
+      },
+    });
+
+    client.emit('push-message', {
+      messages: records.map((e) => e.buffer.toString('base64')),
+    });
   }
 }

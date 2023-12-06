@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
+import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/operation_cipher/operation_cipher.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -14,6 +15,8 @@ class Subscribe {
   final Scope scope;
   final String deviceId;
   final String url;
+
+  var _shouldSyncMessage = true;
 
   Subscribe({
     required this.scope,
@@ -70,12 +73,34 @@ class Subscribe {
       }
     });
     socket.on('push-operation', (data) async {
-      final operations = await OperationCipher.decrypt(
-        scope,
-        data['operations'],
-      );
-      await scope.operator.apply(operations);
+      final List operations = data['operations'];
+      if (operations.isNotEmpty) {
+        final portableOperations = await OperationCipher.decrypt(
+          scope,
+          operations,
+        );
+        await scope.operator.apply(portableOperations);
+      }
+
+      if (_shouldSyncMessage) {
+        _shouldSyncMessage = false;
+        await syncMessage();
+      }
     });
+    socket.on('push-message', (data) async {
+      final List messages = data['messages'];
+      final wrappers = messages
+          .map((e) => base64Decode(e))
+          .map((e) => SignWrapper.fromBuffer(e));
+      for (final wrapper in wrappers) {
+        final valid = await wrapper.verify();
+        if (!valid) continue;
+
+        final operation = await scope.operator.factory.message(wrapper);
+        await scope.operator.apply([operation]);
+      }
+    });
+
     socket.on('sync-operation', (data) => syncOperation());
     socket.on('pull-snapshot', (data) async {
       await handleUploadSnapshot();
@@ -109,6 +134,14 @@ class Subscribe {
     }
 
     socket.emit('sync-operation', replicaClockMap);
+  }
+
+  syncMessage() async {
+    final select = scope.db.messageSignatures.select();
+    final records = await select.get();
+    socket.emit('sync-message', {
+      'signatures': records.map((e) => base64Encode(e.signature)).toList(),
+    });
   }
 
   handleSendMessage() async {

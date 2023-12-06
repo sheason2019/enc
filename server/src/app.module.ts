@@ -6,6 +6,7 @@ import { ReplicaModule } from './replica/replica.module';
 import { AccountModule } from './account/account.module';
 import { OperationModule } from './operation/operation.module';
 import { CryptoModule } from './crypto/crypto.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CryptoModule } from './crypto/crypto.module';
     AccountModule,
     OperationModule,
     CryptoModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

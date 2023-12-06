@@ -19,15 +19,11 @@ class OperationCipher {
     final output = <Map<String, dynamic>>[];
     for (final operation in operations) {
       final secretBox = await CryptoUtils.encrypt(
-        keypair,
-        keypair.ecdhPubKey,
+        scope,
+        scope.snapshot.index,
         operation.info.writeToBuffer(),
       );
-      final portableSecret = PortableSecretBox()
-        ..cipherData = secretBox.cipherText
-        ..nonce = secretBox.nonce
-        ..mac = secretBox.mac.bytes;
-      final buffer = portableSecret.writeToBuffer();
+      final buffer = secretBox.writeToBuffer();
       final sign = await CryptoUtils.createSignature(keypair, buffer);
       final signWrapper = SignWrapper()
         ..buffer = buffer
@@ -47,9 +43,8 @@ class OperationCipher {
 
   static Future<List<PortableOperation>> decrypt(
     Scope scope,
-    List<Map<String, dynamic>> operations,
+    List operations,
   ) async {
-    final keypair = CryptoKeyPair.fromSecret(scope.secret);
     final outputs = <PortableOperation>[];
     for (final operation in operations) {
       final data = SignWrapper.fromBuffer(
@@ -72,13 +67,8 @@ class OperationCipher {
         data.buffer,
       );
       final decryptBuffer = await CryptoUtils.decrypt(
-        keypair,
-        keypair.ecdhPubKey,
-        SecretBox(
-          secretBox.cipherData,
-          nonce: secretBox.nonce,
-          mac: Mac(secretBox.mac),
-        ),
+        scope,
+        secretBox,
       );
 
       final output = PortableOperation.fromBuffer(decryptBuffer);

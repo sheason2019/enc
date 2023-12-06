@@ -44,6 +44,16 @@ class OperationFactory {
     return operation;
   }
 
+  Future<PortableOperation> message(
+    SignWrapper wrapper,
+  ) async {
+    final operation = await _createWithClock(
+      OperationType.PUT_MESSAGE,
+    );
+    operation.content = base64Encode(wrapper.writeToBuffer());
+    return operation;
+  }
+
   Future<PortableOperation> _createWithClock(OperationType type) async {
     final maxClock = scope.db.operations.clock.max();
     final selectCurrentClock = scope.db.operations.selectOnly()

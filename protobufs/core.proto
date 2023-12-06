@@ -44,6 +44,7 @@ enum OperationType {
   PUT_CONTACT = 3;
   PUT_CONVERSATION = 4;
   PUT_CONVERSATION_ANCHOR = 5;
+  PUT_MESSAGE = 6;
 }
 
 message PortableOperation {
@@ -76,6 +77,7 @@ enum MessageType {
   MESSAGE_TYPE_IMAGE = 3;
   MESSAGE_TYPE_VIDEO = 4;
   MESSAGE_TYPE_FILE = 5;
+  MESSAGE_TYPE_STATE_ONLY = 101;
 }
 
 message PortableMessage {
@@ -85,10 +87,11 @@ message PortableMessage {
   AccountSnapshot sender = 4;
   PortableConversation conversation = 5;
   repeated PortableMessageState message_states = 6;
+  int64 created_at = 7;
 }
 
 message PortableMessageState {
-  AccountIndex account = 1;
+  AccountIndex account_index = 1;
   int64 created_at = 2;
   int64 receive_at = 3;
   int64 checked_at = 4;

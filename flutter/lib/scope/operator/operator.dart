@@ -57,7 +57,9 @@ class Operator {
       (tbl) => OrderingTerm.asc(tbl.clock),
       (tbl) => OrderingTerm.asc(tbl.clientId),
     ]);
-    final operation = await select.getSingle();
+    select.limit(1);
+    final operation = await select.getSingleOrNull();
+    if (operation == null) return [];
 
     // 查询需要 Revert 的 Operation
     final selectRevert = scope.db.operations.select();

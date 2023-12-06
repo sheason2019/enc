@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
+import 'package:sheason_chat/chat/room/list/list.view.dart';
+import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/chat/room/title/title.view.dart';
 import 'package:sheason_chat/extensions/conversation/conversation.dart';
 import 'package:sheason_chat/schema/database.dart';
@@ -38,16 +40,26 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.value(
-      value: widget.conversation,
+    final scope = context.watch<Scope>();
+    return MultiProvider(
+      providers: [
+        Provider.value(value: widget.conversation),
+        ListenableProvider(
+          create: (context) => ChatRoomController(
+            scope: scope,
+            conversation: widget.conversation,
+          ),
+          dispose: (context, controller) => controller.dispose(),
+        )
+      ],
       builder: (context, _) => Scaffold(
         appBar: AppBar(
           title: const ChatRoomPageTitle(),
         ),
-        body: Column(
+        body: const Column(
           children: [
-            Expanded(child: Container()),
-            const ChatRoomPageInput(),
+            Expanded(child: MessageListView()),
+            ChatRoomPageInput(),
           ],
         ),
       ),

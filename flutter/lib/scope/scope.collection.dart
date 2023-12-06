@@ -18,7 +18,11 @@ class ScopeCollection extends ChangeNotifier {
   }
 
   updateScopes() async {
-    final entries = Directory(await accountsPath).listSync();
+    final dir = Directory(await accountsPath);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+    final entries = dir.listSync();
     final paths = entries
         .map((e) => e.path)
         .where((e) => !path.basename(e).startsWith('.'))

@@ -17,7 +17,9 @@ model Account {
 
   snapshot  Bytes
   signature Bytes?
+
   Operation Operation[]
+  Message   Message[]
 }
 
 model Operation {
@@ -28,4 +30,13 @@ model Operation {
 
   accountID Int
   account   Account @relation(fields: [accountID], references: [id])
+}
+
+model Message {
+  id        Int   @id @default(autoincrement())
+  signature Bytes
+  buffer    Bytes
+
+  accountID Int?
+  account   Account? @relation(fields: [accountID], references: [id])
 }

@@ -59,10 +59,18 @@ class ContactDetailPage extends StatelessWidget {
               snapshot.username,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Text(
-              snapshot.index.signPubKey,
-              overflow: TextOverflow.ellipsis,
-            ),
+          ),
+          ListTile(
+            title: const Text('ECDH Public Key'),
+            subtitle: Text(snapshot.index.ecdhPubKey),
+          ),
+          ListTile(
+            title: const Text('SIGN Public Key'),
+            subtitle: Text(snapshot.index.signPubKey),
+          ),
+          ListTile(
+            title: const Text('Service URL'),
+            subtitle: Text(snapshot.serviceMap.keys.join('\n')),
           ),
           ListTile(
             onTap: () => toPrivateConversation(context),

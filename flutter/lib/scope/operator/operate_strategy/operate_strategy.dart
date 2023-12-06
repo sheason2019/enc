@@ -4,6 +4,7 @@ import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_contact_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_conversation_anchor_strategy.dart';
+import 'package:sheason_chat/scope/operator/operate_strategy/put_message_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_username_strategy.part.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -52,6 +53,14 @@ abstract class OperateStrategy {
           scope: scope,
           operation: operation,
           portable: PortableConversation.fromBuffer(
+            base64Decode(operation.info.content),
+          ),
+        );
+      case OperationType.PUT_MESSAGE:
+        return PutMessageStrategy(
+          scope: scope,
+          operation: operation,
+          wrapper: SignWrapper.fromBuffer(
             base64Decode(operation.info.content),
           ),
         );
