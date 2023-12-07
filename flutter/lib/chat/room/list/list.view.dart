@@ -27,10 +27,11 @@ class MessageListView extends StatelessWidget {
       initialData: const [],
       stream: messageStream(context),
       builder: (context, snapshot) => ListView.builder(
+        cacheExtent: 1080,
         itemCount: snapshot.requireData.length,
         itemBuilder: (context, index) => MessageListItemView(
           messageId: snapshot.requireData[index],
-        ).padding(vertical: 4, horizontal: 12),
+        ).padding(vertical: 8, horizontal: 12),
       ),
     ).backgroundColor(Colors.black.withOpacity(0.05));
   }
