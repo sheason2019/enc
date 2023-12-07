@@ -29,7 +29,7 @@ class PutConversationAnchorAtomProceder
     list.insert(0, conversation.id);
 
     final anchor = ConversationAnchor(list: list);
-    await scope.handleSetConversationAnchor(anchor);
+    scope.handleSetConversationAnchor(anchor);
 
     return OperateAtom(
       type: OperateAtomType.putConversationAnchor,

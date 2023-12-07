@@ -6,6 +6,7 @@ import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversatino_anchor_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
@@ -93,6 +94,14 @@ class PutMessageStrategy implements OperateStrategy {
       );
       atoms.add(messageStateAtom);
     }
+
+    // Conversation Anchor
+    final anchorProceeder = PutConversationAnchorAtomProceder();
+    final anchorAtom = await anchorProceeder.apply(
+      scope,
+      portableMessage.conversation,
+    );
+    atoms.add(anchorAtom);
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));

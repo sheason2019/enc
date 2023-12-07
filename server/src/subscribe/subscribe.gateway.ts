@@ -1,5 +1,9 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
 import { Account } from '@prisma/client';
 import { AccountService } from 'src/account/account.service';
 import { OperationService } from 'src/operation/operation.service';
@@ -15,6 +19,9 @@ export class SubscribeGateway {
   ) {}
 
   socketMap = new WeakMap<Socket, Account>();
+
+  @WebSocketServer()
+  server: Server;
 
   @SubscribeMessage('subscribe')
   async handleSubscribe(

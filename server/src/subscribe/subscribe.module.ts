@@ -6,5 +6,6 @@ import { OperationModule } from 'src/operation/operation.module';
 @Module({
   providers: [SubscribeGateway],
   imports: [AccountModule, OperationModule],
+  exports: [SubscribeGateway],
 })
 export class SubscribeModule {}

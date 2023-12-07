@@ -2,6 +2,7 @@
 import 'package:cryptography/cryptography.dart';
 import 'package:jwk/jwk.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
+import 'package:sheason_chat/extensions/portable_secret_box/portable_secret_box.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -74,11 +75,9 @@ class CryptoUtils {
     PortableSecretBox secretBox,
   ) async {
     final keypair = CryptoKeyPair.fromSecret(secret);
-    if (secret.ecdhPubKey != secretBox.receiver.ecdhPubKey) {
-      throw Exception('Current account is not secret box receiver');
-    }
+    final agent = secretBox.findAgent(secret);
 
-    final secretKey = await _sharedSecret(keypair, secretBox.sender.ecdhPubKey);
+    final secretKey = await _sharedSecret(keypair, agent.ecdhPubKey);
     final algorithm = Chacha20.poly1305Aead();
     final wand = await algorithm.newCipherWandFromSecretKey(secretKey);
     return wand.decrypt(
