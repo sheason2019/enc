@@ -30,8 +30,8 @@ class MessageListView extends StatelessWidget {
         itemCount: snapshot.requireData.length,
         itemBuilder: (context, index) => MessageListItemView(
           messageId: snapshot.requireData[index],
-        ).padding(vertical: 4),
+        ).padding(vertical: 4, horizontal: 12),
       ),
-    ).padding(horizontal: 12).backgroundColor(Colors.black.withOpacity(0.05));
+    ).backgroundColor(Colors.black.withOpacity(0.05));
   }
 }

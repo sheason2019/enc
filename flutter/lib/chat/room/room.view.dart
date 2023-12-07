@@ -55,6 +55,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       builder: (context, _) => Scaffold(
         appBar: AppBar(
           title: const ChatRoomPageTitle(),
+          scrolledUnderElevation: 0,
         ),
         body: const Column(
           children: [
