@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/message_debug/message_debug.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/progress.view.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:sheason_chat/utils/string_helper.dart';
@@ -12,6 +14,14 @@ class MessageListItemWrapperView extends StatelessWidget {
     super.key,
     required this.child,
   });
+
+  toDebugPage(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    final message = context.read<Message>();
+
+    delegate.pages.add(MessageDebugPage(message: message));
+    delegate.notify();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +70,31 @@ class MessageListItemWrapperView extends StatelessWidget {
                     : TextDirection.ltr,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Card(
-                    color: isCurrentAccountSend ? Colors.blue : Colors.white,
-                    elevation: 0,
-                    child: child,
+                  MenuAnchor(
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () => toDebugPage(context),
+                        child: const Text(
+                          '查看调试信息',
+                        ),
+                      ),
+                    ],
+                    style: const MenuStyle(
+                        visualDensity: VisualDensity.comfortable,
+                        alignment: FractionalOffset(0, -1.25)),
+                    anchorTapClosesMenu: true,
+                    builder: (context, controller, _) => GestureDetector(
+                      onLongPress: () => controller.open(),
+                      onSecondaryTapDown: (details) => controller.open(
+                        position: details.localPosition,
+                      ),
+                      child: Card(
+                        color:
+                            isCurrentAccountSend ? Colors.blue : Colors.white,
+                        elevation: 0,
+                        child: child,
+                      ),
+                    ),
                   ),
                   const MessageStateProgressView(),
                 ],

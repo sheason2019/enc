@@ -17,9 +17,8 @@ class TextMessageView extends StatelessWidget {
     final isCurrentAccountSend = contact.signPubkey == scope.secret.signPubKey;
 
     return MessageListItemWrapperView(
-      child: SelectableText(
+      child: Text(
         message.content,
-        cursorWidth: 0,
         style: TextStyle(
           color: isCurrentAccountSend ? Colors.white : Colors.black,
         ),
