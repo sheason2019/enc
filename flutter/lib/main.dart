@@ -61,6 +61,14 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
+            TargetPlatform.android: ZoomPageTransitionsBuilder(
+              allowEnterRouteSnapshotting: false,
+            ),
+            TargetPlatform.windows: ZoomPageTransitionsBuilder(
+              allowEnterRouteSnapshotting: false,
+            ),
+          }),
         ),
         debugShowCheckedModeBanner: false,
         routerDelegate: mainController.rootDelegate,
