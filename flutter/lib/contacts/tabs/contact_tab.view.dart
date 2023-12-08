@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/contacts/detail/detail.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -65,7 +66,7 @@ class ContactListTile extends StatelessWidget {
 
         return ListTile(
           onTap: () => handleClick(context, account),
-          leading: const CircleAvatar(),
+          leading: AccountAvatar(snapshot: account),
           title: Text(
             account.username,
             overflow: TextOverflow.ellipsis,

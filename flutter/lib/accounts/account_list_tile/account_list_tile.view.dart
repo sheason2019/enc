@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -29,7 +30,9 @@ class AccountListTile extends StatelessWidget {
       child: ListTile(
         onTap: () => handleEnterScope(context),
         onLongPress: () => handleDeleteScope(context),
-        leading: const CircleAvatar(),
+        leading: AccountAvatar(
+          snapshot: scope.snapshot,
+        ),
         title: Text(
           scope.snapshot.username,
           overflow: TextOverflow.ellipsis,

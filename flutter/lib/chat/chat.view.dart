@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/accounts/accounts.view.dart';
 import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
 import 'package:sheason_chat/chat/anchors/anchors.view.dart';
 import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
@@ -22,6 +24,8 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scope = context.watch<Scope>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('消息列表'),
@@ -29,9 +33,11 @@ class ChatView extends StatelessWidget {
         leading: Center(
           child: GestureDetector(
             onTap: () => toAccounts(context),
-            child: const MouseRegion(
+            child: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: CircleAvatar(),
+              child: AccountAvatar(
+                snapshot: scope.snapshot,
+              ),
             ),
           ),
         ),

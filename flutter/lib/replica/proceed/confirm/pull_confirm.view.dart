@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/replica/replica.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -15,7 +16,7 @@ class ReplicaProceedConfirmPull extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: const CircleAvatar(),
+          leading: AccountAvatar(snapshot: target),
           title: Text(target.username),
           subtitle: Text(target.index.signPubKey),
         ),

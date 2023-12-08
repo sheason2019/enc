@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/chat/room/room.view.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/main.controller.dart';
@@ -54,7 +55,7 @@ class ContactDetailPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: const CircleAvatar(),
+            leading: AccountAvatar(snapshot: snapshot),
             title: Text(
               snapshot.username,
               overflow: TextOverflow.ellipsis,
