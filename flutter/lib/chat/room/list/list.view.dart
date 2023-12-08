@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sheason_chat/chat/room/list/list_item/list_item.view.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -17,6 +18,13 @@ class MessageListView extends StatefulWidget {
 
 class _MessageListViewState extends State<MessageListView> {
   StreamSubscription? sub;
+  var inited = false;
+  var initId = 0;
+
+  final itemScrollController = ItemScrollController();
+  final scrollOffsetController = ScrollOffsetController();
+  final itemPositionListener = ItemPositionsListener.create();
+  final scrollOffsetListener = ScrollOffsetListener.create();
 
   Stream<List<int>> watchData() {
     final scope = context.read<Scope>();
@@ -60,12 +68,15 @@ class _MessageListViewState extends State<MessageListView> {
     select.limit(1);
 
     final record = await select.getSingleOrNull();
-
-    final initId = record?.read(db.messages.id) ?? 0;
+    setState(() {
+      initId = record?.read(db.messages.id) ?? 0;
+      inited = true;
+    });
   }
 
   @override
   void initState() {
+    fetchInitIndex();
     super.initState();
   }
 
@@ -77,18 +88,36 @@ class _MessageListViewState extends State<MessageListView> {
 
   @override
   Widget build(BuildContext context) {
+    if (!inited) return const SizedBox.shrink();
+
     return StreamBuilder<List<int>>(
       initialData: const [],
       stream: watchData(),
       builder: (context, snapshot) {
-        var messages = snapshot.requireData;
+        if (snapshot.requireData.isEmpty) return const SizedBox.shrink();
 
-        return ListView.builder(
-          cacheExtent: 1440,
+        final messages = snapshot.requireData;
+        var initIndex = messages.indexOf(initId) + 1;
+        if (initIndex == 0) {
+          initIndex = messages.length;
+        }
+        messages.add(-1);
+
+        return ScrollablePositionedList.builder(
+          itemScrollController: itemScrollController,
+          scrollOffsetController: scrollOffsetController,
+          itemPositionsListener: itemPositionListener,
+          scrollOffsetListener: scrollOffsetListener,
           itemCount: messages.length,
-          itemBuilder: (context, index) => MessageListItemView(
-            messageId: messages[index],
-          ).padding(vertical: 8, horizontal: 12),
+          initialScrollIndex: initIndex,
+          initialAlignment: 1,
+          itemBuilder: (context, index) {
+            if (messages[index] == -1) return const SizedBox.shrink();
+
+            return MessageListItemView(
+              messageId: messages[index],
+            ).padding(vertical: 8, horizontal: 12);
+          },
         ).backgroundColor(Colors.black.withOpacity(0.05));
       },
     );
