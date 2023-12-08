@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/chat/room/room.view.dart';
+import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
@@ -77,7 +79,7 @@ class ConversationAnchorListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => handleClick(context),
-      leading: const CircleAvatar(),
+      leading: _ConversationAnchorAvatar(conversation: conversation),
       title: Row(
         children: [
           StreamBuilder(
@@ -116,11 +118,46 @@ class ConversationAnchorListTile extends StatelessWidget {
           StreamBuilder(
             stream: uncheckMessageCount(context),
             builder: (context, snapshot) => snapshot.hasData
-                ? Badge.count(count: snapshot.requireData)
+                ? Badge.count(
+                    count: snapshot.requireData,
+                    isLabelVisible: snapshot.requireData > 0,
+                  )
                 : const SizedBox.shrink(),
           ),
         ],
       ),
     );
+  }
+}
+
+class _ConversationAnchorAvatar extends StatelessWidget {
+  final Conversation conversation;
+  const _ConversationAnchorAvatar({
+    required this.conversation,
+  });
+
+  Stream<AccountSnapshot> fetchContact(BuildContext context) {
+    final scope = context.watch<Scope>();
+    final agent = conversation.info.findAgent(scope);
+
+    final db = scope.db;
+    final select = db.contacts.select();
+    select.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
+    return select.watchSingle().map((event) => event.snapshot);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (conversation.type == ConversationType.CONVERSATION_PRIVATE) {
+      return StreamBuilder<AccountSnapshot>(
+        initialData: AccountSnapshot(),
+        stream: fetchContact(context),
+        builder: (context, snapshot) => AccountAvatar(
+          snapshot: snapshot.requireData,
+        ),
+      );
+    }
+
+    throw UnimplementedError();
   }
 }

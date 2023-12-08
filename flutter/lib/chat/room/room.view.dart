@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
+import 'package:sheason_chat/chat/room/list/checker.controller.dart';
 import 'package:sheason_chat/chat/room/list/list.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/chat/room/title/title.view.dart';
@@ -50,7 +51,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             conversation: widget.conversation,
           ),
           dispose: (context, controller) => controller.dispose(),
-        )
+        ),
+        Provider(
+          create: (context) => MessageChecker(
+            scope: scope,
+            conversation: widget.conversation,
+            chatController: context.read<ChatRoomController>(),
+          ),
+        ),
       ],
       builder: (context, _) => Scaffold(
         appBar: AppBar(

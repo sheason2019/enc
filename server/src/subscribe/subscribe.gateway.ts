@@ -96,7 +96,7 @@ export class SubscribeGateway {
     });
 
     client.emit('push-message', {
-      messages: records.map((e) => e.buffer.toString('base64')),
+      messages: JSON.stringify(records.map((e) => e.buffer.toString('base64'))),
     });
   }
 }

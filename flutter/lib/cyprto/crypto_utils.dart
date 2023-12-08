@@ -90,9 +90,10 @@ class CryptoUtils {
   }
 
   static Future<Signature> createSignature(
-    CryptoKeyPair keypair,
+    Scope scope,
     List<int> originData,
   ) async {
+    final keypair = CryptoKeyPair.fromSecret(scope.secret);
     final algorithm = Ed25519();
     final key = keypair.getSignKeypair();
     final wand = await algorithm.newSignatureWandFromKeyPair(key);

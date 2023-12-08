@@ -30,14 +30,17 @@ export class MessageController {
     if (!account) {
       throw new HttpException('cannot find account', 404);
     }
-    const wrapper = sheason_chat.SignWrapper.decode(
-      Buffer.from(body.data, 'base64'),
+    const data: string[] = JSON.parse(body.data);
+    const wrappers = data.map((e) =>
+      sheason_chat.SignWrapper.decode(Buffer.from(e, 'base64')),
     );
-    await this.messageService.put(account, wrapper);
+    for (const wrapper of wrappers) {
+      await this.messageService.put(account, wrapper);
+    }
 
     this.subscribeGateway.server
       .to(account.signPubkey)
-      .emit('push-message', { messages: [body.data] });
+      .emit('push-message', { messages: body.data });
 
     return 'OK';
   }

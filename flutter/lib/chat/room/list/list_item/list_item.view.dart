@@ -1,11 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/list/checker.controller.dart';
 import 'package:sheason_chat/chat/room/list/list_item/message_context.model.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/text.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class MessageListItemView extends StatelessWidget {
   final int messageId;
@@ -19,7 +21,7 @@ class MessageListItemView extends StatelessWidget {
         scope.db.contacts.id.equalsExp(
           scope.db.messages.contactId,
         ),
-      )
+      ),
     ]);
     select.where(scope.db.messages.id.equals(messageId));
     final record = await select.getSingle();
@@ -52,8 +54,7 @@ class MessageListItemView extends StatelessWidget {
 class _MessageItemRenderer extends StatelessWidget {
   const _MessageItemRenderer();
 
-  @override
-  Widget build(BuildContext context) {
+  Widget contentBuilder(BuildContext context) {
     final message = context.watch<Message>();
     switch (message.messageType) {
       case MessageType.MESSAGE_TYPE_TEXT:
@@ -61,5 +62,46 @@ class _MessageItemRenderer extends StatelessWidget {
       default:
         return Container();
     }
+  }
+
+  Stream<int?> stateStream(BuildContext context) {
+    final scope = context.watch<Scope>();
+    final message = context.watch<Message>();
+    final db = scope.db;
+
+    final select = db.messageStates.selectOnly().join([
+      innerJoin(
+        db.contacts,
+        db.contacts.id.equalsExp(db.messageStates.contactId),
+      ),
+    ]);
+    select.addColumns([db.messageStates.id]);
+    select.where(db.contacts.signPubkey.equals(scope.secret.signPubKey));
+    select.where(db.messageStates.messageId.equals(message.id));
+    return select
+        .watchSingleOrNull()
+        .map((event) => event?.read(db.messageStates.id));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final message = context.watch<Message>();
+    return StreamBuilder(
+      stream: stateStream(context),
+      builder: (context, snapshot) {
+        return VisibilityDetector(
+          key: ValueKey('message-${message.id}'),
+          onVisibilityChanged: !snapshot.hasData
+              ? null
+              : (info) {
+                  if (info.visibleFraction > 0.75) {
+                    final checker = context.read<MessageChecker>();
+                    checker.check(message);
+                  }
+                },
+          child: contentBuilder(context),
+        );
+      },
+    );
   }
 }

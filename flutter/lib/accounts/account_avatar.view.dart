@@ -9,11 +9,19 @@ class AccountAvatar extends StatelessWidget {
     required this.snapshot,
   });
 
+  String get url {
+    if (snapshot.index.signPubKey.isEmpty) {
+      return '0';
+    } else {
+      return snapshot.index.signPubKey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const size = 40.0;
     return RandomAvatar(
-      snapshot.index.signPubKey,
+      url,
       width: size,
       height: size,
     );

@@ -20,13 +20,14 @@ class _ChatRoomPageInputState extends State<ChatRoomPageInput> {
     super.dispose();
   }
 
-  handleSendMessage() {
+  handleSendMessage() async {
     final controller = context.read<ChatRoomController>();
-    controller.sendMessage(
-      messageType: MessageType.MESSAGE_TYPE_TEXT,
-      content: inputController.text,
-    );
+    final message = await controller.createMessage();
+    message.messageType = MessageType.MESSAGE_TYPE_TEXT;
+    message.content = inputController.text;
     inputController.clear();
+
+    await controller.sendMessage([message]);
   }
 
   @override

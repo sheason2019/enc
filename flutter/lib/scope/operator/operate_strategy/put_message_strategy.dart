@@ -66,42 +66,44 @@ class PutMessageStrategy implements OperateStrategy {
     selectConversation.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
     final conversation = await selectConversation.getSingle();
 
-    final selectContact = scope.db.contacts.select();
-    selectContact.where(
-      (tbl) => tbl.signPubkey.equals(portableMessage.sender.index.signPubKey),
-    );
-    final contact = await selectContact.getSingle();
-
-    final messageProceeder = PutMessageAtomProceeder(
-      contact: contact,
-      conversation: conversation,
-    );
-    final messageAtom = await messageProceeder.apply(scope, portableMessage);
-    atoms.add(messageAtom);
-
-    final messageId = int.parse(messageAtom.to);
-    final selectMessage = scope.db.messages.select();
-    selectMessage.where((tbl) => tbl.id.equals(messageId));
-    final message = await selectMessage.getSingle();
-
-    final messageStateProceeder = PutMessageStateAtomProceeder(
-      message: message,
-    );
-    for (final messageState in portableMessage.messageStates) {
-      final messageStateAtom = await messageStateProceeder.apply(
-        scope,
-        messageState,
+    if (portableMessage.messageType != MessageType.MESSAGE_TYPE_STATE_ONLY) {
+      final selectContact = scope.db.contacts.select();
+      selectContact.where(
+        (tbl) => tbl.signPubkey.equals(portableMessage.sender.index.signPubKey),
       );
-      atoms.add(messageStateAtom);
+      final contact = await selectContact.getSingle();
+
+      final messageProceeder = PutMessageAtomProceeder(
+        contact: contact,
+        conversation: conversation,
+      );
+      final messageAtom = await messageProceeder.apply(scope, portableMessage);
+      atoms.add(messageAtom);
+
+      // Conversation Anchor
+      final anchorProceeder = PutConversationAnchorAtomProceder();
+      final anchorAtom = await anchorProceeder.apply(
+        scope,
+        portableMessage.conversation,
+      );
+      atoms.add(anchorAtom);
     }
 
-    // Conversation Anchor
-    final anchorProceeder = PutConversationAnchorAtomProceder();
-    final anchorAtom = await anchorProceeder.apply(
-      scope,
-      portableMessage.conversation,
-    );
-    atoms.add(anchorAtom);
+    final selectMessage = scope.db.messages.select();
+    selectMessage.where((tbl) => tbl.uuid.equals(portableMessage.uuid));
+    final message = await selectMessage.getSingleOrNull();
+    if (message != null) {
+      final messageStateProceeder = PutMessageStateAtomProceeder(
+        message: message,
+      );
+      for (final messageState in portableMessage.messageStates) {
+        final messageStateAtom = await messageStateProceeder.apply(
+          scope,
+          messageState,
+        );
+        atoms.add(messageStateAtom);
+      }
+    }
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));

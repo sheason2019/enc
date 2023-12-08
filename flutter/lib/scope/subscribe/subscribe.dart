@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
@@ -88,15 +87,19 @@ class Subscribe {
       }
     });
     socket.on('push-message', (data) async {
-      final List messages = data['messages'];
+      final List messages = jsonDecode(data['messages']);
       final wrappers = messages
           .map((e) => base64Decode(e))
           .map((e) => SignWrapper.fromBuffer(e));
+      var i = 0;
       for (final wrapper in wrappers) {
         final valid = await wrapper.verify();
         if (!valid) continue;
 
-        final operation = await scope.operator.factory.message(wrapper);
+        final operation = await scope.operator.factory.message(
+          wrapper,
+          offset: i++,
+        );
         await scope.operator.apply([operation]);
       }
     });
@@ -144,16 +147,9 @@ class Subscribe {
     });
   }
 
-  handleSendMessage() async {
-    socket.emit('message', 'Hello world');
-  }
-
   handleUploadSnapshot() async {
     final buffer = scope.snapshot.writeToBuffer();
-    final sign = await CryptoUtils.createSignature(
-      CryptoKeyPair.fromSecret(scope.secret),
-      buffer,
-    );
+    final sign = await CryptoUtils.createSignature(scope, buffer);
 
     final wrapper = SignWrapper()
       ..buffer = buffer

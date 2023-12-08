@@ -15,7 +15,6 @@ class OperationCipher {
     Scope scope,
     List<Operation> operations,
   ) async {
-    final keypair = CryptoKeyPair.fromSecret(scope.secret);
     final output = <Map<String, dynamic>>[];
     for (final operation in operations) {
       final secretBox = await CryptoUtils.encrypt(
@@ -24,7 +23,7 @@ class OperationCipher {
         operation.info.writeToBuffer(),
       );
       final buffer = secretBox.writeToBuffer();
-      final sign = await CryptoUtils.createSignature(keypair, buffer);
+      final sign = await CryptoUtils.createSignature(scope, buffer);
       final signWrapper = SignWrapper()
         ..buffer = buffer
         ..contentType = ContentType.CONTENT_OPERATION

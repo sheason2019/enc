@@ -8,7 +8,7 @@ import 'package:styled_widget/styled_widget.dart';
 class MessageStateProgressView extends StatelessWidget {
   const MessageStateProgressView({super.key});
 
-  Stream<double> progress(BuildContext context) {
+  Stream<double?> progress(BuildContext context) {
     final scope = context.watch<Scope>();
     final message = context.watch<Message>();
 
@@ -20,17 +20,24 @@ class MessageStateProgressView extends StatelessWidget {
     select.addColumns([checked, count]);
     select.where(scope.db.messageStates.messageId.equals(message.id));
     return select.watchSingle().map((event) {
+      final c = event.read(count);
+      if (c == 0) return null;
+
       return event.read(checked)! / event.read(count)!;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<double>(
+    return StreamBuilder<double?>(
       initialData: 0,
       stream: progress(context),
       builder: (context, snapshot) {
-        final value = snapshot.requireData;
+        final value = snapshot.data;
+
+        if (value == null) {
+          return const SizedBox.shrink();
+        }
 
         return CircularProgressIndicator(
           value: value,
