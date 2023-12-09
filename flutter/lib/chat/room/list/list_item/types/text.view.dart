@@ -22,10 +22,8 @@ class TextMessageView extends StatelessWidget {
         style: TextStyle(
           color: isCurrentAccountSend ? Colors.white : Colors.black,
         ),
-      )
-          .center()
-          .padding(horizontal: 12)
-          .constrained(minWidth: 36, minHeight: 36),
+        softWrap: true,
+      ).constrained(maxWidth: 360).padding(horizontal: 12, vertical: 8),
     );
   }
 }

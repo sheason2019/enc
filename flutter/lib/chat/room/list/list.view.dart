@@ -97,8 +97,8 @@ class _MessageListViewState extends State<MessageListView> {
         if (snapshot.requireData.isEmpty) return const SizedBox.shrink();
 
         final messages = snapshot.requireData;
-        var initIndex = messages.indexOf(initId) + 1;
-        if (initIndex == 0) {
+        var initIndex = messages.indexOf(initId);
+        if (initIndex == -1) {
           initIndex = messages.length;
         }
         messages.add(-1);
@@ -118,8 +118,8 @@ class _MessageListViewState extends State<MessageListView> {
               messageId: messages[index],
             ).padding(vertical: 8, horizontal: 12);
           },
-        ).backgroundColor(Colors.black.withOpacity(0.05));
+        );
       },
-    );
+    ).backgroundColor(Colors.black.withOpacity(0.05));
   }
 }

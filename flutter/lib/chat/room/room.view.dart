@@ -68,7 +68,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         body: const Column(
           children: [
             Expanded(child: MessageListView()),
-            ChatRoomPageInput(),
+            ChatRoomInputView(),
           ],
         ),
       ),

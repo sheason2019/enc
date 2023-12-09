@@ -23,6 +23,14 @@ class ChatRoomController extends ChangeNotifier {
     required this.conversation,
   });
 
+  bool get useTextInput => _useTextInput;
+  set useTextInput(bool value) {
+    _useTextInput = value;
+    notifyListeners();
+  }
+
+  var _useTextInput = true;
+
   Future<PortableMessage> createMessage() async {
     final message = PortableMessage()
       ..conversation = conversation.info

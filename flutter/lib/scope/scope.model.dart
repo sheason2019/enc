@@ -9,6 +9,7 @@ import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operator.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
+import 'package:sheason_chat/scope/uploader/uploader.dart';
 
 import '../models/conversation_anchor.dart';
 
@@ -27,6 +28,7 @@ class Scope extends ChangeNotifier {
 
   late String deviceId;
   late final AppDatabase db;
+  late final uploader = Uploader(scope: this);
 
   Future handleUpdateSnapshot() async {
     final snapshotFile = File(path.join(accountPath, '.snapshot'));

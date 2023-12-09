@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/list/checker.controller.dart';
 import 'package:sheason_chat/chat/room/list/list_item/message_context.model.dart';
+import 'package:sheason_chat/chat/room/list/list_item/types/audio.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/text.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
@@ -59,8 +60,10 @@ class _MessageItemRenderer extends StatelessWidget {
     switch (message.messageType) {
       case MessageType.MESSAGE_TYPE_TEXT:
         return const TextMessageView();
+      case MessageType.MESSAGE_TYPE_AUDIO:
+        return const AudioMessageView();
       default:
-        return Container();
+        return const SizedBox();
     }
   }
 

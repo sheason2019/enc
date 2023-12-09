@@ -7,6 +7,7 @@ import { AccountModule } from './account/account.module';
 import { OperationModule } from './operation/operation.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { MessageModule } from './message/message.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MessageModule } from './message/message.module';
     OperationModule,
     CryptoModule,
     MessageModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -44,66 +44,63 @@ class MessageListItemWrapperView extends StatelessWidget {
         AccountAvatar(
           snapshot: contact.snapshot,
         ).padding(top: 6),
-        IntrinsicWidth(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                textDirection: isCurrentAccountSend
-                    ? TextDirection.rtl
-                    : TextDirection.ltr,
-                children: [
-                  Text(
-                    contact.snapshot.username,
-                    overflow: TextOverflow.ellipsis,
-                  ).bold().width(180),
-                  Text(
-                    StringHelper.time(message.createdAt),
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
-                    textAlign:
-                        isCurrentAccountSend ? TextAlign.right : TextAlign.left,
-                  ).padding(horizontal: 4).expanded(),
-                ],
-              ),
-              Row(
-                textDirection: isCurrentAccountSend
-                    ? TextDirection.rtl
-                    : TextDirection.ltr,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  MenuAnchor(
-                    menuChildren: [
-                      MenuItemButton(
-                        onPressed: () => toDebugPage(context),
-                        child: const Text(
-                          '查看调试信息',
-                        ),
-                      ),
-                    ],
-                    style: const MenuStyle(
-                        visualDensity: VisualDensity.comfortable,
-                        alignment: FractionalOffset(0, -1.25)),
-                    anchorTapClosesMenu: true,
-                    builder: (context, controller, _) => GestureDetector(
-                      onLongPress: () => controller.open(),
-                      onSecondaryTapDown: (details) => controller.open(
-                        position: details.localPosition,
-                      ),
-                      child: Card(
-                        color:
-                            isCurrentAccountSend ? Colors.blue : Colors.white,
-                        elevation: 0,
-                        child: child,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              textDirection:
+                  isCurrentAccountSend ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                Text(
+                  contact.snapshot.username,
+                  overflow: TextOverflow.ellipsis,
+                ).bold().width(180),
+                Text(
+                  StringHelper.time(message.createdAt),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                  textAlign:
+                      isCurrentAccountSend ? TextAlign.right : TextAlign.left,
+                ).padding(horizontal: 4).expanded(),
+              ],
+            ),
+            Row(
+              textDirection:
+                  isCurrentAccountSend ? TextDirection.rtl : TextDirection.ltr,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                MenuAnchor(
+                  menuChildren: [
+                    MenuItemButton(
+                      onPressed: () => toDebugPage(context),
+                      child: const Text(
+                        '查看调试信息',
                       ),
                     ),
+                  ],
+                  style: const MenuStyle(
+                      visualDensity: VisualDensity.comfortable,
+                      alignment: FractionalOffset(0, -1.25)),
+                  anchorTapClosesMenu: true,
+                  builder: (context, controller, _) => GestureDetector(
+                    onLongPress: () => controller.open(),
+                    onSecondaryTapDown: (details) => controller.open(
+                      position: details.localPosition,
+                    ),
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      color: isCurrentAccountSend ? Colors.blue : Colors.white,
+                      elevation: 0,
+                      child: child,
+                    ),
                   ),
-                  const MessageStateProgressView(),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const MessageStateProgressView(),
+                const SizedBox(width: 40),
+              ],
+            ),
+          ],
         ).padding(horizontal: 4).expanded(),
       ],
     );

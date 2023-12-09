@@ -29,4 +29,5 @@ const _$OperateAtomTypeEnumMap = {
   OperateAtomType.putConversationAnchor: 'put-conversation-anchor',
   OperateAtomType.putMessage: 'put-message',
   OperateAtomType.putMessageState: 'put-message-state',
+  OperateAtomType.putMessageSignature: 'put-message-signature',
 };
