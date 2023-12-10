@@ -53,8 +53,7 @@ class VoiceInputController extends ChangeNotifier {
     }
     final uuid = const Uuid().v4();
     final filePath = path.join(
-      scope.accountPath,
-      'cache',
+      scope.paths.cache,
       '$uuid.wav',
     );
 

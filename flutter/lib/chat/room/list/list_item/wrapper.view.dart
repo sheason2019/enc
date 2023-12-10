@@ -91,8 +91,6 @@ class _MessageContentCardState extends State<_MessageContentCard> {
     delegate.notify();
   }
 
-  var focus = false;
-
   @override
   Widget build(BuildContext context) {
     final scope = context.watch<Scope>();
@@ -100,41 +98,29 @@ class _MessageContentCardState extends State<_MessageContentCard> {
 
     final isCurrentAccountSend = contact.signPubkey == scope.secret.signPubKey;
 
-    return MouseRegion(
-      onEnter: (e) {
-        setState(() {
-          focus = true;
-        });
-      },
-      onExit: (e) {
-        setState(() {
-          focus = false;
-        });
-      },
-      child: MenuAnchor(
-        menuChildren: [
-          MenuItemButton(
-            onPressed: () => toDebugPage(context),
-            child: const Text(
-              '查看调试信息',
-            ),
+    return MenuAnchor(
+      menuChildren: [
+        MenuItemButton(
+          onPressed: () => toDebugPage(context),
+          child: const Text(
+            '查看调试信息',
           ),
-        ],
-        style: const MenuStyle(
-            visualDensity: VisualDensity.comfortable,
-            alignment: FractionalOffset(0, -1.25)),
-        anchorTapClosesMenu: true,
-        builder: (context, controller, _) => GestureDetector(
-          onLongPress: () => controller.open(),
-          onSecondaryTapDown: (details) => controller.open(
-            position: details.localPosition,
-          ),
-          child: Card(
-            clipBehavior: Clip.hardEdge,
-            color: isCurrentAccountSend ? Colors.blue : Colors.white,
-            elevation: focus ? 4 : 0,
-            child: widget.child,
-          ),
+        ),
+      ],
+      style: const MenuStyle(
+          visualDensity: VisualDensity.comfortable,
+          alignment: FractionalOffset(0, -1.25)),
+      anchorTapClosesMenu: true,
+      builder: (context, controller, _) => GestureDetector(
+        onLongPress: () => controller.open(),
+        onSecondaryTapDown: (details) => controller.open(
+          position: details.localPosition,
+        ),
+        child: Card(
+          clipBehavior: Clip.hardEdge,
+          color: isCurrentAccountSend ? Colors.blue : Colors.white,
+          elevation: 0,
+          child: widget.child,
         ),
       ),
     );

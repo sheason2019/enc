@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/account_paths/account_paths.dart';
 import 'package:sheason_chat/scope/operator/operator.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
 import 'package:sheason_chat/scope/uploader/uploader.dart';
@@ -14,8 +14,9 @@ import 'package:sheason_chat/scope/uploader/uploader.dart';
 import '../models/conversation_anchor.dart';
 
 class Scope extends ChangeNotifier {
-  final String accountPath;
-  Scope({required this.accountPath});
+  final AccountPaths paths;
+  Scope({required String accountPath})
+      : paths = AccountPaths(root: accountPath);
   final subs = <StreamSubscription>[];
 
   var secret = AccountSecret();
@@ -31,7 +32,7 @@ class Scope extends ChangeNotifier {
   late final uploader = Uploader(scope: this);
 
   Future handleUpdateSnapshot() async {
-    final snapshotFile = File(path.join(accountPath, '.snapshot'));
+    final snapshotFile = File(paths.snapshot);
     if (!await snapshotFile.exists()) return;
 
     final snapshot = AccountSnapshot.fromBuffer(
@@ -44,14 +45,14 @@ class Scope extends ChangeNotifier {
   }
 
   Future<void> handleSetSnapshot(AccountSnapshot snapshot) async {
-    final snapshotFile = File(path.join(accountPath, '.snapshot'));
+    final snapshotFile = File(paths.snapshot);
     await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
     this.snapshot = snapshot;
     notifyListeners();
   }
 
   Future<void> handleUpdateConversationAnchor() async {
-    final anchorFile = File(path.join(accountPath, '.conversation-anchor'));
+    final anchorFile = File(paths.conversationAnchor);
     if (!await anchorFile.exists()) return;
 
     final anchor = ConversationAnchor.fromJson(
@@ -64,14 +65,14 @@ class Scope extends ChangeNotifier {
   Future<void> handleSetConversationAnchor(
     ConversationAnchor anchor,
   ) async {
-    final anchorFile = File(path.join(accountPath, '.conversation-anchor'));
+    final anchorFile = File(paths.conversationAnchor);
     await anchorFile.writeAsString(jsonEncode(anchor.toJson()));
     this.anchor = anchor;
     notifyListeners();
   }
 
   Future handleUpdateSecret() async {
-    final secretFile = File(path.join(accountPath, '.secret'));
+    final secretFile = File(paths.secret);
     if (!await secretFile.exists()) return;
 
     final secret = AccountSecret.fromBuffer(
@@ -82,7 +83,7 @@ class Scope extends ChangeNotifier {
   }
 
   Future<void> handleInitIsar() async {
-    db = AppDatabase(accountPath);
+    db = AppDatabase(paths.root);
   }
 
   Future<void> handleInitDeviceId() async {

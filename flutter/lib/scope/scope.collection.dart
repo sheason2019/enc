@@ -111,7 +111,7 @@ class ScopeCollection extends ChangeNotifier {
   Future<void> setDefaultScope(Scope? scope) async {
     final file = File(path.join(await accountsPath, '.active-account'));
     if (scope != null) {
-      await file.writeAsString(scope.accountPath);
+      await file.writeAsString(scope.paths.root);
     } else {
       await file.writeAsString('');
     }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
@@ -68,6 +69,12 @@ class VoiceInputBody extends StatelessWidget {
 
     controller.closeEntry();
     final wavFilePath = await controller.stopRecord();
+
+    if (controller.cancel) {
+      await File(wavFilePath!).delete();
+      return;
+    }
+
     final resourceUrl = await scope.uploader.upload(
       controller.service,
       wavFilePath!,
@@ -80,6 +87,8 @@ class VoiceInputBody extends StatelessWidget {
     message.messageType = MessageType.MESSAGE_TYPE_AUDIO;
     message.content = jsonEncode(content.toJson());
     await chatController.sendMessage([message]);
+    // 完成上传后删除文件
+    await File(wavFilePath).delete();
   }
 
   @override

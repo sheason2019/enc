@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/list/checker.controller.dart';
 import 'package:sheason_chat/chat/room/list/list_item/message_context.model.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/audio.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/file.view.dart';
+import 'package:sheason_chat/chat/room/list/list_item/types/file/file.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/image.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/text.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/video.view.dart';
