@@ -103,21 +103,25 @@ class _MessageListViewState extends State<MessageListView> {
         }
         messages.add(-1);
 
-        return ScrollablePositionedList.builder(
-          itemScrollController: itemScrollController,
-          scrollOffsetController: scrollOffsetController,
-          itemPositionsListener: itemPositionListener,
-          scrollOffsetListener: scrollOffsetListener,
-          itemCount: messages.length,
-          initialScrollIndex: initIndex,
-          initialAlignment: 1,
-          itemBuilder: (context, index) {
-            if (messages[index] == -1) return const SizedBox.shrink();
+        return ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: ScrollablePositionedList.builder(
+            itemScrollController: itemScrollController,
+            scrollOffsetController: scrollOffsetController,
+            itemPositionsListener: itemPositionListener,
+            scrollOffsetListener: scrollOffsetListener,
+            itemCount: messages.length,
+            initialScrollIndex: initIndex,
+            initialAlignment: 1,
+            minCacheExtent: 1440,
+            itemBuilder: (context, index) {
+              if (messages[index] == -1) return const SizedBox.shrink();
 
-            return MessageListItemView(
-              messageId: messages[index],
-            ).padding(vertical: 8, horizontal: 12);
-          },
+              return MessageListItemView(
+                messageId: messages[index],
+              ).padding(vertical: 8, horizontal: 12);
+            },
+          ),
         );
       },
     ).backgroundColor(Colors.black.withOpacity(0.05));
