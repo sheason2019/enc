@@ -22,7 +22,7 @@ class _TextInputViewState extends State<TextInputView> {
   }
 
   handleSendMessage() async {
-    final controller = context.read<ChatRoomController>();
+    final controller = context.read<ChatController>();
     final message = await controller.createMessage();
     message.messageType = MessageType.MESSAGE_TYPE_TEXT;
     message.content = inputController.text;

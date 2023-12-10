@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
+import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
 import 'package:sheason_chat/chat/room/list/checker.controller.dart';
 import 'package:sheason_chat/chat/room/list/list.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
@@ -46,7 +47,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       providers: [
         Provider.value(value: widget.conversation),
         ListenableProvider(
-          create: (context) => ChatRoomController(
+          create: (context) => ChatController(
             scope: scope,
             conversation: widget.conversation,
           ),
@@ -56,8 +57,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           create: (context) => MessageChecker(
             scope: scope,
             conversation: widget.conversation,
-            chatController: context.read<ChatRoomController>(),
+            chatController: context.read<ChatController>(),
           ),
+        ),
+        Provider(
+          create: (context) => MediaInputController(context: context),
         ),
       ],
       builder: (context, _) => Scaffold(

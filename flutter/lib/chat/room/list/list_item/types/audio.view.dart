@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/list/list_item/wrapper.view.dart';
 import 'package:sheason_chat/models/network_resource.dart';
@@ -17,7 +17,7 @@ class AudioMessageView extends StatefulWidget {
 }
 
 class _AudioMessageViewState extends State<AudioMessageView> {
-  final player = AudioPlayer();
+  final player = Player();
 
   var playing = false;
   Duration duration = Duration.zero;
@@ -25,32 +25,40 @@ class _AudioMessageViewState extends State<AudioMessageView> {
 
   late final message = context.read<Message>();
   late final resource = NetworkResource.fromJson(jsonDecode(message.content));
-  late final source = UrlSource(resource.url);
 
   Future<void> handlePlay() async {
-    debugPrint(source.url);
-    await player.play(source);
+    if (playing) {
+      player.pause();
+    } else {
+      player.play();
+    }
   }
 
   Future<void> watchState() async {
-    player.onPlayerStateChanged.listen((event) {
-      final playing = event == PlayerState.playing;
-      if (playing != this.playing) {
+    player.stream.playing.listen((event) {
+      if (event != playing) {
         setState(() {
-          this.playing = playing;
+          playing = event;
         });
       }
     });
-    player.onPositionChanged.listen((event) {
+    player.stream.position.listen((event) {
       setState(() {
         position = event;
       });
     });
-    player.onDurationChanged.listen((event) {
+    player.stream.duration.listen((event) {
       setState(() {
         duration = event;
       });
     });
+    player.stream.completed.listen((event) async {
+      if (event) {
+        await player.seek(Duration.zero);
+        player.pause();
+      }
+    });
+    await player.open(Media(resource.url), play: false);
   }
 
   @override

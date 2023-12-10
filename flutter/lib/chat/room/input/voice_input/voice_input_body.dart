@@ -63,7 +63,7 @@ class VoiceInputBody extends StatelessWidget {
 
   void handlePanEnd(BuildContext context, DragEndDetails details) async {
     final scope = context.read<Scope>();
-    final chatController = context.read<ChatRoomController>();
+    final chatController = context.read<ChatController>();
     if (!controller.recording) return;
 
     controller.closeEntry();

@@ -12,7 +12,7 @@ import 'package:synchronized/synchronized.dart';
 class MessageChecker {
   final Scope scope;
   final Conversation conversation;
-  final ChatRoomController chatController;
+  final ChatController chatController;
 
   MessageChecker({
     required this.scope,

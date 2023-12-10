@@ -9,7 +9,7 @@ class ChatRoomInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<ChatRoomController>();
+    final controller = context.watch<ChatController>();
     if (controller.useTextInput) {
       return const TextInputView();
     } else {

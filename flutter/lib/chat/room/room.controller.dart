@@ -12,13 +12,13 @@ import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:uuid/uuid.dart';
 
-class ChatRoomController extends ChangeNotifier {
+class ChatController extends ChangeNotifier {
   final Scope scope;
   final Conversation conversation;
 
   final uploads = <Future>[];
 
-  ChatRoomController({
+  ChatController({
     required this.scope,
     required this.conversation,
   });

@@ -1,17 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
+import 'package:sheason_chat/models/network_resource.dart';
+import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class InputMenuIconButton extends StatelessWidget {
   const InputMenuIconButton({super.key});
 
   void handleClick(BuildContext context) {
-    final controller = context.read<ChatRoomController>();
+    final chatController = context.read<ChatController>();
+    final mediaInputController = context.read<MediaInputController>();
     showModalBottomSheet(
       context: context,
       builder: (context) => InputMenuBottomSheet(
-        controller: controller,
+        scope: context.read<Scope>(),
+        chatController: chatController,
+        mediaInputController: mediaInputController,
       ).height(160),
     );
   }
@@ -26,10 +35,14 @@ class InputMenuIconButton extends StatelessWidget {
 }
 
 class InputMenuBottomSheet extends StatelessWidget {
-  final ChatRoomController controller;
+  final ChatController chatController;
+  final MediaInputController mediaInputController;
+  final Scope scope;
   const InputMenuBottomSheet({
     super.key,
-    required this.controller,
+    required this.chatController,
+    required this.mediaInputController,
+    required this.scope,
   });
 
   handleCloseSheet(BuildContext context) {
@@ -37,17 +50,46 @@ class InputMenuBottomSheet extends StatelessWidget {
   }
 
   handleToogleVoiceInput(BuildContext context) {
-    controller.useTextInput = false;
+    chatController.useTextInput = false;
     handleCloseSheet(context);
   }
 
   handleToggleTextInput(BuildContext context) {
-    controller.useTextInput = true;
+    chatController.useTextInput = true;
     handleCloseSheet(context);
   }
 
-  handleInputMedia(BuildContext context) {
+  handleInputMedia(BuildContext context) async {
     handleCloseSheet(context);
+
+    final mediaInputContext = await mediaInputController.selectMedia();
+    if (mediaInputContext == null) return;
+
+    final serviceUrl = await mediaInputController.showPreviewDialog(
+      mediaInputContext,
+    );
+    if (serviceUrl == null) return;
+
+    final upload = await scope.uploader.upload(
+      serviceUrl,
+      mediaInputContext.mediaFile.path,
+    );
+
+    final message = await chatController.createMessage();
+    switch (mediaInputContext.mediaType) {
+      case MediaType.image:
+        message.messageType = MessageType.MESSAGE_TYPE_IMAGE;
+        break;
+      case MediaType.video:
+        message.messageType = MessageType.MESSAGE_TYPE_VIDEO;
+        break;
+    }
+    message.content = jsonEncode(NetworkResource(
+      url: upload,
+      name: mediaInputContext.mediaFile.name,
+    ));
+
+    await chatController.sendMessage([message]);
   }
 
   handleInputFile(BuildContext context) {
@@ -67,7 +109,7 @@ class InputMenuBottomSheet extends StatelessWidget {
         mainAxisSpacing: 4,
         crossAxisSpacing: 4,
         children: [
-          if (!controller.useTextInput)
+          if (!chatController.useTextInput)
             _InputMenuWrapper(
               onTap: () => handleToggleTextInput(context),
               icon: Icons.edit,
