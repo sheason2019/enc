@@ -79,4 +79,22 @@ export class StorageController {
     const file = fs.createReadStream(p);
     file.pipe(res);
   }
+
+  @Get(':signPubkey/storage/:fileId/size')
+  async getFileSize(
+    @Param('signPubkey') signPubkey: string,
+    @Param('fileId') fileId: string,
+  ) {
+    // 这是因为 Flutter 的 base64Url 和 Nodejs 的 Base64Url 填充逻辑不同
+    // 因此在 Node 端进行一次转换
+    const accountScope = Buffer.from(signPubkey, 'base64url').toString(
+      'base64url',
+    );
+    const p = path.join(DATA_ROOT, accountScope, fileId);
+    if (!fs.existsSync(p)) {
+      throw new HttpException('文件不存在', HttpStatus.NOT_FOUND);
+    }
+
+    return fs.statSync(p).size;
+  }
 }

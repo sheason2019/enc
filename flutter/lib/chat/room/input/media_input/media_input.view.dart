@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/service_selector/service_selector.controller.dart';
+import 'package:sheason_chat/utils/service_selector/service_selector.view.dart';
 import 'package:sheason_chat/video/video.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -23,6 +25,8 @@ class MediaInputView extends StatefulWidget {
 }
 
 class _MediaInputViewState extends State<MediaInputView> {
+  late final serviceController = ServiceSelectorController(widget.scope);
+
   String get mediaName {
     switch (widget.mediaInputContext.mediaType) {
       case MediaType.image:
@@ -41,40 +45,24 @@ class _MediaInputViewState extends State<MediaInputView> {
     }
   }
 
-  String? serviceUrl;
+  @override
+  void dispose() {
+    serviceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final services = widget.scope.snapshot.serviceMap.keys.toList();
-
     return SimpleDialog(
       title: Text('发送$mediaName'),
       contentPadding: const EdgeInsets.all(20),
       children: [
         contentBuilder(context),
-        Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: serviceUrl,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            hint: const Text('点击选择托管静态资源的服务器'),
-            onChanged: (v) {
-              setState(() {
-                serviceUrl = v;
-              });
-            },
-            items: [
-              for (final service in services)
-                DropdownMenuItem(
-                  value: service,
-                  child: Text(service),
-                ),
-            ],
-          ),
-        ),
+        ServiceSelector(controller: serviceController),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(serviceUrl),
+          onPressed: () => Navigator.of(context).pop(
+            serviceController.serviceUrl,
+          ),
           child: const Text('确认发送'),
         ).padding(top: 12),
       ],

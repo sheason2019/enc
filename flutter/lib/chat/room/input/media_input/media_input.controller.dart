@@ -15,7 +15,7 @@ class MediaInputController {
   final BuildContext context;
   const MediaInputController({required this.context});
 
-  Future<MediaInputContext?> selectMedia() async {
+  Future<MediaInputContext?> pickMedia() async {
     final picker = ImagePicker();
     final media = await picker.pickMedia();
     if (media == null) {

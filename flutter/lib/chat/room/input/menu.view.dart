@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/input/file_input/file_input.controller.dart';
 import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/models/network_resource.dart';
@@ -15,12 +17,14 @@ class InputMenuIconButton extends StatelessWidget {
   void handleClick(BuildContext context) {
     final chatController = context.read<ChatController>();
     final mediaInputController = context.read<MediaInputController>();
+    final fileInputController = context.read<FileInputController>();
     showModalBottomSheet(
       context: context,
       builder: (context) => InputMenuBottomSheet(
         scope: context.read<Scope>(),
         chatController: chatController,
         mediaInputController: mediaInputController,
+        fileInputController: fileInputController,
       ).height(160),
     );
   }
@@ -37,11 +41,13 @@ class InputMenuIconButton extends StatelessWidget {
 class InputMenuBottomSheet extends StatelessWidget {
   final ChatController chatController;
   final MediaInputController mediaInputController;
+  final FileInputController fileInputController;
   final Scope scope;
   const InputMenuBottomSheet({
     super.key,
     required this.chatController,
     required this.mediaInputController,
+    required this.fileInputController,
     required this.scope,
   });
 
@@ -62,7 +68,7 @@ class InputMenuBottomSheet extends StatelessWidget {
   handleInputMedia(BuildContext context) async {
     handleCloseSheet(context);
 
-    final mediaInputContext = await mediaInputController.selectMedia();
+    final mediaInputContext = await mediaInputController.pickMedia();
     if (mediaInputContext == null) return;
 
     final serviceUrl = await mediaInputController.showPreviewDialog(
@@ -92,8 +98,24 @@ class InputMenuBottomSheet extends StatelessWidget {
     await chatController.sendMessage([message]);
   }
 
-  handleInputFile(BuildContext context) {
+  handleInputFile(BuildContext context) async {
     handleCloseSheet(context);
+
+    final filePath = await fileInputController.pickFile();
+    if (filePath == null) return;
+
+    final serviceUrl = await fileInputController.showPreviewDialog(filePath);
+    if (serviceUrl == null) return;
+
+    final upload = await scope.uploader.upload(serviceUrl, filePath);
+    final message = await chatController.createMessage();
+    message.content = jsonEncode(NetworkResource(
+      url: upload,
+      name: path.basename(filePath),
+    ));
+    message.messageType = MessageType.MESSAGE_TYPE_FILE;
+
+    await chatController.sendMessage([message]);
   }
 
   handleCreateRTC(BuildContext context) {

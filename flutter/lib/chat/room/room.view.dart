@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/input/file_input/file_input.controller.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
 import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
 import 'package:sheason_chat/chat/room/list/checker.controller.dart';
@@ -62,6 +63,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         ),
         Provider(
           create: (context) => MediaInputController(context: context),
+        ),
+        Provider(
+          create: (context) => FileInputController(context: context),
         ),
       ],
       builder: (context, _) => Scaffold(
