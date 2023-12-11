@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -39,6 +41,7 @@ class SimpleVideo extends StatefulWidget {
 class _SimpleVideoState extends State<SimpleVideo> {
   late final player = Player();
   late final controller = VideoController(player);
+  late final subList = <StreamSubscription>[];
 
   Future<void> initVideo() async {
     switch (widget._type) {
@@ -50,14 +53,19 @@ class _SimpleVideoState extends State<SimpleVideo> {
         break;
     }
 
-    player.seek(Duration.zero);
+    final subWidth = player.stream.width.listen((event) {
+      setState(() {
+        player.seek(Duration.zero);
+      });
+    });
+    subList.add(subWidth);
 
-    player.stream.width.listen((event) {
-      setState(() {});
+    final subHeight = player.stream.height.listen((event) {
+      setState(() {
+        player.seek(Duration.zero);
+      });
     });
-    player.stream.height.listen((event) {
-      setState(() {});
-    });
+    subList.add(subHeight);
   }
 
   @override
@@ -68,6 +76,9 @@ class _SimpleVideoState extends State<SimpleVideo> {
 
   @override
   void dispose() {
+    for (final sub in subList) {
+      sub.cancel();
+    }
     player.dispose();
     super.dispose();
   }
