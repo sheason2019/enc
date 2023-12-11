@@ -20,6 +20,15 @@ class OperationFactory {
     return operation;
   }
 
+  Future<PortableOperation> deleteService(String service) async {
+    final operation = await _createWithClock(
+      OperationType.DELETE_SERVICE,
+      0,
+    );
+    operation.content = service;
+    return operation;
+  }
+
   Future<PortableOperation> contact(AccountSnapshot snapshot) async {
     final operation = await _createWithClock(OperationType.PUT_CONTACT, 0);
     operation.content = base64Encode(snapshot.writeToBuffer());

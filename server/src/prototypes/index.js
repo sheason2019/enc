@@ -535,6 +535,7 @@
              * @property {string|null} [username] AccountSnapshot username
              * @property {string|null} [avatarUrl] AccountSnapshot avatarUrl
              * @property {Object.<string,sheason_chat.IPortableService>|null} [serviceMap] AccountSnapshot serviceMap
+             * @property {number|null} [version] AccountSnapshot version
              */
     
             /**
@@ -586,6 +587,14 @@
             AccountSnapshot.prototype.serviceMap = $util.emptyObject;
     
             /**
+             * AccountSnapshot version.
+             * @member {number} version
+             * @memberof sheason_chat.AccountSnapshot
+             * @instance
+             */
+            AccountSnapshot.prototype.version = 0;
+    
+            /**
              * Creates a new AccountSnapshot instance using the specified properties.
              * @function create
              * @memberof sheason_chat.AccountSnapshot
@@ -620,6 +629,8 @@
                         writer.uint32(/* id 4, wireType 2 =*/34).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
                         $root.sheason_chat.PortableService.encode(message.serviceMap[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
                     }
+                if (message.version != null && Object.hasOwnProperty.call(message, "version"))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int32(message.version);
                 return writer;
             };
     
@@ -689,6 +700,10 @@
                             message.serviceMap[key] = value;
                             break;
                         }
+                    case 5: {
+                            message.version = reader.int32();
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -745,6 +760,9 @@
                             return "serviceMap." + error;
                     }
                 }
+                if (message.version != null && message.hasOwnProperty("version"))
+                    if (!$util.isInteger(message.version))
+                        return "version: integer expected";
                 return null;
             };
     
@@ -779,6 +797,8 @@
                         message.serviceMap[keys[i]] = $root.sheason_chat.PortableService.fromObject(object.serviceMap[keys[i]]);
                     }
                 }
+                if (object.version != null)
+                    message.version = object.version | 0;
                 return message;
             };
     
@@ -801,6 +821,7 @@
                     object.index = null;
                     object.username = "";
                     object.avatarUrl = "";
+                    object.version = 0;
                 }
                 if (message.index != null && message.hasOwnProperty("index"))
                     object.index = $root.sheason_chat.AccountIndex.toObject(message.index, options);
@@ -814,6 +835,8 @@
                     for (var j = 0; j < keys2.length; ++j)
                         object.serviceMap[keys2[j]] = $root.sheason_chat.PortableService.toObject(message.serviceMap[keys2[j]], options);
                 }
+                if (message.version != null && message.hasOwnProperty("version"))
+                    object.version = message.version;
                 return object;
             };
     
@@ -1428,6 +1451,7 @@
          * @property {number} PUT_CONVERSATION=4 PUT_CONVERSATION value
          * @property {number} PUT_CONVERSATION_ANCHOR=5 PUT_CONVERSATION_ANCHOR value
          * @property {number} PUT_MESSAGE=6 PUT_MESSAGE value
+         * @property {number} DELETE_SERVICE=101 DELETE_SERVICE value
          */
         sheason_chat.OperationType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -1438,6 +1462,7 @@
             values[valuesById[4] = "PUT_CONVERSATION"] = 4;
             values[valuesById[5] = "PUT_CONVERSATION_ANCHOR"] = 5;
             values[valuesById[6] = "PUT_MESSAGE"] = 6;
+            values[valuesById[101] = "DELETE_SERVICE"] = 101;
             return values;
         })();
     
@@ -1634,6 +1659,7 @@
                     case 4:
                     case 5:
                     case 6:
+                    case 101:
                         break;
                     }
                 if (message.content != null && message.hasOwnProperty("content"))
@@ -1692,6 +1718,10 @@
                 case "PUT_MESSAGE":
                 case 6:
                     message.type = 6;
+                    break;
+                case "DELETE_SERVICE":
+                case 101:
+                    message.type = 101;
                     break;
                 }
                 if (object.content != null)

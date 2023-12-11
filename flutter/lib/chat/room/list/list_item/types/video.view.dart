@@ -20,9 +20,9 @@ class VideoMessageView extends StatelessWidget {
     );
 
     return MessageListItemWrapperView(
-      child: SimpleVideo.network(networkResource.url).constrained(
-        maxWidth: 360,
-      ),
+      child: SimpleVideo.network(networkResource.url)
+          .width(280)
+          .height(280 * 9 / 16),
     );
   }
 }

@@ -23,9 +23,7 @@ class PutConversationAnchorAtomProceder
     // 在现有 Anchor 中查找是否存在此字段
     final list = scope.anchor.list.toList();
     final from = list.indexOf(conversation.id);
-    if (from != -1) {
-      list.removeAt(from);
-    }
+    list.removeWhere((element) => element == conversation.id);
     list.insert(0, conversation.id);
 
     final anchor = ConversationAnchor(list: list);
@@ -48,7 +46,7 @@ class PutConversationAnchorAtomProceder
     list.remove(conversationId);
     if (atom.from != null) {
       final from = int.parse(atom.from!);
-      list.insert(from, from);
+      if (from != -1) list.insert(from, from);
     }
 
     await scope.handleSetConversationAnchor(

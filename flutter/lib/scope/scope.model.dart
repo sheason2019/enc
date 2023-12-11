@@ -45,9 +45,11 @@ class Scope extends ChangeNotifier {
   }
 
   Future<void> handleSetSnapshot(AccountSnapshot snapshot) async {
+    snapshot.version = this.snapshot.version + 1;
     final snapshotFile = File(paths.snapshot);
     await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
     this.snapshot = snapshot;
+
     notifyListeners();
   }
 

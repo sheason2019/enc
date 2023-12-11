@@ -235,6 +235,9 @@ export namespace sheason_chat {
 
         /** AccountSnapshot serviceMap */
         serviceMap?: ({ [k: string]: sheason_chat.IPortableService }|null);
+
+        /** AccountSnapshot version */
+        version?: (number|null);
     }
 
     /** Represents an AccountSnapshot. */
@@ -257,6 +260,9 @@ export namespace sheason_chat {
 
         /** AccountSnapshot serviceMap. */
         public serviceMap: { [k: string]: sheason_chat.IPortableService };
+
+        /** AccountSnapshot version. */
+        public version: number;
 
         /**
          * Creates a new AccountSnapshot instance using the specified properties.
@@ -569,7 +575,8 @@ export namespace sheason_chat {
         PUT_CONTACT = 3,
         PUT_CONVERSATION = 4,
         PUT_CONVERSATION_ANCHOR = 5,
-        PUT_MESSAGE = 6
+        PUT_MESSAGE = 6,
+        DELETE_SERVICE = 101
     }
 
     /** Properties of a PortableOperation. */

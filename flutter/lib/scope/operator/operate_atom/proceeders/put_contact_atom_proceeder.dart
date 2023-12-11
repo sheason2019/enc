@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
@@ -10,12 +11,18 @@ import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutContactAtomProceeder implements AtomProceeder<AccountSnapshot> {
   @override
-  Future<OperateAtom> apply(Scope scope, AccountSnapshot snapshot) async {
+  Future<OperateAtom?> apply(Scope scope, AccountSnapshot snapshot) async {
     final select = scope.db.contacts.select();
     select.where((tbl) => tbl.signPubkey.equals(snapshot.index.signPubKey));
     final exist = await select.getSingleOrNull();
     if (exist != null) {
-      // update
+      // update if version bigger
+      if (snapshot.version <= exist.snapshot.version) {
+        return null;
+      }
+      debugPrint(
+          'origin snapshot ${exist.snapshot.version} current snapshot ${snapshot.version}');
+
       final update = scope.db.contacts.update();
       update.where((tbl) => tbl.id.equals(exist.id));
       await update.write(ContactsCompanion(

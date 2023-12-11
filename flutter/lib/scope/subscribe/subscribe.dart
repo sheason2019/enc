@@ -35,7 +35,8 @@ class Subscribe {
           .build(),
     );
 
-    socket.onConnect((data) {
+    socket.onConnect((data) async {
+      await handleUploadSnapshot();
       socket.emitWithAck('subscribe', {
         'deviceId': deviceId,
         'snapshot': base64Encode(scope.snapshot.writeToBuffer()),

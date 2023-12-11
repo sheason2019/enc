@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/chat/room/room.view.dart';
@@ -62,10 +63,20 @@ class ContactDetailPage extends StatelessWidget {
             ),
           ),
           ListTile(
+            onLongPress: () {
+              Clipboard.setData(
+                ClipboardData(text: snapshot.index.ecdhPubKey),
+              );
+            },
             title: const Text('ECDH Public Key'),
             subtitle: Text(snapshot.index.ecdhPubKey),
           ),
           ListTile(
+            onLongPress: () {
+              Clipboard.setData(
+                ClipboardData(text: snapshot.index.signPubKey),
+              );
+            },
             title: const Text('SIGN Public Key'),
             subtitle: Text(snapshot.index.signPubKey),
           ),

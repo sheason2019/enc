@@ -51,7 +51,6 @@ export class SubscribeGateway {
     }
 
     const diffMap = await this.operationService.diff(account, payload);
-    console.log('account id', account.id, 'diff map::', diffMap);
 
     client.emit('push-operation', { operations: diffMap.push });
     if (Object.keys(diffMap.pull).length > 0) {
@@ -85,7 +84,6 @@ export class SubscribeGateway {
       throw new Error('Cannot find account by socket client');
     }
 
-    console.log('sync message', payload);
     const records = await prisma.message.findMany({
       where: {
         account,

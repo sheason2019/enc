@@ -9,6 +9,7 @@ import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class SearchContactPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _SearchContactPageState extends State<SearchContactPage> {
   }
 
   handleSubmit() async {
+    final scope = context.read<Scope>();
     final delegate = context.read<MainController>().rootDelegate;
     final url = textController.text;
     final resp = await dio.get(url);
@@ -45,6 +47,10 @@ class _SearchContactPageState extends State<SearchContactPage> {
     if (!verify) {
       throw Exception('Verify signature failed');
     }
+
+    // 更新联系人信息
+    final operation = await scope.operator.factory.contact(snapshot);
+    await scope.operator.apply([operation]);
 
     delegate.pages.add(ContactDetailPage(snapshot: snapshot));
     delegate.notify();

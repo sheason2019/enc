@@ -20,9 +20,9 @@ class ImageMessageView extends StatelessWidget {
     );
 
     return MessageListItemWrapperView(
-      child: ExtendedImage.network(networkResource.url).constrained(
-        maxWidth: 360,
-      ),
+      child: ExtendedImage.network(
+        networkResource.url,
+      ).constrained(maxWidth: 240, minHeight: 48),
     );
   }
 }

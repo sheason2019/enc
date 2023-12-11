@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_service_atom_proceeder.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -22,13 +24,22 @@ class PutServiceStrategy implements OperateStrategy {
 
   @override
   Future<void> apply() async {
-    final proceeder = PutServiceAtomProceeder();
-    final atom = await proceeder.apply(scope, serviceUrl);
+    final atoms = <OperateAtom>[];
+    {
+      final proceeder = PutServiceAtomProceeder();
+      final atom = await proceeder.apply(scope, serviceUrl);
+      atoms.add(atom);
+    }
+    {
+      final proceeder = PutContactAtomProceeder();
+      final atom = await proceeder.apply(scope, scope.snapshot);
+      if (atom != null) atoms.add(atom);
+    }
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));
     await update.write(OperationsCompanion(
-      atoms: Value([atom]),
+      atoms: Value(atoms),
     ));
   }
 

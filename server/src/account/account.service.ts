@@ -17,6 +17,14 @@ export class AccountService {
         },
       });
       if (!!exist) {
+        const existSnapshot = sheason_chat.AccountSnapshot.decode(
+          exist.snapshot,
+        );
+
+        if (existSnapshot.version >= snapshot.version) {
+          return exist;
+        }
+
         exist.snapshot = buffer;
         await tx.account.update({
           where: {

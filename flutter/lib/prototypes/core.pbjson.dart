@@ -39,6 +39,7 @@ const OperationType$json = {
     {'1': 'PUT_CONVERSATION', '2': 4},
     {'1': 'PUT_CONVERSATION_ANCHOR', '2': 5},
     {'1': 'PUT_MESSAGE', '2': 6},
+    {'1': 'DELETE_SERVICE', '2': 101},
   ],
 };
 
@@ -46,7 +47,8 @@ const OperationType$json = {
 final $typed_data.Uint8List operationTypeDescriptor = $convert.base64Decode(
     'Cg1PcGVyYXRpb25UeXBlEhUKEVVOS05PV05fT1BFQVJUSU9OEAASEAoMUFVUX1VTRVJOQU1FEA'
     'ESDwoLUFVUX1NFUlZJQ0UQAhIPCgtQVVRfQ09OVEFDVBADEhQKEFBVVF9DT05WRVJTQVRJT04Q'
-    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAFEg8KC1BVVF9NRVNTQUdFEAY=');
+    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAFEg8KC1BVVF9NRVNTQUdFEAYSEgoOREVMRV'
+    'RFX1NFUlZJQ0UQZQ==');
 
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = {
@@ -138,6 +140,7 @@ const AccountSnapshot$json = {
     {'1': 'username', '3': 2, '4': 1, '5': 9, '10': 'username'},
     {'1': 'avatar_url', '3': 3, '4': 1, '5': 9, '10': 'avatarUrl'},
     {'1': 'serviceMap', '3': 4, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot.ServiceMapEntry', '10': 'serviceMap'},
+    {'1': 'version', '3': 5, '4': 1, '5': 5, '10': 'version'},
   ],
   '3': [AccountSnapshot_ServiceMapEntry$json],
 };
@@ -157,9 +160,9 @@ final $typed_data.Uint8List accountSnapshotDescriptor = $convert.base64Decode(
     'Cg9BY2NvdW50U25hcHNob3QSMAoFaW5kZXgYASABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudE'
     'luZGV4UgVpbmRleBIaCgh1c2VybmFtZRgCIAEoCVIIdXNlcm5hbWUSHQoKYXZhdGFyX3VybBgD'
     'IAEoCVIJYXZhdGFyVXJsEk0KCnNlcnZpY2VNYXAYBCADKAsyLS5zaGVhc29uX2NoYXQuQWNjb3'
-    'VudFNuYXBzaG90LlNlcnZpY2VNYXBFbnRyeVIKc2VydmljZU1hcBpcCg9TZXJ2aWNlTWFwRW50'
-    'cnkSEAoDa2V5GAEgASgJUgNrZXkSMwoFdmFsdWUYAiABKAsyHS5zaGVhc29uX2NoYXQuUG9ydG'
-    'FibGVTZXJ2aWNlUgV2YWx1ZToCOAE=');
+    'VudFNuYXBzaG90LlNlcnZpY2VNYXBFbnRyeVIKc2VydmljZU1hcBIYCgd2ZXJzaW9uGAUgASgF'
+    'Ugd2ZXJzaW9uGlwKD1NlcnZpY2VNYXBFbnRyeRIQCgNrZXkYASABKAlSA2tleRIzCgV2YWx1ZR'
+    'gCIAEoCzIdLnNoZWFzb25fY2hhdC5Qb3J0YWJsZVNlcnZpY2VSBXZhbHVlOgI4AQ==');
 
 @$core.Deprecated('Use portableServiceDescriptor instead')
 const PortableService$json = {

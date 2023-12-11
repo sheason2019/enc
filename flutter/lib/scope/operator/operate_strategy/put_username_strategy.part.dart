@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_username_atom_proceeder.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -23,13 +25,27 @@ class PutUsernameStrategy implements OperateStrategy {
 
   @override
   Future<void> apply() async {
-    final proceeder = PutUsernameAtomProceeder();
-    final atom = await proceeder.apply(scope, username);
+    final atoms = <OperateAtom>[];
+    {
+      final proceeder = PutUsernameAtomProceeder();
+      final atom = await proceeder.apply(scope, username);
+      atoms.add(atom);
+    }
+    {
+      final contactProceeder = PutContactAtomProceeder();
+      final atom = await contactProceeder.apply(
+        scope,
+        scope.snapshot,
+      );
+      if (atom != null) {
+        atoms.add(atom);
+      }
+    }
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));
     await update.write(OperationsCompanion(
-      atoms: Value([atom]),
+      atoms: Value(atoms),
     ));
   }
 

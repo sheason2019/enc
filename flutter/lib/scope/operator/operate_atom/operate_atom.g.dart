@@ -24,6 +24,7 @@ Map<String, dynamic> _$OperateAtomToJson(OperateAtom instance) =>
 const _$OperateAtomTypeEnumMap = {
   OperateAtomType.putUsername: 'put-username',
   OperateAtomType.putService: 'put-service',
+  OperateAtomType.deleteService: 'delete-service',
   OperateAtomType.putContact: 'put-contact',
   OperateAtomType.putConversation: 'put-conversation',
   OperateAtomType.putConversationAnchor: 'put-conversation-anchor',

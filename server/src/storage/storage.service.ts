@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Account } from '@prisma/client';
-import { createHash } from 'crypto';
 import * as path from 'path';
 import * as fs from 'fs';
 import { sheason_chat } from 'src/prototypes';
@@ -20,25 +19,20 @@ export class StorageService {
   }
 
   handleMerge(account: Account, wrapper: sheason_chat.SignWrapper): string {
-    const filename = Buffer.from(wrapper.buffer).toString('base64url');
+    const filename = Buffer.from(wrapper.sign).toString('base64url');
     const mergeIdList: string[] = JSON.parse(wrapper.buffer.toString());
     const mergePathList = mergeIdList.map((e) =>
       path.join(DATA_ROOT, account.signPubkey, e),
     );
     const filePath = path.join(DATA_ROOT, account.signPubkey, filename);
     const fileStream = fs.createWriteStream(filePath);
-    const hFile = createHash('md5');
 
     for (const p of mergePathList) {
       const buffer = fs.readFileSync(p);
       fileStream.write(buffer);
-      hFile.update(buffer);
     }
 
-    const fileMd5 = hFile.digest();
-    fileStream.close();
-
-    return fileMd5.toString('base64url');
+    return filename;
   }
 
   // 删除指定的文件，返回值为删除的文件名

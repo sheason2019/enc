@@ -18,6 +18,7 @@ message AccountSnapshot {
   string username = 2;
   string avatar_url = 3;
   map<string, PortableService> serviceMap = 4;
+  int32 version = 5;
 }
 
 message PortableService {}
@@ -45,6 +46,8 @@ enum OperationType {
   PUT_CONVERSATION = 4;
   PUT_CONVERSATION_ANCHOR = 5;
   PUT_MESSAGE = 6;
+
+  DELETE_SERVICE = 101;
 }
 
 message PortableOperation {

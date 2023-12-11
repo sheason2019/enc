@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/operate_strategy/delete_service_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_contact_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_conversation_anchor_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_message_strategy.dart';
@@ -64,8 +65,15 @@ abstract class OperateStrategy {
             base64Decode(operation.info.content),
           ),
         );
-      default:
-        throw UnimplementedError();
+      case OperationType.DELETE_SERVICE:
+        return DeleteServiceStrategy(
+          scope: scope,
+          operation: operation,
+          url: operation.info.content,
+        );
+      case OperationType.UNKNOWN_OPEARTION:
+        break;
     }
+    throw UnimplementedError();
   }
 }

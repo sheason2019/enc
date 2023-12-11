@@ -5,6 +5,8 @@ enum OperateAtomType {
   putUsername,
   @JsonValue('put-service')
   putService,
+  @JsonValue('delete-service')
+  deleteService,
   @JsonValue('put-contact')
   putContact,
   @JsonValue('put-conversation')

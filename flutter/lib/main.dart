@@ -7,6 +7,7 @@ import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   runApp(const MyApp());

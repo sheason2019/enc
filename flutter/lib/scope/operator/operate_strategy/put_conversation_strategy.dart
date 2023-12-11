@@ -29,7 +29,9 @@ class PutConversationStrategy implements OperateStrategy {
     final contactProceeder = PutContactAtomProceeder();
     for (final member in portable.members) {
       final atom = await contactProceeder.apply(scope, member);
-      atoms.add(atom);
+      if (atom != null) {
+        atoms.add(atom);
+      }
     }
 
     final putConversationAtom = await PutConversationAtomProceeder().apply(

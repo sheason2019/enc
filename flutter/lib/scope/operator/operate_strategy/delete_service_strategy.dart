@@ -1,48 +1,49 @@
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_anchor_atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_strategy/operate_strategy.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
-import 'operate_strategy.dart';
-
-class PutConversationAnchorStrategy implements OperateStrategy {
-  @override
-  final Operation operation;
+class DeleteServiceStrategy implements OperateStrategy {
   @override
   final Scope scope;
 
-  final PortableConversation portable;
+  @override
+  final Operation operation;
 
-  const PutConversationAnchorStrategy({
+  final String url;
+
+  const DeleteServiceStrategy({
     required this.scope,
     required this.operation,
-    required this.portable,
+    required this.url,
   });
 
   @override
   Future<void> apply() async {
-    final proceeder = PutConversationAnchorAtomProceder();
-    final atom = await proceeder.apply(scope, portable);
+    final proceeder = DeleteServiceAtomProceeder();
+    final atom = await proceeder.apply(scope, url);
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));
-    await update.write(OperationsCompanion(
+    update.write(OperationsCompanion(
       atoms: Value([atom]),
     ));
   }
 
   @override
   Future<void> revert() async {
-    for (final atom in operation.atoms!) {
+    final atoms = operation.atoms;
+    if (atoms == null) return;
+    for (final atom in atoms) {
       final proceeder = AtomProceeder.fetch(atom);
       await proceeder.revert(scope, atom);
     }
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));
-    await update.write(const OperationsCompanion(
+    update.write(const OperationsCompanion(
       atoms: Value(null),
     ));
   }

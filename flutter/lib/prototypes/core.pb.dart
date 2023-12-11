@@ -153,6 +153,7 @@ class AccountSnapshot extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'username')
     ..aOS(3, _omitFieldNames ? '' : 'avatarUrl')
     ..m<$core.String, PortableService>(4, _omitFieldNames ? '' : 'serviceMap', protoName: 'serviceMap', entryClassName: 'AccountSnapshot.ServiceMapEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: PortableService.create, valueDefaultOrMaker: PortableService.getDefault, packageName: const $pb.PackageName('sheason_chat'))
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -208,6 +209,15 @@ class AccountSnapshot extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $core.Map<$core.String, PortableService> get serviceMap => $_getMap(3);
+
+  @$pb.TagNumber(5)
+  $core.int get version => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set version($core.int v) { $_setSignedInt32(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasVersion() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVersion() => clearField(5);
 }
 
 class PortableService extends $pb.GeneratedMessage {

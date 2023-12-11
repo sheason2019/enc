@@ -47,7 +47,7 @@ class MessageListItemWrapperView extends StatelessWidget {
                 Text(
                   contact.snapshot.username,
                   overflow: TextOverflow.ellipsis,
-                ).bold().width(180),
+                ).bold().constrained(maxWidth: 180),
                 Text(
                   StringHelper.time(message.createdAt),
                   overflow: TextOverflow.ellipsis,

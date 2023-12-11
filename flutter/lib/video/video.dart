@@ -43,12 +43,13 @@ class _SimpleVideoState extends State<SimpleVideo> {
   Future<void> initVideo() async {
     switch (widget._type) {
       case _VideoResourceType.file:
-        player.open(Media('file:///${widget.filePath}'), play: false);
+        await player.open(Media('file:///${widget.filePath}'), play: false);
         break;
       case _VideoResourceType.network:
-        player.open(Media(widget.url!), play: false);
+        await player.open(Media(widget.url!), play: false);
         break;
     }
+    await player.seek(Duration.zero);
   }
 
   @override
@@ -65,9 +66,6 @@ class _SimpleVideoState extends State<SimpleVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Video(controller: controller),
-    );
+    return Video(controller: controller);
   }
 }
