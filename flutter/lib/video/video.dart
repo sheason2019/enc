@@ -49,7 +49,15 @@ class _SimpleVideoState extends State<SimpleVideo> {
         await player.open(Media(widget.url!), play: false);
         break;
     }
-    await player.seek(Duration.zero);
+
+    player.seek(Duration.zero);
+
+    player.stream.width.listen((event) {
+      setState(() {});
+    });
+    player.stream.height.listen((event) {
+      setState(() {});
+    });
   }
 
   @override
@@ -64,8 +72,20 @@ class _SimpleVideoState extends State<SimpleVideo> {
     super.dispose();
   }
 
+  double get aspect {
+    final w = player.state.width;
+    final h = player.state.height;
+    if (w == null || h == null) return 1;
+    return w / h;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Video(controller: controller);
+    return AspectRatio(
+      aspectRatio: aspect,
+      child: Video(
+        controller: controller,
+      ),
+    );
   }
 }

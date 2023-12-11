@@ -98,6 +98,8 @@ class _MessageContentCardState extends State<_MessageContentCard> {
 
     final isCurrentAccountSend = contact.signPubkey == scope.secret.signPubKey;
 
+    Offset? position;
+
     return MenuAnchor(
       menuChildren: [
         MenuItemButton(
@@ -108,11 +110,14 @@ class _MessageContentCardState extends State<_MessageContentCard> {
         ),
       ],
       style: const MenuStyle(
-          visualDensity: VisualDensity.comfortable,
-          alignment: FractionalOffset(0, -1.25)),
+        visualDensity: VisualDensity.comfortable,
+      ),
       anchorTapClosesMenu: true,
       builder: (context, controller, _) => GestureDetector(
-        onLongPress: () => controller.open(),
+        onLongPressStart: (details) => position = details.localPosition,
+        onLongPress: () => controller.open(
+          position: position,
+        ),
         onSecondaryTapDown: (details) => controller.open(
           position: details.localPosition,
         ),
