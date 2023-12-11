@@ -81,6 +81,7 @@ class MessageType extends $pb.ProtobufEnum {
   static const MessageType MESSAGE_TYPE_IMAGE = MessageType._(3, _omitEnumNames ? '' : 'MESSAGE_TYPE_IMAGE');
   static const MessageType MESSAGE_TYPE_VIDEO = MessageType._(4, _omitEnumNames ? '' : 'MESSAGE_TYPE_VIDEO');
   static const MessageType MESSAGE_TYPE_FILE = MessageType._(5, _omitEnumNames ? '' : 'MESSAGE_TYPE_FILE');
+  static const MessageType MESSAGE_TYPE_RTC = MessageType._(6, _omitEnumNames ? '' : 'MESSAGE_TYPE_RTC');
   static const MessageType MESSAGE_TYPE_STATE_ONLY = MessageType._(101, _omitEnumNames ? '' : 'MESSAGE_TYPE_STATE_ONLY');
 
   static const $core.List<MessageType> values = <MessageType> [
@@ -90,6 +91,7 @@ class MessageType extends $pb.ProtobufEnum {
     MESSAGE_TYPE_IMAGE,
     MESSAGE_TYPE_VIDEO,
     MESSAGE_TYPE_FILE,
+    MESSAGE_TYPE_RTC,
     MESSAGE_TYPE_STATE_ONLY,
   ];
 

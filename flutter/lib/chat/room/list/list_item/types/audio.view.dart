@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class AudioMessageView extends StatefulWidget {
 }
 
 class _AudioMessageViewState extends State<AudioMessageView> {
+  final subList = <StreamSubscription>[];
   final player = Player();
 
   var playing = false;
@@ -35,29 +37,37 @@ class _AudioMessageViewState extends State<AudioMessageView> {
   }
 
   Future<void> watchState() async {
-    player.stream.playing.listen((event) {
+    final subPlay = player.stream.playing.listen((event) {
       if (event != playing) {
         setState(() {
           playing = event;
         });
       }
     });
-    player.stream.position.listen((event) {
+    subList.add(subPlay);
+
+    final subPosition = player.stream.position.listen((event) {
       setState(() {
         position = event;
       });
     });
-    player.stream.duration.listen((event) {
+    subList.add(subPosition);
+
+    final subDuration = player.stream.duration.listen((event) {
       setState(() {
         duration = event;
       });
     });
-    player.stream.completed.listen((event) async {
+    subList.add(subDuration);
+
+    final subComplete = player.stream.completed.listen((event) async {
       if (event) {
         await player.seek(Duration.zero);
         player.pause();
       }
     });
+    subList.add(subComplete);
+
     await player.open(Media(resource.url), play: false);
   }
 
@@ -69,6 +79,9 @@ class _AudioMessageViewState extends State<AudioMessageView> {
 
   @override
   void dispose() {
+    for (final sub in subList) {
+      sub.cancel();
+    }
     player.dispose();
     super.dispose();
   }

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/input/file_input/file_input.controller.dart';
 import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
+import 'package:sheason_chat/chat/room/input/rtc_input/rtc_input.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/models/network_resource.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -120,6 +122,12 @@ class InputMenuBottomSheet extends StatelessWidget {
 
   handleCreateRTC(BuildContext context) {
     handleCloseSheet(context);
+
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(
+      CreateRTCInvitePage(controller: chatController),
+    );
+    delegate.notify();
   }
 
   @override
@@ -127,7 +135,7 @@ class InputMenuBottomSheet extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: GridView.extent(
-        maxCrossAxisExtent: 75,
+        maxCrossAxisExtent: 88,
         mainAxisSpacing: 4,
         crossAxisSpacing: 4,
         children: [

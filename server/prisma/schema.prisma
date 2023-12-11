@@ -20,6 +20,7 @@ model Account {
 
   Operation Operation[]
   Message   Message[]
+  RtcRecord RtcRecord[]
 }
 
 model Operation {
@@ -39,4 +40,14 @@ model Message {
 
   accountID Int?
   account   Account? @relation(fields: [accountID], references: [id])
+}
+
+model RtcRecord {
+  id         Int    @id @default(autoincrement())
+  serviceUrl String
+  uuid       String
+  name       String
+
+  accountID Int
+  account   Account @relation(fields: [accountID], references: [id])
 }

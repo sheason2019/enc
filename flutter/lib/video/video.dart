@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 enum _VideoResourceType {
   network,
@@ -92,11 +94,14 @@ class _SimpleVideoState extends State<SimpleVideo> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop =
+        Platform.isMacOS || Platform.isWindows || Platform.isLinux;
+
     return AspectRatio(
       aspectRatio: aspect,
       child: Video(
         controller: controller,
       ),
-    );
+    ).constrained(minWidth: isDesktop ? 400 : 120);
   }
 }

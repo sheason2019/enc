@@ -6,6 +6,7 @@ import 'package:sheason_chat/chat/room/list/list_item/message_context.model.dart
 import 'package:sheason_chat/chat/room/list/list_item/types/audio.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/file/file.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/image.view.dart';
+import 'package:sheason_chat/chat/room/list/list_item/types/rtc.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/text.view.dart';
 import 'package:sheason_chat/chat/room/list/list_item/types/video.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -71,8 +72,10 @@ class _MessageItemRenderer extends StatelessWidget {
         return const ImageMessageView();
       case MessageType.MESSAGE_TYPE_FILE:
         return const FileMessageView();
+      case MessageType.MESSAGE_TYPE_RTC:
+        return const RtcMessageView();
       default:
-        return const SizedBox();
+        return Text('无法解析的消息类型 ${message.messageType.name}');
     }
   }
 

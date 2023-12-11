@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,8 @@ class VideoMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final message = context.watch<Message>();
+    final isDesktop =
+        Platform.isWindows || Platform.isMacOS || Platform.isLinux;
 
     final networkResource = NetworkResource.fromJson(
       jsonDecode(message.content),
@@ -21,8 +24,8 @@ class VideoMessageView extends StatelessWidget {
 
     return MessageListItemWrapperView(
       child: SimpleVideo.network(networkResource.url).constrained(
-        maxWidth: 280,
-        maxHeight: 280,
+        maxWidth: isDesktop ? 400 : 280,
+        maxHeight: isDesktop ? 400 : 280,
       ),
     );
   }

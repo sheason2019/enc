@@ -17,7 +17,6 @@ class ServiceSelector extends StatelessWidget {
       builder: (context, _) => DropdownButton<String>(
         isExpanded: true,
         value: controller.serviceUrl,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
         hint: const Text('点击选择托管静态资源的服务器'),
         onChanged: (v) {
           controller.serviceUrl = v;
