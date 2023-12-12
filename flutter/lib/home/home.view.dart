@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -6,8 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: const LinearProgressIndicator(),
+      body: const LinearProgressIndicator().width(280).center(),
     );
   }
 }

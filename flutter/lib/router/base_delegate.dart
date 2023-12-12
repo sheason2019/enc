@@ -26,7 +26,7 @@ class BaseDelegate extends RouterDelegate<Widget>
       pages: [
         for (final page in pages)
           MaterialPage(
-            key: ValueKey(page.runtimeType),
+            key: ValueKey(page),
             child: page,
           ),
       ],
