@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/accounts/accounts.view.dart';
+import 'package:sheason_chat/accounts/online_hint/scope_online_hint.view.dart';
 import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
 import 'package:sheason_chat/chat/anchors/anchors.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
@@ -30,17 +32,22 @@ class ChatView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('消息列表'),
         centerTitle: true,
-        leading: Center(
-          child: GestureDetector(
-            onTap: () => toAccounts(context),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: AccountAvatar(
-                snapshot: scope.snapshot,
+        leading: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: () => toAccounts(context),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: AccountAvatar(
+                  snapshot: scope.snapshot,
+                ),
               ),
             ),
-          ),
-        ),
+            ScopeOnlineHint(scope: scope).padding(left: 8),
+          ],
+        ).center().padding(horizontal: 16),
+        leadingWidth: 144,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),

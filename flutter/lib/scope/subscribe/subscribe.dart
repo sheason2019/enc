@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
@@ -10,12 +11,13 @@ import 'package:sheason_chat/scope/operation_cipher/operation_cipher.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-class Subscribe {
+class Subscribe extends ChangeNotifier {
   final Scope scope;
   final String deviceId;
   final String url;
 
-  var _shouldSyncMessage = true;
+  var connected = false;
+  var _syncMessage = false;
 
   Subscribe({
     required this.scope,
@@ -35,12 +37,24 @@ class Subscribe {
           .build(),
     );
 
+    socket.onDisconnect((data) {
+      connected = false;
+      notifyListeners();
+    });
+
     socket.onConnect((data) async {
       await handleUploadSnapshot();
-      socket.emitWithAck('subscribe', {
-        'deviceId': deviceId,
-        'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
-      });
+      socket.emitWithAck(
+        'subscribe',
+        {
+          'deviceId': deviceId,
+          'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
+        },
+        ack: (_) {
+          connected = true;
+          notifyListeners();
+        },
+      );
     });
 
     socket.on('pull-operation', (data) async {
@@ -82,9 +96,9 @@ class Subscribe {
         await scope.operator.apply(portableOperations);
       }
 
-      if (_shouldSyncMessage) {
-        _shouldSyncMessage = false;
-        await syncMessage();
+      if (!_syncMessage) {
+        _syncMessage = true;
+        syncMessage();
       }
     });
     socket.on('push-message', (data) async {
@@ -165,7 +179,9 @@ class Subscribe {
     );
   }
 
-  dispose() {
+  @override
+  void dispose() {
     socket.dispose();
+    super.dispose();
   }
 }

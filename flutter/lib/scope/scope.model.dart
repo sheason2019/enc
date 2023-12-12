@@ -122,6 +122,8 @@ class Scope extends ChangeNotifier {
       await subscribe.init();
       subscribes[append] = subscribe;
     }
+
+    notifyListeners();
   }
 
   init() async {

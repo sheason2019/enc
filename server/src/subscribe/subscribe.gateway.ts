@@ -41,6 +41,8 @@ export class SubscribeGateway {
     await client.join(account.signPubkey);
     this.socketMap.set(client, account);
     client.emit('sync-operation');
+
+    return snapshot.index.signPubKey;
   }
 
   @SubscribeMessage('sync-operation')

@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/accounts/online_hint/online_hint.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/services/create/create.view.dart';
 import 'package:sheason_chat/profile/services/detail/detail.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});
-
-  toDetail(BuildContext context, String url) {
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.add(ServiceDetailPage(url: url));
-    delegate.notify();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +34,38 @@ class ServicesPage extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: serviceUrls.length,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () => toDetail(context, serviceUrls[index]),
-          title: Text(serviceUrls[index]),
+        itemBuilder: (context, index) => _ServiceItem(
+          serviceUrl: serviceUrls[index],
         ),
+      ),
+    );
+  }
+}
+
+class _ServiceItem extends StatelessWidget {
+  final String serviceUrl;
+  const _ServiceItem({required this.serviceUrl});
+
+  toDetail(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(ServiceDetailPage(url: serviceUrl));
+    delegate.notify();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = context.watch<Scope>();
+    final subscribe = scope.subscribes[serviceUrl];
+
+    return ListTile(
+      onTap: () => toDetail(context),
+      title: Row(
+        children: [
+          Text(serviceUrl).expanded(),
+          OnlineHint(subscribes: [
+            if (subscribe != null) subscribe,
+          ]),
+        ],
       ),
     );
   }
