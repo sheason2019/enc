@@ -50,15 +50,13 @@ class CreateRTCInviteController extends ChangeNotifier {
       'payload': base64Encode(wrapper.writeToBuffer()),
     });
     final resp = await dio.post(
-      '$url/${chatController.scope.secret.signPubKey}/rtc',
+      '$url/rtc',
       data: data,
     );
     final receiveRtcModel = RtcModel.fromJson(resp.data);
     final message = await chatController.createMessage();
     message.messageType = MessageType.MESSAGE_TYPE_RTC;
     message.content = jsonEncode(receiveRtcModel.toJson());
-
-    debugPrint('message $message');
 
     await chatController.sendMessage([message]);
   }

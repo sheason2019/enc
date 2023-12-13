@@ -22,18 +22,14 @@ export class RtcController {
     private readonly rtcService: RtcService,
   ) {}
 
-  @Post(':signPubkey/rtc')
+  @Post('rtc')
   @UseInterceptors(NoFilesInterceptor())
   async handleCreateRtc(
-    @Param('signPubkey') signPubkey: string,
     @Body()
-    body: { payload: string },
+    body: {
+      payload: string;
+    },
   ): Promise<IRtcModel> {
-    const account = await this.accountService.find(signPubkey);
-    if (!account) {
-      throw new HttpException('cannot find account', 404);
-    }
-
     const wrapper = sheason_chat.SignWrapper.decode(
       Buffer.from(body.payload, 'base64'),
     );
@@ -42,8 +38,9 @@ export class RtcController {
       throw new HttpException('verify signature failed', 403);
     }
 
-    if (wrapper.signer.signPubKey !== signPubkey) {
-      throw new HttpException('account scope error', 403);
+    const account = await this.accountService.find(wrapper.signer.signPubKey);
+    if (!account) {
+      throw new HttpException('cannot find account', 404);
     }
 
     const model: IRtcModel = JSON.parse(Buffer.from(wrapper.buffer).toString());
@@ -56,17 +53,9 @@ export class RtcController {
     };
   }
 
-  @Get(':signPubkey/rtc/:uuid')
-  async handleGetRtc(
-    @Param('signPubkey') signPubkey: string,
-    @Param('uuid') uuid: string,
-  ): Promise<IRtcModel> {
-    const account = await this.accountService.find(signPubkey);
-    if (!account) {
-      throw new HttpException('cannot find account', 404);
-    }
-
-    const record = await this.rtcService.findRtc(account, uuid);
+  @Get('rtc/:uuid')
+  async handleGetRtc(@Param('uuid') uuid: string): Promise<IRtcModel> {
+    const record = await this.rtcService.findRtc(uuid);
     if (!record) {
       throw new HttpException('cannot find rtc record', 404);
     }

@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/list/list_item/wrapper.view.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/models/rtc_model.dart';
+import 'package:sheason_chat/rtc/rtc.view/index.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class RtcMessageView extends StatelessWidget {
@@ -31,7 +34,14 @@ class RtcMessageView extends StatelessWidget {
               .height(36)
               .backgroundColor(Colors.green),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              final delegate = context.read<MainController>().rootDelegate;
+              delegate.pages.add(RtcPage(
+                scope: context.read<Scope>(),
+                rtcModel: rtcModel,
+              ));
+              delegate.notify();
+            },
             child: const Text('加入通话'),
           ).padding(vertical: 4, right: 8).alignment(Alignment.centerRight),
         ],

@@ -18,10 +18,9 @@ export class RtcService {
     });
   }
 
-  findRtc(account: Account, uuid: string) {
+  findRtc(uuid: string) {
     return prisma.rtcRecord.findFirst({
       where: {
-        account,
         uuid,
       },
     });
