@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/list/list_item/wrapper.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/models/rtc_model.dart';
-import 'package:sheason_chat/rtc/rtc.view/index.dart';
+import 'package:sheason_chat/rtc/rtc.view.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';

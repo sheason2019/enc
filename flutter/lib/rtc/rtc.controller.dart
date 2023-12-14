@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -29,7 +30,33 @@ class RtcController extends ChangeNotifier {
     required this.scope,
   });
 
-  late Socket socket;
+  Socket? socket;
+
+  RtcMember? get currentMember => clientMap[socket?.id];
+
+  bool get audioOpen => _audioOpen;
+  set audioOpen(bool value) {
+    if (value) {
+      _openAudio();
+    } else {
+      _closeAudio();
+    }
+  }
+
+  var _audioOpen = false;
+
+  bool get videoOpen => _videoOpen;
+  set videoOpen(bool value) {
+    if (value) {
+      _openVideo();
+    } else {
+      _closeVideo();
+    }
+  }
+
+  var _videoOpen = false;
+
+  final renderer = RTCVideoRenderer()..initialize();
 
   final clientMap = <String, RtcMember>{};
 
@@ -201,8 +228,11 @@ class RtcController extends ChangeNotifier {
       }
     });
 
+    await _createLocalStream();
+
     this.socket = socket;
     socket.connect();
+    notifyListeners();
   }
 
   Future<RtcSession> _createSession(String clientId) async {
@@ -225,11 +255,32 @@ class RtcController extends ChangeNotifier {
         });
       }
     };
-    pc.onConnectionState = (state) {
-      debugPrint('connection state $state');
-    };
 
-    return RtcSession(peerConnection: pc);
+    final localStream = renderer.srcObject!;
+    final tracks = localStream.getTracks();
+
+    final audioTrack = tracks.where((e) => e.kind == 'audio').firstOrNull;
+    final videoTrack = tracks.where((e) => e.kind == 'video').firstOrNull;
+
+    final session = RtcSession(
+      peerConnection: pc,
+    );
+
+    if (audioTrack != null) {
+      session.audioSender = await pc.addTrack(audioTrack, localStream);
+    }
+    if (videoTrack != null) {
+      session.videoSender = await pc.addTrack(videoTrack, localStream);
+    }
+
+    if (!_audioOpen) {
+      await session.audioSender?.replaceTrack(null);
+    }
+    if (!_videoOpen) {
+      await session.videoSender?.replaceTrack(null);
+    }
+
+    return session;
   }
 
   Future<void> _sendExchangeData(String clientId, Map data) async {
@@ -240,18 +291,121 @@ class RtcController extends ChangeNotifier {
       jsonEncode(data).codeUnits,
       encryptTarget: member!.snapshot.index,
     );
-    socket.emit('exchange', {
+    socket!.emit('exchange', {
       'clientId': clientId,
       'wrapper': base64Encode(wrapper.writeToBuffer()),
     });
   }
 
+  Future<void> _createLocalStream() async {
+    late MediaStream stream;
+    if (Platform.isAndroid) {
+      stream = await navigator.mediaDevices.getUserMedia({
+        'audio': true,
+        'video': {
+          'mandatory': {
+            'frameRate': 60.0,
+          },
+        },
+      });
+    }
+
+    if (Platform.isWindows) {
+      final sources = await desktopCapturer.getSources(
+        types: [SourceType.Screen],
+      );
+      final source = sources.first;
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        'audio': true,
+        'video': {
+          'deviceId': {'exact': source.id},
+          'mandatory': {
+            'frameRate': 60.0,
+          },
+        },
+      });
+      final audioStream = await navigator.mediaDevices.getUserMedia({
+        'audio': true,
+      });
+      final tracks = audioStream.getAudioTracks();
+      for (final track in tracks) {
+        stream.addTrack(track);
+      }
+    }
+
+    renderer.srcObject = stream;
+  }
+
+  Future<void> _openAudio() async {
+    final localStream = renderer.srcObject!;
+    final tracks = localStream.getTracks();
+    final track = tracks.where((e) => e.kind == 'audio').firstOrNull;
+    if (track == null) return;
+
+    for (final member in clientMap.values) {
+      final session = member.session;
+      if (session == null) continue;
+
+      await session.audioSender?.replaceTrack(track);
+      await session.sendMediaStatus(audioOpen: true);
+    }
+
+    _audioOpen = true;
+    notifyListeners();
+  }
+
+  Future<void> _closeAudio() async {
+    for (final member in clientMap.values) {
+      final session = member.session;
+      if (session == null) continue;
+
+      await session.audioSender?.replaceTrack(null);
+      await session.sendMediaStatus(audioOpen: false);
+    }
+
+    _audioOpen = false;
+    notifyListeners();
+  }
+
+  Future<void> _openVideo() async {
+    final localStream = renderer.srcObject!;
+    final tracks = localStream.getTracks();
+    final track = tracks.where((e) => e.kind == 'video').firstOrNull;
+    if (track == null) return;
+
+    for (final member in clientMap.values) {
+      final session = member.session;
+      if (session == null) continue;
+
+      await session.videoSender?.replaceTrack(track);
+      await session.sendMediaStatus(videoOpen: true);
+    }
+
+    _videoOpen = true;
+    notifyListeners();
+  }
+
+  Future<void> _closeVideo() async {
+    for (final member in clientMap.values) {
+      final session = member.session;
+      if (session == null) continue;
+
+      await session.videoSender?.replaceTrack(null);
+      await session.sendMediaStatus(videoOpen: false);
+    }
+
+    _videoOpen = false;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
-    socket.dispose();
+    socket?.dispose();
     for (final client in clientMap.values) {
       client.dispose();
     }
+    renderer.srcObject?.dispose();
+    renderer.dispose();
     super.dispose();
   }
 }

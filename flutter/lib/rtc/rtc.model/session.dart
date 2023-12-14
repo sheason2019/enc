@@ -7,13 +7,30 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class RtcSession extends ChangeNotifier {
   final RTCPeerConnection peerConnection;
+  RTCRtpSender? audioSender;
+  RTCRtpSender? videoSender;
 
   final describeCompleter = Completer();
 
-  // 三大数据源是否开启
-  var dataChannelOpen = false;
-  var audioOpen = false;
-  var videoOpen = false;
+  late RTCDataChannel channel;
+
+  bool get audioOpen => _audioOpen;
+  set audioOpen(bool value) {
+    _audioOpen = value;
+    notifyListeners();
+  }
+
+  var _audioOpen = false;
+
+  bool get videoOpen => _videoOpen;
+  set videoOpen(bool value) {
+    _videoOpen = value;
+    notifyListeners();
+  }
+
+  var _videoOpen = false;
+
+  final renderer = RTCVideoRenderer()..initialize();
 
   RtcSession({
     required this.peerConnection,
@@ -26,8 +43,8 @@ class RtcSession extends ChangeNotifier {
   int delay = -1;
 
   Future<void> startHeartbeat() async {
-    final dataChannel = await peerConnection.createDataChannel(
-      'heartbeat',
+    channel = await peerConnection.createDataChannel(
+      'channel',
       RTCDataChannelInit(),
     );
 
@@ -46,11 +63,11 @@ class RtcSession extends ChangeNotifier {
         sequence.removeAt(0);
       }
 
-      dataChannel.send(RTCDataChannelMessage(jsonEncode(pingMap)));
+      channel.send(RTCDataChannelMessage(jsonEncode(pingMap)));
     });
     _timer = timer;
     peerConnection.onDataChannel = (channel) {
-      if (channel.label == 'heartbeat') {
+      if (channel.label == 'channel') {
         channel.onMessage = (data) {
           final Map json = jsonDecode(data.text);
           if (json['type'] == 'ping') {
@@ -58,7 +75,7 @@ class RtcSession extends ChangeNotifier {
               'type': 'pong',
               'key': json['key'],
             };
-            dataChannel.send(RTCDataChannelMessage(jsonEncode(pongMap)));
+            channel.send(RTCDataChannelMessage(jsonEncode(pongMap)));
           }
           if (json['type'] == 'pong') {
             for (final item in sequence) {
@@ -72,14 +89,54 @@ class RtcSession extends ChangeNotifier {
               }
             }
           }
+          if (json['type'] == 'media-status') {
+            _receiveMediaStatus(json);
+          }
         };
       }
     };
+    peerConnection.onTrack = (event) {
+      debugPrint('on track $event');
+      renderer.srcObject?.dispose();
+      debugPrint('on track streams ${event.streams}');
+      renderer.srcObject = event.streams.first;
+      notifyListeners();
+    };
+  }
+
+  Future<void> sendMediaStatus({
+    bool? videoOpen,
+    bool? audioOpen,
+  }) async {
+    final json = <String, dynamic>{
+      'type': 'media-status',
+    };
+    if (videoOpen != null) {
+      json['video-open'] = videoOpen;
+    }
+    if (audioOpen != null) {
+      json['audio-open'] = audioOpen;
+    }
+
+    await channel.send(RTCDataChannelMessage(jsonEncode(json)));
+  }
+
+  void _receiveMediaStatus(Map json) {
+    final videoOpen = json['video-open'];
+    final audioOpen = json['audio-open'];
+    if (videoOpen != null) {
+      this.videoOpen = videoOpen;
+    }
+    if (audioOpen != null) {
+      this.audioOpen = audioOpen;
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    renderer.dispose();
+    renderer.srcObject?.dispose();
     super.dispose();
   }
 }

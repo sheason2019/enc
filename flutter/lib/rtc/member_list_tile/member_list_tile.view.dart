@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
+import 'package:sheason_chat/rtc/rtc.model/member.dart';
 import 'package:sheason_chat/rtc/rtc.model/session.dart';
 
-class RtcPageBody extends StatelessWidget {
-  const RtcPageBody({super.key});
+class MemberListTile extends StatelessWidget {
+  final RtcMember member;
+  const MemberListTile({
+    super.key,
+    required this.member,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<RtcController>();
-    final clientMap = controller.clientMap;
-    final clients = clientMap.keys.toList();
-
-    return ListView.builder(
-      itemCount: clients.length,
-      itemBuilder: (context, index) => ListTile(
-        leading: AccountAvatar(
-          snapshot: clientMap[clients[index]]!.snapshot,
-        ),
-        title: Text(clients[index]),
-        trailing: DelayBuilder(
-          session: clientMap[clients[index]]!.session,
-        ),
+    return ListTile(
+      leading: AccountAvatar(
+        snapshot: member.snapshot,
+      ),
+      title: Text(member.clientId),
+      trailing: _DelayBuilder(
+        session: member.session,
       ),
     );
   }
 }
 
-class DelayBuilder extends StatelessWidget {
+class _DelayBuilder extends StatelessWidget {
   final RtcSession? session;
-  const DelayBuilder({super.key, required this.session});
+  const _DelayBuilder({super.key, required this.session});
 
   Color colorBuilder(int delay) {
     if (delay < 0) return Colors.red;
