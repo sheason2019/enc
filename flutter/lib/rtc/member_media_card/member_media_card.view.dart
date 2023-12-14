@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
+import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/rtc/member_focus/member_focus.view.dart';
 import 'package:sheason_chat/rtc/rtc.controller.dart';
 import 'package:sheason_chat/rtc/rtc.model/member.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -72,7 +74,13 @@ class _MemberMediaCardState extends State<MemberMediaCard> {
               });
               return;
             }
-            debugPrint('focus stream');
+
+            final delegate = context.read<MainController>().rootDelegate;
+            delegate.pages.add(MemberFocusPage(
+              member: member,
+              controller: controller,
+            ));
+            delegate.notify();
           },
           onLongPress: () {
             if (menuOpen) return;
@@ -137,5 +145,48 @@ class _MemberMediaCardState extends State<MemberMediaCard> {
         ),
       ),
     );
+  }
+}
+
+class MemberMediaCardCore extends StatelessWidget {
+  final RtcMember member;
+  final bool videoOpen;
+  final bool audioOpen;
+  final RTCVideoRenderer renderer;
+  final bool muted;
+
+  const MemberMediaCardCore({
+    super.key,
+    required this.member,
+    required this.audioOpen,
+    required this.videoOpen,
+    required this.renderer,
+    required this.muted,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        if (videoOpen)
+          Positioned.fill(
+            child: RTCVideoView(
+              renderer,
+            ),
+          ),
+        Icon(
+          audioOpen ? Icons.mic : Icons.mic_off,
+          color: Colors.black38,
+        ).positioned(left: 12, bottom: 12),
+        const Icon(
+          Icons.block,
+          size: 96,
+          color: Colors.red,
+        )
+            .opacity(muted ? 0.5 : 0, animate: true)
+            .animate(Durations.medium1, Curves.easeIn)
+            .center(),
+      ],
+    ).backgroundColor(Colors.black54);
   }
 }

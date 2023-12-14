@@ -51,11 +51,6 @@ class RtcPageControl extends StatelessWidget {
           label: '设置',
           iconData: Icons.settings,
         ),
-        _Button(
-          onTap: () {},
-          label: '隐藏菜单',
-          iconData: Icons.arrow_drop_down,
-        ),
       ],
     ).height(72).border(top: 1, color: Colors.black26);
   }
