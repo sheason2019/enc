@@ -30,6 +30,13 @@ class RtcSession extends ChangeNotifier {
 
   var _videoOpen = false;
 
+  bool get muted => _muted;
+  set muted(bool value) {
+    _mute(value);
+  }
+
+  bool _muted = false;
+
   final renderer = RTCVideoRenderer()..initialize();
 
   RtcSession({
@@ -130,6 +137,18 @@ class RtcSession extends ChangeNotifier {
     if (audioOpen != null) {
       this.audioOpen = audioOpen;
     }
+  }
+
+  void _mute(bool mute) {
+    final tracks = renderer.srcObject?.getTracks();
+    if (tracks != null) {
+      for (final track in tracks) {
+        track.enabled = !mute;
+      }
+    }
+
+    _muted = mute;
+    notifyListeners();
   }
 
   @override

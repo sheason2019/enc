@@ -34,7 +34,7 @@ class RtcPage extends StatelessWidget {
                   child: GridView.extent(
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    maxCrossAxisExtent: 400,
+                    maxCrossAxisExtent: 480,
                     childAspectRatio: 16 / 9,
                     children: [
                       for (final member in controller.clientMap.values)
