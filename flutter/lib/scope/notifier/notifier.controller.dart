@@ -11,6 +11,9 @@ import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 abstract class Notifier {
+  Scope? blockScope;
+  Conversation? blockConversation;
+
   Future<void> message(Scope scope, Message message);
 
   Future<void> initial(

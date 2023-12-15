@@ -16,6 +16,11 @@ class NormalNotifier implements Notifier {
 
   @override
   Future<void> message(Scope scope, Message message) async {
+    if (scope == blockScope &&
+        message.conversationId == blockConversation?.id) {
+      return;
+    }
+
     final select = scope.db.contacts.select();
     select.where((tbl) => tbl.id.equals(message.contactId));
     final contact = await select.getSingle();
@@ -95,4 +100,10 @@ class NormalNotifier implements Notifier {
       },
     );
   }
+
+  @override
+  Conversation? blockConversation;
+
+  @override
+  Scope? blockScope;
 }

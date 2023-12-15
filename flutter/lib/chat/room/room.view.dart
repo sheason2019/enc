@@ -21,6 +21,8 @@ class ChatRoomPage extends StatefulWidget {
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
+  late final scope = context.read<Scope>();
+
   handleTriggerAnchor() async {
     // 查询 Anchor 中是否存在此会话，若不存在则创建 Anchor
     final scope = context.read<Scope>();
@@ -36,10 +38,27 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     }
   }
 
+  handleBlockNotifier() {
+    scope.notifier.blockConversation = widget.conversation;
+    scope.notifier.blockScope = scope;
+  }
+
+  handleCancelBlockNotifier() {
+    scope.notifier.blockConversation = null;
+    scope.notifier.blockScope = null;
+  }
+
   @override
   void initState() {
+    handleBlockNotifier();
     handleTriggerAnchor();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    handleCancelBlockNotifier();
+    super.dispose();
   }
 
   @override
