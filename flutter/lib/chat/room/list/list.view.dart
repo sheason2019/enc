@@ -19,6 +19,7 @@ class MessageListView extends StatefulWidget {
 class _MessageListViewState extends State<MessageListView> {
   StreamSubscription? sub;
   var initId = 0;
+  var inited = false;
 
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
@@ -69,6 +70,7 @@ class _MessageListViewState extends State<MessageListView> {
     final record = await select.getSingleOrNull();
     setState(() {
       initId = record?.read(db.messages.id) ?? 0;
+      inited = true;
     });
   }
 
@@ -86,15 +88,19 @@ class _MessageListViewState extends State<MessageListView> {
 
   @override
   Widget build(BuildContext context) {
+    if (!inited) return Container();
+
     return StreamBuilder<List<int>>(
-      initialData: const [],
       stream: watchData(),
       builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+
         final messages = snapshot.requireData.toList();
         var initIndex = messages.indexOf(initId);
         if (initIndex == -1) {
           initIndex = messages.length;
         }
+        debugPrint('initIndex $initIndex');
         messages.add(-1);
 
         return ScrollConfiguration(
