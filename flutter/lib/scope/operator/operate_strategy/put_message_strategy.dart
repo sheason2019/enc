@@ -36,7 +36,7 @@ class PutMessageStrategy implements OperateStrategy {
       scope,
       Uint8List.fromList(wrapper.sign),
     );
-    if (signatureAtom.from != null) {
+    if (signatureAtom == null) {
       final update = scope.db.operations.update();
       update.where((tbl) => tbl.id.equals(operation.id));
       await update.write(OperationsCompanion(
@@ -61,7 +61,9 @@ class PutMessageStrategy implements OperateStrategy {
       scope,
       portableMessage.conversation,
     );
-    atoms.add(atom);
+    if (atom != null) {
+      atoms.add(atom);
+    }
 
     final agent = portableMessage.conversation.findAgent(scope);
     final selectConversation = scope.db.conversations.select();
@@ -80,7 +82,9 @@ class PutMessageStrategy implements OperateStrategy {
         conversation: conversation,
       );
       final messageAtom = await messageProceeder.apply(scope, portableMessage);
-      atoms.add(messageAtom);
+      if (messageAtom != null) {
+        atoms.add(messageAtom);
+      }
 
       // Conversation Anchor
       final anchorProceeder = PutConversationAnchorAtomProceder();

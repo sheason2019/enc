@@ -17,7 +17,7 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
   });
 
   @override
-  Future<OperateAtom> apply(
+  Future<OperateAtom?> apply(
     Scope scope,
     PortableMessage portableMessage,
   ) async {
@@ -33,11 +33,7 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
 
     if (message != null) {
       // 若消息已存在，则不进行任何操作
-      return OperateAtom(
-        type: OperateAtomType.putMessage,
-        from: message.id.toString(),
-        to: message.id.toString(),
-      );
+      return null;
     }
 
     final insert = await db.messages.insertReturning(MessagesCompanion.insert(

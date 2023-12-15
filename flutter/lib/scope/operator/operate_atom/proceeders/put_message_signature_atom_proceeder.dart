@@ -7,7 +7,7 @@ import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutMessageSignatureAtomProceeder implements AtomProceeder<Uint8List> {
   @override
-  Future<OperateAtom> apply(Scope scope, Uint8List data) async {
+  Future<OperateAtom?> apply(Scope scope, Uint8List data) async {
     final select = scope.db.messageSignatures.select();
     select.where((tbl) => tbl.signature.equals(data));
     final record = await select.getSingleOrNull();
@@ -21,11 +21,7 @@ class PutMessageSignatureAtomProceeder implements AtomProceeder<Uint8List> {
         to: insert.id.toString(),
       );
     } else {
-      return OperateAtom(
-        type: OperateAtomType.putMessageSignature,
-        from: record.id.toString(),
-        to: record.id.toString(),
-      );
+      return null;
     }
   }
 

@@ -51,7 +51,7 @@ class CryptoUtils {
     final keypair = CryptoKeyPair.fromSecret(scope.secret);
 
     final secret = await _sharedSecret(keypair, target.ecdhPubKey);
-    final algorithm = Chacha20.poly1305Aead();
+    final algorithm = Chacha20(macAlgorithm: Hmac.sha256());
     final wand = await algorithm.newCipherWandFromSecretKey(secret);
     final secretBox = await wand.encrypt(plainData);
 
@@ -78,7 +78,7 @@ class CryptoUtils {
     final agent = secretBox.findAgent(secret);
 
     final secretKey = await _sharedSecret(keypair, agent.ecdhPubKey);
-    final algorithm = Chacha20.poly1305Aead();
+    final algorithm = Chacha20(macAlgorithm: Hmac.sha256());
     final wand = await algorithm.newCipherWandFromSecretKey(secretKey);
     return wand.decrypt(
       SecretBox(

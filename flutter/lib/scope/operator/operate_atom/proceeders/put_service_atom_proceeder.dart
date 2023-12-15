@@ -17,25 +17,25 @@ class PutServiceAtomProceeder implements AtomProceeder<String> {
     await scope.handleSetSnapshot(snapshot);
 
     return OperateAtom(
-        type: OperateAtomType.putService,
-        from: prevService == null
-            ? null
-            : base64Encode(prevService.writeToBuffer()),
-        to: base64Encode(service.writeToBuffer()),
-        extra: {
-          'url': url,
-        });
+      type: OperateAtomType.putService,
+      from: prevService == null
+          ? null
+          : base64Encode(prevService.writeToBuffer()),
+      to: url,
+    );
   }
 
   @override
   Future<void> revert(Scope scope, OperateAtom atom) async {
-    final url = atom.extra!['url'];
+    final url = atom.to;
     final snapshot = scope.snapshot.deepCopy();
     if (atom.from == null) {
       snapshot.serviceMap.remove(url);
       await scope.handleSetSnapshot(snapshot);
     } else {
-      final service = PortableService.fromBuffer(base64Decode(atom.to));
+      final service = PortableService.fromBuffer(
+        base64Decode(atom.from!),
+      );
       snapshot.serviceMap[url] = service;
       await scope.handleSetSnapshot(snapshot);
     }

@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
@@ -28,7 +27,6 @@ class PutContactStrategy implements OperateStrategy {
   Future<void> apply() async {
     final atoms = <OperateAtom>[];
     final proceeder = PutContactAtomProceeder();
-    debugPrint('snapshot $snapshot');
     final atom = await proceeder.apply(scope, snapshot);
     if (atom != null) {
       atoms.add(atom);

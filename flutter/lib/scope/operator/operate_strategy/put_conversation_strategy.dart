@@ -38,7 +38,9 @@ class PutConversationStrategy implements OperateStrategy {
       scope,
       portable,
     );
-    atoms.add(putConversationAtom);
+    if (putConversationAtom != null) {
+      atoms.add(putConversationAtom);
+    }
 
     final updateOperation = scope.db.operations.update();
     updateOperation.where((tbl) => tbl.id.equals(operation.id));

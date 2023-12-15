@@ -12,6 +12,7 @@ import 'package:sheason_chat/chat/room/list/list_item/types/video.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class MessageListItemView extends StatelessWidget {
@@ -75,7 +76,7 @@ class _MessageItemRenderer extends StatelessWidget {
       case MessageType.MESSAGE_TYPE_RTC:
         return const RtcMessageView();
       default:
-        return Text('无法解析的消息类型 ${message.messageType.name}');
+        return Text('无法解析的消息类型 ${message.messageType.name}').center();
     }
   }
 

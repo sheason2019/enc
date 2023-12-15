@@ -12,7 +12,7 @@ import 'package:sheason_chat/scope/scope.model.dart';
 class PutConversationAtomProceeder
     implements AtomProceeder<PortableConversation> {
   @override
-  Future<OperateAtom> apply(Scope scope, PortableConversation portable) async {
+  Future<OperateAtom?> apply(Scope scope, PortableConversation portable) async {
     final agent = portable.findAgent(scope);
     // 查询 Conversation 是否存在
     final select = scope.db.conversations.select();
@@ -32,7 +32,12 @@ class PutConversationAtomProceeder
         ),
       );
     } else {
-      // 应用会话
+      // 私聊 Conversation 不会发生变化，所以略过变更
+      if (portable.type == ConversationType.CONVERSATION_PRIVATE) {
+        return null;
+      }
+
+      // 群聊会话需要有一个 Version Key 避免重复写入
       final update = scope.db.conversations.update();
       update.where((tbl) => tbl.id.equals(exist.id));
       final conversations = await update.writeReturning(ConversationsCompanion(

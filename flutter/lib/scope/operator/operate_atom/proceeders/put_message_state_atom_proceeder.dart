@@ -48,10 +48,7 @@ class PutMessageStateAtomProceeder
       return OperateAtom(
         type: OperateAtomType.putMessageState,
         from: null,
-        to: base64Encode(portable.writeToBuffer()),
-        extra: {
-          'id': insert.id,
-        },
+        to: insert.id.toString(),
       );
     } else {
       final update = scope.db.messageStates.update();
@@ -73,18 +70,16 @@ class PutMessageStateAtomProceeder
         messageState.checkedAt?.millisecondsSinceEpoch ?? 0,
       );
       return OperateAtom(
-          type: OperateAtomType.putMessageState,
-          from: base64Encode(prevPortable.writeToBuffer()),
-          to: base64Encode(portable.writeToBuffer()),
-          extra: {
-            'id': messageState.id,
-          });
+        type: OperateAtomType.putMessageState,
+        from: base64Encode(prevPortable.writeToBuffer()),
+        to: messageState.id.toString(),
+      );
     }
   }
 
   @override
   Future<void> revert(Scope scope, OperateAtom atom) async {
-    final int id = atom.extra!['id'];
+    final int id = int.parse(atom.to);
     if (atom.from == null) {
       await scope.db.messageStates.deleteWhere((tbl) => tbl.id.equals(id));
     } else {
