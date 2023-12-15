@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sheason_chat/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 
@@ -13,22 +14,7 @@ class ConversationAnchorMessagePreview extends StatelessWidget {
     final message = this.message;
     if (message == null) return '';
 
-    switch (message.messageType) {
-      case MessageType.MESSAGE_TYPE_TEXT:
-        return message.content;
-      case MessageType.MESSAGE_TYPE_AUDIO:
-        return '[语音消息]';
-      case MessageType.MESSAGE_TYPE_VIDEO:
-        return '[视频]';
-      case MessageType.MESSAGE_TYPE_IMAGE:
-        return '[图片]';
-      case MessageType.MESSAGE_TYPE_FILE:
-        return '[文件]';
-      case MessageType.MESSAGE_TYPE_RTC:
-        return '[通话邀请]';
-      default:
-        return '收到一条新消息';
-    }
+    return MessagePreviewHelper.previewStr(message);
   }
 
   Color get previewColor {

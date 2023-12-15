@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -10,7 +11,8 @@ class ReplicaProceedSuccess extends StatelessWidget {
   handleClick(BuildContext context) {
     final scope = context.read<Scope?>();
     final mainController = context.read<MainController>();
-    mainController.handleEnterScope(scope);
+    final collection = context.read<ScopeCollection>();
+    mainController.handleEnterScope(collection, scope);
   }
 
   @override

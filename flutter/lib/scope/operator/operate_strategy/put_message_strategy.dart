@@ -20,11 +20,14 @@ class PutMessageStrategy implements OperateStrategy {
   @override
   final Scope scope;
 
+  final bool notifyMessage;
+
   final SignWrapper wrapper;
   PutMessageStrategy({
     required this.scope,
     required this.operation,
     required this.wrapper,
+    required this.notifyMessage,
   });
 
   @override
@@ -80,6 +83,7 @@ class PutMessageStrategy implements OperateStrategy {
       final messageProceeder = PutMessageAtomProceeder(
         contact: contact,
         conversation: conversation,
+        notifyMessage: notifyMessage,
       );
       final messageAtom = await messageProceeder.apply(scope, portableMessage);
       if (messageAtom != null) {

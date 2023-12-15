@@ -100,7 +100,6 @@ class _MessageListViewState extends State<MessageListView> {
         if (initIndex == -1) {
           initIndex = messages.length;
         }
-        debugPrint('initIndex $initIndex');
         messages.add(-1);
 
         return ScrollConfiguration(

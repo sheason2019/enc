@@ -11,8 +11,9 @@ class AccountListTile extends StatelessWidget {
   const AccountListTile({super.key, required this.scope});
 
   handleEnterScope(BuildContext context) {
+    final collection = context.read<ScopeCollection>();
     final controller = context.read<MainController>();
-    controller.handleEnterScope(scope);
+    controller.handleEnterScope(collection, scope);
   }
 
   handleDeleteScope(BuildContext context) {

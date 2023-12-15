@@ -4,7 +4,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/scope/scope.collection.dart';
 import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,21 +20,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final mainController = MainController(
-    onActiveScopeChanged: (scope) async {
-      await collection.setDefaultScope(scope);
-      setState(() {
-        currentScope = scope;
-      });
-    },
-  );
-  late final collection = ScopeCollection();
-  Scope? currentScope;
+  final mainController = MainController();
+  final collection = ScopeCollection();
 
   void init() async {
+    mainController.addListener(() => setState(() {}));
+    await collection.notifier.initial(mainController, collection);
     await collection.updateScopes();
     final defaultScope = await collection.findDefaultScope();
-    await mainController.handleEnterScope(defaultScope);
+    await mainController.handleEnterScope(collection, defaultScope);
   }
 
   @override
@@ -55,9 +48,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider.value(value: mainController),
+        ListenableProvider.value(value: mainController),
         ListenableProvider.value(value: collection),
-        ListenableProvider.value(value: currentScope),
+        ListenableProvider.value(value: mainController.scope),
       ],
       builder: (context, _) => MaterialApp.router(
         title: 'Sheason Chat',

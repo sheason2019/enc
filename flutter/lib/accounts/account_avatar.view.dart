@@ -40,6 +40,7 @@ class AccountAvatar extends StatelessWidget {
         enableLoadState: true,
         width: size,
         height: size,
+        cache: true,
       ).clipRRect(all: size);
     }
 

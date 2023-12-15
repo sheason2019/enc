@@ -10,10 +10,12 @@ import 'atom_proceeder.dart';
 class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
   final Contact? contact;
   final Conversation? conversation;
+  final bool notifyMessage;
 
   PutMessageAtomProceeder({
     required this.contact,
     required this.conversation,
+    required this.notifyMessage,
   });
 
   @override
@@ -46,6 +48,10 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
       ),
       messageType: portableMessage.messageType,
     ));
+
+    if (notifyMessage) {
+      scope.notifier.message(scope, insert);
+    }
 
     return OperateAtom(
       type: OperateAtomType.putMessage,

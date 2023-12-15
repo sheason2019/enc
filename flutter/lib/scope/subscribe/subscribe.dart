@@ -107,6 +107,7 @@ class Subscribe extends ChangeNotifier {
           .map((e) => base64Decode(e))
           .map((e) => SignWrapper.fromBuffer(e));
       var i = 0;
+      final operations = <PortableOperation>[];
       for (final wrapper in wrappers) {
         final valid = await wrapper.verify();
         if (!valid) continue;
@@ -115,8 +116,9 @@ class Subscribe extends ChangeNotifier {
           wrapper,
           offset: i++,
         );
-        await scope.operator.apply([operation]);
+        operations.add(operation);
       }
+      await scope.operator.apply(operations, notifyMessage: true);
     });
 
     socket.on('sync-operation', (data) => syncOperation());

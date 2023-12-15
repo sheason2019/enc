@@ -12,7 +12,10 @@ class Operator {
 
   Operator({required this.scope});
 
-  Future<void> apply(List<PortableOperation> operations) async {
+  Future<void> apply(
+    List<PortableOperation> operations, {
+    bool notifyMessage = false,
+  }) async {
     await scope.db.transaction(() async {
       // 写入 Operation
       await _write(operations);
@@ -23,7 +26,11 @@ class Operator {
       // 查询未被应用的 Operation
       final applyList = await _getApplyList();
       // 应用所有 Operation
-      await BatchOperate.apply(scope, applyList);
+      await BatchOperate.apply(
+        scope,
+        applyList,
+        notifyMessage: notifyMessage,
+      );
     });
     // 请求与服务器进行同步
     for (final subscribe in scope.subscribes.values) {

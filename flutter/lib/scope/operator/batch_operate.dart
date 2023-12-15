@@ -18,10 +18,15 @@ class BatchOperate {
 
   static Future<void> apply(
     Scope scope,
-    List<Operation> operations,
-  ) async {
+    List<Operation> operations, {
+    bool notifyMessage = false,
+  }) async {
     for (final operation in operations) {
-      final strategy = OperateStrategy.create(scope, operation);
+      final strategy = OperateStrategy.create(
+        scope,
+        operation,
+        notifyMessage: notifyMessage,
+      );
       await strategy.apply();
     }
   }

@@ -6,11 +6,13 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/notifier/notifier.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class ScopeCollection extends ChangeNotifier {
   final subs = <StreamSubscription>[];
   final scopeMap = <String, Scope>{};
+  final notifier = Notifier.create();
 
   Future<String> get accountsPath async {
     final dir = await getApplicationDocumentsDirectory();
@@ -40,7 +42,10 @@ class ScopeCollection extends ChangeNotifier {
       scopeMap.remove(delete)?.dispose();
     }
     for (final append in appendSet) {
-      final scope = Scope(accountPath: append);
+      final scope = Scope(
+        accountPath: append,
+        notifier: notifier,
+      );
       scopeMap[append] = scope;
       await scope.init();
     }

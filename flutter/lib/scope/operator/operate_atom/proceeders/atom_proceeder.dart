@@ -35,6 +35,7 @@ abstract class AtomProceeder<T> {
         return PutConversationAnchorAtomProceder();
       case OperateAtomType.putMessage:
         return PutMessageAtomProceeder(
+          notifyMessage: false,
           contact: null,
           conversation: null,
         );

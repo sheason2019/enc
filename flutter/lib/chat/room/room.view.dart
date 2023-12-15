@@ -56,6 +56,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           dispose: (context, controller) => controller.dispose(),
         ),
         Provider(
+          lazy: false,
           create: (context) => MessageChecker(
             scope: scope,
             conversation: widget.conversation,

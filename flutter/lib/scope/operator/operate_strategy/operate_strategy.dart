@@ -20,7 +20,11 @@ abstract class OperateStrategy {
   Future<void> apply();
   Future<void> revert();
 
-  factory OperateStrategy.create(Scope scope, Operation operation) {
+  factory OperateStrategy.create(
+    Scope scope,
+    Operation operation, {
+    bool notifyMessage = false,
+  }) {
     switch (operation.info.type) {
       case OperationType.PUT_USERNAME:
         return PutUsernameStrategy(
@@ -71,6 +75,7 @@ abstract class OperateStrategy {
           wrapper: SignWrapper.fromBuffer(
             base64Decode(operation.info.content),
           ),
+          notifyMessage: notifyMessage,
         );
       case OperationType.DELETE_SERVICE:
         return DeleteServiceStrategy(

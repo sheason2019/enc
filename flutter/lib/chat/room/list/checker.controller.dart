@@ -25,7 +25,7 @@ class MessageChecker {
 
   final _lock = Lock();
 
-  static const duration = Durations.short2;
+  static const duration = Durations.long2;
 
   void check(Message message) {
     // 重复写入问题

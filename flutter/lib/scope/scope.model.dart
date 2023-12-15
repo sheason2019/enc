@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/account_paths/account_paths.dart';
+import 'package:sheason_chat/scope/notifier/notifier.controller.dart';
 import 'package:sheason_chat/scope/operator/operator.dart';
 import 'package:sheason_chat/scope/subscribe/subscribe.dart';
 import 'package:sheason_chat/scope/uploader/uploader.dart';
@@ -15,8 +16,10 @@ import '../models/conversation_anchor.dart';
 
 class Scope extends ChangeNotifier {
   final AccountPaths paths;
-  Scope({required String accountPath})
-      : paths = AccountPaths(root: accountPath);
+  Scope({
+    required String accountPath,
+    required this.notifier,
+  }) : paths = AccountPaths(root: accountPath);
   final subs = <StreamSubscription>[];
 
   var secret = AccountSecret();
@@ -30,6 +33,8 @@ class Scope extends ChangeNotifier {
   late String deviceId;
   late final AppDatabase db;
   late final uploader = Uploader(scope: this);
+
+  final Notifier notifier;
 
   Future handleUpdateSnapshot() async {
     final snapshotFile = File(paths.snapshot);
