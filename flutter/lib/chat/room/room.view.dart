@@ -52,6 +52,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void initState() {
     handleBlockNotifier();
     handleTriggerAnchor();
+    scope.notifier.clean(scope, widget.conversation);
     super.initState();
   }
 

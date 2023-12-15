@@ -100,4 +100,12 @@ class WinNotifier implements Notifier {
 
   @override
   Scope? blockScope;
+
+  @override
+  Future<void> clean(Scope scope, Conversation conversation) async {
+    final payload = 'conversation/${scope.secret.signPubKey}/'
+        '${conversation.id}';
+
+    WinToast.instance().dismiss(tag: scope.secret.signPubKey, group: payload);
+  }
 }

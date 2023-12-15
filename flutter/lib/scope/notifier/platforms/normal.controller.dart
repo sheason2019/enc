@@ -106,4 +106,14 @@ class NormalNotifier implements Notifier {
 
   @override
   Scope? blockScope;
+
+  @override
+  Future<void> clean(Scope scope, Conversation conversation) async {
+    final channelId = conversation.id.toString();
+    final notifications = await plugin.getActiveNotifications();
+    for (final noti in notifications) {
+      if (noti.channelId != channelId) continue;
+      await plugin.cancel(noti.id!, tag: noti.tag);
+    }
+  }
 }

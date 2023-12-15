@@ -21,6 +21,11 @@ abstract class Notifier {
     ScopeCollection collection,
   );
 
+  Future<void> clean(
+    Scope scope,
+    Conversation conversation,
+  );
+
   factory Notifier.create() {
     if (Platform.isWindows) {
       return WinNotifier();
