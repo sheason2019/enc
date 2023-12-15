@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
+import 'package:sheason_chat/chat/anchors/anchor/anchor_message_preview/anchor_message_preview.view.dart';
 import 'package:sheason_chat/chat/room/room.view.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/main.controller.dart';
@@ -46,13 +47,13 @@ class ConversationAnchorListTile extends StatelessWidget {
     return select.watchSingleOrNull().map((event) => event?.createdAt);
   }
 
-  Stream<String?> messagePreview(BuildContext context) {
+  Stream<Message?> messagePreview(BuildContext context) {
     final scope = context.watch<Scope>();
     final select = scope.db.messages.select();
     select.limit(1);
     select.where((tbl) => tbl.conversationId.equals(conversation.id));
     select.orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)]);
-    return select.watchSingleOrNull().map((event) => event?.content);
+    return select.watchSingleOrNull();
   }
 
   Stream<int> uncheckMessageCount(BuildContext context) {
@@ -108,12 +109,9 @@ class ConversationAnchorListTile extends StatelessWidget {
         children: [
           StreamBuilder(
             stream: messagePreview(context),
-            builder: (context, snapshot) => snapshot.hasData
-                ? Text(
-                    snapshot.data!,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : const SizedBox.shrink(),
+            builder: (context, snapshot) => ConversationAnchorMessagePreview(
+              message: snapshot.data,
+            ),
           ).expanded(),
           StreamBuilder(
             stream: uncheckMessageCount(context),

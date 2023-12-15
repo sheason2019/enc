@@ -62,8 +62,8 @@ class _AudioMessageViewState extends State<AudioMessageView> {
 
     final subComplete = player.stream.completed.listen((event) async {
       if (event) {
+        await player.pause();
         await player.seek(Duration.zero);
-        player.pause();
       }
     });
     subList.add(subComplete);

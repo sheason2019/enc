@@ -20,6 +20,12 @@ class _VoiceInputViewState extends State<VoiceInputView> {
   );
 
   @override
+  void initState() {
+    controller.recorder.hasPermission();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();

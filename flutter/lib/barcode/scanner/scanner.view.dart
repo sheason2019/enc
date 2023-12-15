@@ -2,11 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:provider/provider.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/replica/proceed/proceed.view.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/barcode/scanner/scanner.controller.dart';
 
 class BarcodeScannerPage extends StatefulWidget {
   const BarcodeScannerPage({super.key});
@@ -17,6 +13,7 @@ class BarcodeScannerPage extends StatefulWidget {
 
 class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
   final controller = MobileScannerController();
+  final resultController = ScanResultController();
 
   @override
   void dispose() {
@@ -28,40 +25,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     final json = jsonDecode(rawValue);
     switch (json['type']) {
       case 'replica':
-        return handleReplica(json);
+        return resultController.handleReplica(context, json);
+      case 'account':
+        return resultController.handleAccount(context, json);
       default:
-        return;
+        return resultController.handlePlain(context, rawValue);
     }
-  }
-
-  void handleReplica(Map json) {
-    debugPrint('Scanned replica $json');
-    late ReplicaDataDirection direction;
-    switch (json['dataDirection']) {
-      case 'push':
-        direction = ReplicaDataDirection.pull;
-        break;
-      case 'pull':
-        direction = ReplicaDataDirection.push;
-        break;
-      default:
-        throw Exception(
-          'Unknown replica data direction: ${json['dataDirection']}',
-        );
-    }
-
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.removeLast();
-    delegate.pages.add(
-      ReplicaProceedPage(
-        url: json['url'],
-        scope: context.read<Scope?>(),
-        dataDirection: direction,
-        connDirection: ReplicaConnDirection.connect,
-        namespace: json['namespace'],
-      ),
-    );
-    delegate.notify();
   }
 
   @override

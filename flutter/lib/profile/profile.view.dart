@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/profile/account_qrcode/account_qrcode.view.dart';
 import 'package:sheason_chat/profile/alter_avatar/alter_avatar.view.dart';
 import 'package:sheason_chat/profile/alter_username/alter_username.view.dart';
 import 'package:sheason_chat/profile/operations/operations.view.dart';
@@ -48,9 +49,12 @@ class ProfileView extends StatelessWidget {
             ),
           ),
           ListTile(
+            onTap: () => to(delegate, const AccountQrCodePage()),
+            title: const Text('账号二维码'),
+          ),
+          ListTile(
             onTap: () => to(delegate, const OperationsPage()),
-            title: const Text('Operation Chain'),
-            subtitle: const Text('查看同步操作链'),
+            title: const Text('查看操作日志'),
           ),
           ListTile(
             onTap: () => to(

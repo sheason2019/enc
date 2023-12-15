@@ -10,6 +10,7 @@ import 'package:sheason_chat/chat/room/title/title.view.dart';
 import 'package:sheason_chat/extensions/conversation/conversation.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class ChatRoomPage extends StatefulWidget {
   final Conversation conversation;
@@ -73,10 +74,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           title: const ChatRoomPageTitle(),
           scrolledUnderElevation: 0,
         ),
-        body: const Column(
+        body: Column(
           children: [
-            Expanded(child: MessageListView()),
-            ChatRoomInputView(),
+            const MessageListView()
+                .backgroundColor(Colors.black.withOpacity(0.05))
+                .expanded(),
+            const ChatRoomInputView(),
           ],
         ),
       ),
