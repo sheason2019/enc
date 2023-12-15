@@ -14,6 +14,12 @@ class OperationFactory {
     return operation;
   }
 
+  Future<PortableOperation> avatar(String url) async {
+    final operation = await _createWithClock(OperationType.PUT_AVATAR, 0);
+    operation.content = url;
+    return operation;
+  }
+
   Future<PortableOperation> service(String service) async {
     final operation = await _createWithClock(OperationType.PUT_SERVICE, 0);
     operation.content = service;

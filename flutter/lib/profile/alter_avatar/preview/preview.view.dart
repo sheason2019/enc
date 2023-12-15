@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:sheason_chat/utils/service_selector/service_selector.controller.dart';
 import 'package:sheason_chat/utils/service_selector/service_selector.view.dart';
@@ -30,7 +31,19 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
     super.dispose();
   }
 
-  void handleSubmit() async {}
+  void handleSubmit() async {
+    final delegate = context.read<MainController>().rootDelegate;
+    final scope = context.read<Scope>();
+    final url = await scope.uploader.upload(
+      controller.serviceUrl!,
+      widget.imagePath,
+    );
+    final operation = await scope.operator.factory.avatar(url);
+    await scope.operator.apply([operation]);
+    delegate.pages.removeLast();
+    delegate.pages.removeLast();
+    delegate.notify();
+  }
 
   @override
   Widget build(BuildContext context) {

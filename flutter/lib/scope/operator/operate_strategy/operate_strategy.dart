@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/delete_service_strategy.dart';
+import 'package:sheason_chat/scope/operator/operate_strategy/put_avatar_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_contact_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_conversation_anchor_strategy.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/put_message_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_username_strategy.part.dart';
+import 'package:sheason_chat/scope/operator/operate_strategy/put_username_strategy.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 import 'put_conversation_strategy.dart';
@@ -26,6 +27,12 @@ abstract class OperateStrategy {
           scope: scope,
           operation: operation,
           username: operation.info.content,
+        );
+      case OperationType.PUT_AVATAR:
+        return PutAvatarStrategy(
+          scope: scope,
+          operation: operation,
+          url: operation.info.content,
         );
       case OperationType.PUT_SERVICE:
         return PutServiceStrategy(

@@ -31,11 +31,14 @@ class AccountsPage extends StatelessWidget {
       ),
       endDrawer: NavigationDrawer(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, bottom: 8, top: 16),
             child: Text(
               '新建账号',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           ListTile(

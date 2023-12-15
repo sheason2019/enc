@@ -125,12 +125,12 @@ class Operation extends DataClass implements Insertable<Operation> {
     map['client_id'] = Variable<String>(clientId);
     map['clock'] = Variable<int>(clock);
     {
-      final converter = $OperationsTable.$converterinfo;
-      map['info'] = Variable<Uint8List>(converter.toSql(info));
+      map['info'] =
+          Variable<Uint8List>($OperationsTable.$converterinfo.toSql(info));
     }
     if (!nullToAbsent || atoms != null) {
-      final converter = $OperationsTable.$converteratomsn;
-      map['atoms'] = Variable<String>(converter.toSql(atoms));
+      map['atoms'] =
+          Variable<String>($OperationsTable.$converteratomsn.toSql(atoms));
     }
     return map;
   }
@@ -273,14 +273,12 @@ class OperationsCompanion extends UpdateCompanion<Operation> {
       map['clock'] = Variable<int>(clock.value);
     }
     if (info.present) {
-      final converter = $OperationsTable.$converterinfo;
-
-      map['info'] = Variable<Uint8List>(converter.toSql(info.value));
+      map['info'] = Variable<Uint8List>(
+          $OperationsTable.$converterinfo.toSql(info.value));
     }
     if (atoms.present) {
-      final converter = $OperationsTable.$converteratomsn;
-
-      map['atoms'] = Variable<String>(converter.toSql(atoms.value));
+      map['atoms'] = Variable<String>(
+          $OperationsTable.$converteratomsn.toSql(atoms.value));
     }
     return map;
   }
@@ -389,8 +387,8 @@ class Contact extends DataClass implements Insertable<Contact> {
     map['id'] = Variable<int>(id);
     map['sign_pubkey'] = Variable<String>(signPubkey);
     {
-      final converter = $ContactsTable.$convertersnapshot;
-      map['snapshot'] = Variable<Uint8List>(converter.toSql(snapshot));
+      map['snapshot'] = Variable<Uint8List>(
+          $ContactsTable.$convertersnapshot.toSql(snapshot));
     }
     return map;
   }
@@ -497,9 +495,8 @@ class ContactsCompanion extends UpdateCompanion<Contact> {
       map['sign_pubkey'] = Variable<String>(signPubkey.value);
     }
     if (snapshot.present) {
-      final converter = $ContactsTable.$convertersnapshot;
-
-      map['snapshot'] = Variable<Uint8List>(converter.toSql(snapshot.value));
+      map['snapshot'] = Variable<Uint8List>(
+          $ContactsTable.$convertersnapshot.toSql(snapshot.value));
     }
     return map;
   }
@@ -641,14 +638,14 @@ class Conversation extends DataClass implements Insertable<Conversation> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     {
-      final converter = $ConversationsTable.$convertertype;
-      map['type'] = Variable<int>(converter.toSql(type));
+      map['type'] =
+          Variable<int>($ConversationsTable.$convertertype.toSql(type));
     }
     map['ecdh_pubkey'] = Variable<String>(ecdhPubkey);
     map['sign_pubkey'] = Variable<String>(signPubkey);
     {
-      final converter = $ConversationsTable.$converterinfo;
-      map['info'] = Variable<Uint8List>(converter.toSql(info));
+      map['info'] =
+          Variable<Uint8List>($ConversationsTable.$converterinfo.toSql(info));
     }
     return map;
   }
@@ -785,9 +782,8 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
       map['id'] = Variable<int>(id.value);
     }
     if (type.present) {
-      final converter = $ConversationsTable.$convertertype;
-
-      map['type'] = Variable<int>(converter.toSql(type.value));
+      map['type'] =
+          Variable<int>($ConversationsTable.$convertertype.toSql(type.value));
     }
     if (ecdhPubkey.present) {
       map['ecdh_pubkey'] = Variable<String>(ecdhPubkey.value);
@@ -796,9 +792,8 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
       map['sign_pubkey'] = Variable<String>(signPubkey.value);
     }
     if (info.present) {
-      final converter = $ConversationsTable.$converterinfo;
-
-      map['info'] = Variable<Uint8List>(converter.toSql(info.value));
+      map['info'] = Variable<Uint8List>(
+          $ConversationsTable.$converterinfo.toSql(info.value));
     }
     return map;
   }
@@ -1197,8 +1192,8 @@ class Message extends DataClass implements Insertable<Message> {
     map['conversation_id'] = Variable<int>(conversationId);
     map['contact_id'] = Variable<int>(contactId);
     {
-      final converter = $MessagesTable.$convertermessageType;
-      map['message_type'] = Variable<int>(converter.toSql(messageType));
+      map['message_type'] = Variable<int>(
+          $MessagesTable.$convertermessageType.toSql(messageType));
     }
     map['uuid'] = Variable<String>(uuid);
     map['content'] = Variable<String>(content);
@@ -1375,9 +1370,8 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       map['contact_id'] = Variable<int>(contactId.value);
     }
     if (messageType.present) {
-      final converter = $MessagesTable.$convertermessageType;
-
-      map['message_type'] = Variable<int>(converter.toSql(messageType.value));
+      map['message_type'] = Variable<int>(
+          $MessagesTable.$convertermessageType.toSql(messageType.value));
     }
     if (uuid.present) {
       map['uuid'] = Variable<String>(uuid.value);

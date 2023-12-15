@@ -3,6 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 enum OperateAtomType {
   @JsonValue('put-username')
   putUsername,
+  @JsonValue('put-avatar')
+  putAvatar,
   @JsonValue('put-service')
   putService,
   @JsonValue('delete-service')

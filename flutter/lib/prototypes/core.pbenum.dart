@@ -38,6 +38,7 @@ class OperationType extends $pb.ProtobufEnum {
   static const OperationType PUT_CONVERSATION = OperationType._(4, _omitEnumNames ? '' : 'PUT_CONVERSATION');
   static const OperationType PUT_CONVERSATION_ANCHOR = OperationType._(5, _omitEnumNames ? '' : 'PUT_CONVERSATION_ANCHOR');
   static const OperationType PUT_MESSAGE = OperationType._(6, _omitEnumNames ? '' : 'PUT_MESSAGE');
+  static const OperationType PUT_AVATAR = OperationType._(7, _omitEnumNames ? '' : 'PUT_AVATAR');
   static const OperationType DELETE_SERVICE = OperationType._(101, _omitEnumNames ? '' : 'DELETE_SERVICE');
 
   static const $core.List<OperationType> values = <OperationType> [
@@ -48,6 +49,7 @@ class OperationType extends $pb.ProtobufEnum {
     PUT_CONVERSATION,
     PUT_CONVERSATION_ANCHOR,
     PUT_MESSAGE,
+    PUT_AVATAR,
     DELETE_SERVICE,
   ];
 

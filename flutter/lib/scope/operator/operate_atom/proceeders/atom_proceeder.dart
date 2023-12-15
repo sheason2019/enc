@@ -1,6 +1,7 @@
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
+import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_avatar_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_anchor_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_atom_proceeder.dart';
@@ -20,6 +21,8 @@ abstract class AtomProceeder<T> {
     switch (atom.type) {
       case OperateAtomType.putUsername:
         return PutUsernameAtomProceeder();
+      case OperateAtomType.putAvatar:
+        return PutAvatarAtomProceeder();
       case OperateAtomType.putService:
         return PutServiceAtomProceeder();
       case OperateAtomType.deleteService:

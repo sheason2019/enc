@@ -39,6 +39,7 @@ const OperationType$json = {
     {'1': 'PUT_CONVERSATION', '2': 4},
     {'1': 'PUT_CONVERSATION_ANCHOR', '2': 5},
     {'1': 'PUT_MESSAGE', '2': 6},
+    {'1': 'PUT_AVATAR', '2': 7},
     {'1': 'DELETE_SERVICE', '2': 101},
   ],
 };
@@ -47,8 +48,8 @@ const OperationType$json = {
 final $typed_data.Uint8List operationTypeDescriptor = $convert.base64Decode(
     'Cg1PcGVyYXRpb25UeXBlEhUKEVVOS05PV05fT1BFQVJUSU9OEAASEAoMUFVUX1VTRVJOQU1FEA'
     'ESDwoLUFVUX1NFUlZJQ0UQAhIPCgtQVVRfQ09OVEFDVBADEhQKEFBVVF9DT05WRVJTQVRJT04Q'
-    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAFEg8KC1BVVF9NRVNTQUdFEAYSEgoOREVMRV'
-    'RFX1NFUlZJQ0UQZQ==');
+    'BBIbChdQVVRfQ09OVkVSU0FUSU9OX0FOQ0hPUhAFEg8KC1BVVF9NRVNTQUdFEAYSDgoKUFVUX0'
+    'FWQVRBUhAHEhIKDkRFTEVURV9TRVJWSUNFEGU=');
 
 @$core.Deprecated('Use conversationTypeDescriptor instead')
 const ConversationType$json = {
