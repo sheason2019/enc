@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
@@ -21,7 +24,9 @@ class ChatController extends ChangeNotifier {
   ChatController({
     required this.scope,
     required this.conversation,
-  });
+  }) {
+    _createStream();
+  }
 
   bool get useTextInput => _useTextInput;
   set useTextInput(bool value) {
@@ -30,6 +35,72 @@ class ChatController extends ChangeNotifier {
   }
 
   var _useTextInput = true;
+
+  var onUpdates = <void Function()>[];
+
+  var ids = <int>[];
+  StreamSubscription? idsSub;
+  Future<void> _createStream() async {
+    final db = scope.db;
+    final select = db.messages.selectOnly();
+    select.addColumns([db.messages.id]);
+    select.where(db.messages.conversationId.equals(conversation.id));
+    select.orderBy([
+      OrderingTerm.asc(db.messages.createdAt),
+    ]);
+    final stream = select
+        .watch()
+        .map((event) => event.map((e) => e.read(db.messages.id)!).toList());
+    idsSub = stream.listen((messages) async {
+      final initId = await _fetchInitIndex();
+      var initIndex = messages.indexOf(initId);
+      if (initIndex == -1) {
+        initIndex = messages.length;
+      }
+      messages.insert(initIndex, -1);
+      messages.insert(messages.length, -2);
+      ids = messages;
+      inited = true;
+      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        final onUpdates = this.onUpdates;
+        this.onUpdates = [];
+        for (final onUpdate in onUpdates) {
+          onUpdate();
+        }
+      });
+    });
+  }
+
+  var inited = false;
+
+  Future<int> _fetchInitIndex() async {
+    final db = scope.db;
+
+    final select = db.messageStates.selectOnly().join([
+      innerJoin(
+        db.messages,
+        db.messages.id.equalsExp(db.messageStates.messageId),
+      ),
+      innerJoin(
+        db.contacts,
+        db.contacts.id.equalsExp(db.messageStates.contactId),
+      ),
+    ]);
+    select.addColumns([db.messages.id]);
+    select.where(Expression.and([
+      db.messages.conversationId.equals(conversation.id),
+      db.messageStates.checkedAt.isNull(),
+      db.contacts.signPubkey.equals(scope.secret.signPubKey),
+    ]));
+    select.orderBy([
+      OrderingTerm.asc(db.messages.createdAt),
+    ]);
+    select.limit(1);
+
+    final record = await select.getSingleOrNull();
+    return record?.read(db.messages.id) ?? -1;
+  }
 
   Future<PortableMessage> createMessage() async {
     final message = PortableMessage()
@@ -63,7 +134,10 @@ class ChatController extends ChangeNotifier {
     return message;
   }
 
-  Future<void> sendMessage(List<PortableMessage> messages) async {
+  Future<void> sendMessage(
+    List<PortableMessage> messages, {
+    required bool toBottom,
+  }) async {
     // 通过 ConversationAgent 加密消息内容
     final wrappers = <SignWrapper>[];
     final operations = <PortableOperation>[];
@@ -93,7 +167,9 @@ class ChatController extends ChangeNotifier {
     await _sendMessage(wrappers);
     await scope.operator.apply(operations);
 
-    notifyListeners();
+    if (toBottom) {
+      onUpdates.add(handleToBottom);
+    }
   }
 
   Future<void> _sendMessage(List<SignWrapper> wrappers) async {
@@ -107,12 +183,32 @@ class ChatController extends ChangeNotifier {
       final select = scope.db.contacts.select();
       select.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
       final contact = await select.getSingle();
-      await Future.wait(contact.snapshot.serviceMap.keys.map((e) async {
-        await dio.post('$e/${contact.signPubkey}/messages', data: postData);
-      }));
+      await Future.wait(contact.snapshot.serviceMap.keys.map(
+        (e) => dio.post('$e/${contact.signPubkey}/messages', data: postData),
+      ));
       return;
     }
 
     throw UnimplementedError();
+  }
+
+  final itemScrollController = ItemScrollController();
+  final scrollOffsetController = ScrollOffsetController();
+  final itemPositionListener = ItemPositionsListener.create();
+  final scrollOffsetListener = ScrollOffsetListener.create();
+
+  handleToBottom() {
+    final index = ids.indexOf(-2);
+    itemScrollController.scrollTo(
+      index: index,
+      duration: Durations.medium1,
+      alignment: 1,
+    );
+  }
+
+  @override
+  void dispose() {
+    idsSub?.cancel();
+    super.dispose();
   }
 }

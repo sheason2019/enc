@@ -86,7 +86,10 @@ class VoiceInputBody extends StatelessWidget {
     final message = await chatController.createMessage();
     message.messageType = MessageType.MESSAGE_TYPE_AUDIO;
     message.content = jsonEncode(content.toJson());
-    await chatController.sendMessage([message]);
+    await chatController.sendMessage(
+      [message],
+      toBottom: true,
+    );
     // 完成上传后删除文件
     await File(wavFilePath).delete();
   }

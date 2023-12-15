@@ -1,123 +1,41 @@
-import 'dart:async';
-
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sheason_chat/chat/room/list/list_item/list_item.view.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class MessageListView extends StatefulWidget {
+class MessageListView extends StatelessWidget {
   const MessageListView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MessageListViewState();
-}
-
-class _MessageListViewState extends State<MessageListView> {
-  StreamSubscription? sub;
-  var initId = 0;
-  var inited = false;
-
-  final itemScrollController = ItemScrollController();
-  final scrollOffsetController = ScrollOffsetController();
-  final itemPositionListener = ItemPositionsListener.create();
-  final scrollOffsetListener = ScrollOffsetListener.create();
-
-  Stream<List<int>> watchData() {
-    final scope = context.read<Scope>();
-    final conversation = context.read<Conversation>();
-    final db = scope.db;
-    final select = db.messages.selectOnly();
-    select.addColumns([db.messages.id]);
-    select.where(db.messages.conversationId.equals(conversation.id));
-    select.orderBy([
-      OrderingTerm.asc(db.messages.createdAt),
-    ]);
-    return select
-        .watch()
-        .map((event) => event.map((e) => e.read(db.messages.id)!).toList());
-  }
-
-  Future<void> fetchInitIndex() async {
-    final conversation = context.read<Conversation>();
-    final scope = context.read<Scope>();
-    final db = scope.db;
-
-    final select = db.messageStates.selectOnly().join([
-      innerJoin(
-        db.messages,
-        db.messages.id.equalsExp(db.messageStates.messageId),
-      ),
-      innerJoin(
-        db.contacts,
-        db.contacts.id.equalsExp(db.messageStates.contactId),
-      ),
-    ]);
-    select.addColumns([db.messages.id]);
-    select.where(Expression.and([
-      db.messages.conversationId.equals(conversation.id),
-      db.messageStates.checkedAt.isNull(),
-      db.contacts.signPubkey.equals(scope.secret.signPubKey),
-    ]));
-    select.orderBy([
-      OrderingTerm.asc(db.messages.createdAt),
-    ]);
-    select.limit(1);
-
-    final record = await select.getSingleOrNull();
-    setState(() {
-      initId = record?.read(db.messages.id) ?? 0;
-      inited = true;
-    });
-  }
-
-  @override
-  void initState() {
-    fetchInitIndex();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    sub?.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (!inited) return Container();
+    final controller = context.watch<ChatController>();
 
-    return StreamBuilder<List<int>>(
-      stream: watchData(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+    if (!controller.inited) return Container();
 
-        final messages = snapshot.requireData.toList();
-        var initIndex = messages.indexOf(initId);
-        if (initIndex == -1) {
-          initIndex = messages.length;
-        }
-        messages.add(-1);
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        final messages = controller.ids;
 
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: ScrollablePositionedList.builder(
-            itemScrollController: itemScrollController,
-            scrollOffsetController: scrollOffsetController,
-            itemPositionsListener: itemPositionListener,
-            scrollOffsetListener: scrollOffsetListener,
+            itemScrollController: controller.itemScrollController,
+            scrollOffsetController: controller.scrollOffsetController,
+            itemPositionsListener: controller.itemPositionListener,
+            scrollOffsetListener: controller.scrollOffsetListener,
             itemCount: messages.length,
-            initialScrollIndex: initIndex,
+            initialScrollIndex: messages.indexOf(-1),
             initialAlignment: 1,
             minCacheExtent: 1440,
             itemBuilder: (context, index) {
-              if (messages[index] == -1) return const SizedBox.shrink();
+              final message = messages[index];
+              if ([-1, -2].contains(message)) return const SizedBox.shrink();
 
               return MessageListItemView(
-                messageId: messages[index],
+                messageId: message,
               ).padding(vertical: 8, horizontal: 12);
             },
           ),

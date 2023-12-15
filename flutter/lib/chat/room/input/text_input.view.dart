@@ -28,7 +28,10 @@ class _TextInputViewState extends State<TextInputView> {
     message.content = inputController.text;
     inputController.clear();
 
-    await controller.sendMessage([message]);
+    await controller.sendMessage(
+      [message],
+      toBottom: true,
+    );
   }
 
   @override

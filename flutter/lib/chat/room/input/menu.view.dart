@@ -97,7 +97,7 @@ class InputMenuBottomSheet extends StatelessWidget {
       name: mediaInputContext.mediaFile.name,
     ));
 
-    await chatController.sendMessage([message]);
+    await chatController.sendMessage([message], toBottom: true);
   }
 
   handleInputFile(BuildContext context) async {
@@ -117,7 +117,7 @@ class InputMenuBottomSheet extends StatelessWidget {
     ));
     message.messageType = MessageType.MESSAGE_TYPE_FILE;
 
-    await chatController.sendMessage([message]);
+    await chatController.sendMessage([message], toBottom: true);
   }
 
   handleCreateRTC(BuildContext context) {
