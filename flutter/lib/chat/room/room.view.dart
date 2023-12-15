@@ -97,9 +97,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         ),
         body: Column(
           children: [
-            const MessageListView()
-                .backgroundColor(Colors.black.withOpacity(0.05))
-                .expanded(),
+            const MessageListView().expanded(),
             const ChatRoomInputView(),
           ],
         ),

@@ -19,25 +19,48 @@ class MessageListView extends StatelessWidget {
       builder: (context, _) {
         final messages = controller.ids;
 
-        return ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: ScrollablePositionedList.builder(
-            itemScrollController: controller.itemScrollController,
-            scrollOffsetController: controller.scrollOffsetController,
-            itemPositionsListener: controller.itemPositionListener,
-            scrollOffsetListener: controller.scrollOffsetListener,
-            itemCount: messages.length,
-            initialScrollIndex: messages.indexOf(-1),
-            initialAlignment: 1,
-            minCacheExtent: 1440,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-              if ([-1, -2].contains(message)) return const SizedBox.shrink();
+        return Scaffold(
+          backgroundColor: Colors.black.withOpacity(0.05),
+          body: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: ScrollablePositionedList.builder(
+              itemScrollController: controller.itemScrollController,
+              scrollOffsetController: controller.scrollOffsetController,
+              itemPositionsListener: controller.itemPositionListener,
+              scrollOffsetListener: controller.scrollOffsetListener,
+              itemCount: messages.length,
+              initialScrollIndex: messages.indexOf(-1),
+              initialAlignment: 1,
+              minCacheExtent: 1440,
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                if ([-1, -2].contains(message)) return const SizedBox.shrink();
 
-              return MessageListItemView(
-                messageId: message,
-              ).padding(vertical: 8, horizontal: 12);
-            },
+                return MessageListItemView(
+                  messageId: message,
+                ).padding(vertical: 8, horizontal: 12);
+              },
+            ),
+          ),
+          floatingActionButton: AnimatedScale(
+            scale: controller.uncheck == 0 ? 0 : 1,
+            duration: Durations.short3,
+            child: FloatingActionButton(
+              heroTag: 'uncheck-hint',
+              onPressed: controller.handleToUncheck,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(999),
+              ),
+              backgroundColor: Colors.white,
+              child: Badge.count(
+                isLabelVisible: controller.uncheck > 0,
+                offset: const Offset(8, 8),
+                alignment: Alignment.bottomRight,
+                count: controller.uncheck,
+                child: const Icon(Icons.keyboard_arrow_down),
+              ),
+            ),
           ),
         );
       },

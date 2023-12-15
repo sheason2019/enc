@@ -25,7 +25,8 @@ class ChatController extends ChangeNotifier {
     required this.scope,
     required this.conversation,
   }) {
-    _createStream();
+    _watchMessages();
+    _watchUncheck();
   }
 
   bool get useTextInput => _useTextInput;
@@ -40,7 +41,8 @@ class ChatController extends ChangeNotifier {
 
   var ids = <int>[];
   StreamSubscription? idsSub;
-  Future<void> _createStream() async {
+  StreamSubscription? uncheckSub;
+  void _watchMessages() {
     final db = scope.db;
     final select = db.messages.selectOnly();
     select.addColumns([db.messages.id]);
@@ -69,6 +71,30 @@ class ChatController extends ChangeNotifier {
           onUpdate();
         }
       });
+    });
+  }
+
+  var uncheck = 0;
+  void _watchUncheck() {
+    final count = scope.db.messageStates.id.count();
+    final select = scope.db.messageStates.selectOnly().join([
+      innerJoin(
+        scope.db.contacts,
+        scope.db.contacts.id.equalsExp(scope.db.messageStates.contactId),
+      ),
+      innerJoin(
+        scope.db.messages,
+        scope.db.messages.id.equalsExp(scope.db.messageStates.messageId),
+      ),
+    ]);
+    select.addColumns([count]);
+    select.where(scope.db.contacts.signPubkey.equals(scope.secret.signPubKey));
+    select.where(scope.db.messageStates.checkedAt.isNull());
+    select.where(scope.db.messages.conversationId.equals(conversation.id));
+    final stream = select.watchSingle().map((event) => event.read(count)!);
+    uncheckSub = stream.listen((event) {
+      uncheck = event;
+      notifyListeners();
     });
   }
 
@@ -206,9 +232,19 @@ class ChatController extends ChangeNotifier {
     );
   }
 
+  handleToUncheck() {
+    final index = ids.indexOf(-1);
+    itemScrollController.scrollTo(
+      index: index,
+      duration: Durations.medium1,
+      alignment: 1,
+    );
+  }
+
   @override
   void dispose() {
     idsSub?.cancel();
+    uncheckSub?.cancel();
     super.dispose();
   }
 }
