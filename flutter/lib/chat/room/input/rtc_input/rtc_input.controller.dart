@@ -54,14 +54,12 @@ class CreateRTCInviteController extends ChangeNotifier {
       data: data,
     );
     final receiveRtcModel = RtcModel.fromJson(resp.data);
-    final message = await chatController.createMessage();
+    final message = await chatController.inputController.createMessage();
     message.messageType = MessageType.MESSAGE_TYPE_RTC;
     message.content = jsonEncode(receiveRtcModel.toJson());
 
-    await chatController.sendMessage(
-      [message],
-      toBottom: true,
-    );
+    await chatController.inputController.sendMessage([message]);
+    await chatController.messagesController.handleNextTickToBottom();
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/chat/message_debug/message_debug.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/progress.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/progress.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';

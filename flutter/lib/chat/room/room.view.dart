@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/input/file_input/file_input.controller.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
 import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
-import 'package:sheason_chat/chat/room/list/checker.controller.dart';
-import 'package:sheason_chat/chat/room/list/list.view.dart';
+import 'package:sheason_chat/chat/room/messages/checker.controller.dart';
+import 'package:sheason_chat/chat/room/messages_panel/messages_panel.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/chat/room/title/title.view.dart';
 import 'package:sheason_chat/extensions/conversation/conversation.dart';
@@ -68,7 +68,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     return MultiProvider(
       providers: [
         Provider.value(value: widget.conversation),
-        ListenableProvider(
+        Provider(
           create: (context) => ChatController(
             scope: scope,
             conversation: widget.conversation,
@@ -97,7 +97,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         ),
         body: Column(
           children: [
-            const MessageListView().expanded(),
+            const MessagesPanelView().expanded(),
             const ChatRoomInputView(),
           ],
         ),

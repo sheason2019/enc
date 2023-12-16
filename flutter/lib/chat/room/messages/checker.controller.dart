@@ -99,9 +99,6 @@ class MessageChecker {
       portableDatas.add(portable);
     }
 
-    await chatController.sendMessage(
-      portableDatas,
-      toBottom: false,
-    );
+    await chatController.inputController.sendMessage(portableDatas);
   }
 }

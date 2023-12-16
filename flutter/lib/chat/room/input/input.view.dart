@@ -10,10 +10,16 @@ class ChatRoomInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<ChatController>();
-    if (controller.useTextInput) {
-      return const TextInputView();
-    } else {
-      return const VoiceInputView();
-    }
+    final inputController = controller.inputController;
+    return ListenableBuilder(
+      listenable: inputController,
+      builder: (context, _) {
+        if (inputController.useTextInput) {
+          return const TextInputView();
+        } else {
+          return const VoiceInputView();
+        }
+      },
+    );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/list/list_item/wrapper.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/wrapper.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/models/rtc_model.dart';
 import 'package:sheason_chat/rtc/rtc.view.dart';

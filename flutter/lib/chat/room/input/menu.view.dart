@@ -58,12 +58,12 @@ class InputMenuBottomSheet extends StatelessWidget {
   }
 
   handleToogleVoiceInput(BuildContext context) {
-    chatController.useTextInput = false;
+    chatController.inputController.useTextInput = false;
     handleCloseSheet(context);
   }
 
   handleToggleTextInput(BuildContext context) {
-    chatController.useTextInput = true;
+    chatController.inputController.useTextInput = true;
     handleCloseSheet(context);
   }
 
@@ -83,7 +83,7 @@ class InputMenuBottomSheet extends StatelessWidget {
       mediaInputContext.mediaFile.path,
     );
 
-    final message = await chatController.createMessage();
+    final message = await chatController.inputController.createMessage();
     switch (mediaInputContext.mediaType) {
       case MediaType.image:
         message.messageType = MessageType.MESSAGE_TYPE_IMAGE;
@@ -97,7 +97,8 @@ class InputMenuBottomSheet extends StatelessWidget {
       name: mediaInputContext.mediaFile.name,
     ));
 
-    await chatController.sendMessage([message], toBottom: true);
+    await chatController.inputController.sendMessage([message]);
+    await chatController.messagesController.handleNextTickToBottom();
   }
 
   handleInputFile(BuildContext context) async {
@@ -110,14 +111,15 @@ class InputMenuBottomSheet extends StatelessWidget {
     if (serviceUrl == null) return;
 
     final upload = await scope.uploader.upload(serviceUrl, filePath);
-    final message = await chatController.createMessage();
+    final message = await chatController.inputController.createMessage();
     message.content = jsonEncode(NetworkResource(
       url: upload,
       name: path.basename(filePath),
     ));
     message.messageType = MessageType.MESSAGE_TYPE_FILE;
 
-    await chatController.sendMessage([message], toBottom: true);
+    await chatController.inputController.sendMessage([message]);
+    await chatController.messagesController.handleNextTickToBottom();
   }
 
   handleCreateRTC(BuildContext context) {
@@ -139,7 +141,7 @@ class InputMenuBottomSheet extends StatelessWidget {
         mainAxisSpacing: 4,
         crossAxisSpacing: 4,
         children: [
-          if (!chatController.useTextInput)
+          if (!chatController.inputController.useTextInput)
             _InputMenuWrapper(
               onTap: () => handleToggleTextInput(context),
               icon: Icons.edit,

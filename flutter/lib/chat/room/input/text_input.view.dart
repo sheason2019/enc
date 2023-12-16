@@ -23,15 +23,13 @@ class _TextInputViewState extends State<TextInputView> {
 
   handleSendMessage() async {
     final controller = context.read<ChatController>();
-    final message = await controller.createMessage();
+    final message = await controller.inputController.createMessage();
     message.messageType = MessageType.MESSAGE_TYPE_TEXT;
     message.content = inputController.text;
     inputController.clear();
 
-    await controller.sendMessage(
-      [message],
-      toBottom: true,
-    );
+    await controller.inputController.sendMessage([message]);
+    await controller.messagesController.handleNextTickToBottom();
   }
 
   @override

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/list/list_item/wrapper.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/wrapper.view.dart';
 import 'package:sheason_chat/models/network_resource.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';

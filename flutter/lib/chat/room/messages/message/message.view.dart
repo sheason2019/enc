@@ -1,14 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/list/checker.controller.dart';
-import 'package:sheason_chat/chat/room/list/list_item/message_context.model.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/audio.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/file/file.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/image.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/rtc.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/text.view.dart';
-import 'package:sheason_chat/chat/room/list/list_item/types/video.view.dart';
+import 'package:sheason_chat/chat/room/messages/checker.controller.dart';
+import 'package:sheason_chat/chat/room/messages/message/message_context.model.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/audio.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/file/file.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/image.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/rtc.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/text.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/video.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -42,7 +42,7 @@ class MessageListItemView extends StatelessWidget {
     return FutureBuilder(
       future: fetchMessage(context),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const SizedBox.shrink();
+        if (!snapshot.hasData) return const SizedBox(height: 70);
 
         final messageContext = snapshot.data!;
         return MultiProvider(
