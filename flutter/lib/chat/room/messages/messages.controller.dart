@@ -51,7 +51,7 @@ class MessagesController extends ChangeNotifier {
   }
 
   void _watchMessages() async {
-    final uncheckId = await _findUncheckId();
+    var uncheckId = await _findUncheckId();
     final db = scope.db;
     final select = db.messages.selectOnly();
     select.addColumns([db.messages.id]);
@@ -66,6 +66,7 @@ class MessagesController extends ChangeNotifier {
       inited = true;
       uncheckIndex = messages.indexOf(uncheckId);
       if (uncheckIndex < 0) {
+        uncheckId = messages.last;
         uncheckIndex = messages.length;
       }
 
