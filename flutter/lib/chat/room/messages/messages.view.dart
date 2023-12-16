@@ -4,6 +4,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sheason_chat/chat/room/messages/message/message.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class MessagesView extends StatelessWidget {
   const MessagesView({super.key});
@@ -29,7 +30,19 @@ class MessagesView extends StatelessWidget {
           itemBuilder: (context, index) {
             final id = messagesController.ids[index];
             if (id < 0) {
-              return const SizedBox();
+              return VisibilityDetector(
+                key: messagesController.lockBottomKey,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.9) {
+                    messagesController.lockBottom = true;
+                  } else {
+                    messagesController.lockBottom = false;
+                  }
+                },
+                child: const SizedBox(
+                  height: 4,
+                ),
+              );
             }
 
             return MessageListItemView(

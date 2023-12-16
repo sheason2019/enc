@@ -15,6 +15,9 @@ class MessagesController extends ChangeNotifier {
   final scrollOffsetListener = ScrollOffsetListener.create();
   final itemPositionListener = ItemPositionsListener.create();
 
+  final lockBottomKey = UniqueKey();
+  var lockBottom = false;
+
   MessagesController({
     required this.scope,
     required this.conversation,
@@ -51,7 +54,6 @@ class MessagesController extends ChangeNotifier {
   }
 
   void _watchMessages() async {
-    var uncheckId = await _findUncheckId();
     final db = scope.db;
     final select = db.messages.selectOnly();
     select.addColumns([db.messages.id]);
@@ -63,6 +65,7 @@ class MessagesController extends ChangeNotifier {
         .watch()
         .map((event) => event.map((e) => e.read(db.messages.id)!).toList());
     messagesSub = stream.listen((messages) async {
+      var uncheckId = await _findUncheckId();
       inited = true;
       uncheckIndex = messages.indexOf(uncheckId);
       if (uncheckIndex < 0) {
@@ -75,7 +78,7 @@ class MessagesController extends ChangeNotifier {
       ids.add(-1);
       notifyListeners();
 
-      if (_nextTickToBottom) {
+      if (_nextTickToBottom || lockBottom) {
         _nextTickToBottom = false;
         Timer(Durations.short1, handleToBottom);
       }
