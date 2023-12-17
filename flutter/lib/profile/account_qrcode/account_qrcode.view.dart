@@ -43,14 +43,14 @@ class _AccountQrCodePageState extends State<AccountQrCodePage> {
               listenable: controller,
               builder: (context, _) => BarcodeWidget(
                 barcode: Barcode.qrCode(
-                  errorCorrectLevel: BarcodeQRCorrectionLevel.medium,
+                  errorCorrectLevel: BarcodeQRCorrectionLevel.quartile,
                 ),
                 data: jsonEncode({
                   'type': 'account',
                   'url': '${controller.serviceUrl}/${scope.secret.signPubKey}',
                 }),
               ),
-            ).padding(vertical: 16),
+            ).aspectRatio(aspectRatio: 1).padding(all: 32),
             const Text(
               '使用扫一扫功能扫描二维码添加用户',
               style: TextStyle(
@@ -67,8 +67,8 @@ class _AccountQrCodePageState extends State<AccountQrCodePage> {
         ],
       )
           .padding(bottom: 24, top: 12)
-          .constrained(maxWidth: 360)
           .card()
+          .constrained(maxWidth: 360)
           .padding(horizontal: 16)
           .center(),
     );
