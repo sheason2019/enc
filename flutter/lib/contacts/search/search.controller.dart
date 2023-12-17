@@ -14,9 +14,24 @@ import 'package:sheason_chat/scope/scope.model.dart';
 class SearchContactController {
   SearchContactController._();
 
-  static Future<void> handleSearch(BuildContext context, String url) async {
+  static Future<void> handleSearchAndEnterContactPage(
+    BuildContext context,
+    String url,
+  ) async {
     final scope = context.read<Scope>();
     final delegate = context.read<MainController>().rootDelegate;
+    final snapshot = await handleSearch(url);
+    // 更新联系人信息
+    final operation = await scope.operator.factory.contact(snapshot);
+    await scope.operator.apply([operation]);
+
+    delegate.pages.add(ContactDetailPage(snapshot: snapshot));
+    delegate.notify();
+  }
+
+  static Future<AccountSnapshot> handleSearch(
+    String url,
+  ) async {
     final resp = await dio.get(url);
     final snapshotBuffer = base64Decode(resp.data['snapshot']);
     final snapshot = AccountSnapshot.fromBuffer(snapshotBuffer);
@@ -33,11 +48,6 @@ class SearchContactController {
       throw Exception('Verify signature failed');
     }
 
-    // 更新联系人信息
-    final operation = await scope.operator.factory.contact(snapshot);
-    await scope.operator.apply([operation]);
-
-    delegate.pages.add(ContactDetailPage(snapshot: snapshot));
-    delegate.notify();
+    return snapshot;
   }
 }

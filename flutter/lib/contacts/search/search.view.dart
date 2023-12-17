@@ -20,7 +20,7 @@ class _SearchContactPageState extends State<SearchContactPage> {
 
   handleSubmit() async {
     final url = textController.text;
-    await SearchContactController.handleSearch(context, url);
+    await SearchContactController.handleSearchAndEnterContactPage(context, url);
   }
 
   @override

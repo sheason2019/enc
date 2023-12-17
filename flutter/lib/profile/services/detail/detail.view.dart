@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
+import 'package:sheason_chat/profile/services/detail/resource/resource.view.dart';
+import 'package:sheason_chat/profile/services/detail/reupload_account_snapshot/reupload_account_snapshot.view.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class ServiceDetailPage extends StatelessWidget {
   final String url;
   const ServiceDetailPage({super.key, required this.url});
 
-  handleUploadSnapshot(BuildContext context) async {
-    final scope = context.read<Scope>();
-    await scope.subscribes[url]?.handleUploadSnapshot();
+  to(BuildContext context, Widget widget) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(widget);
+    delegate.notify();
   }
 
   handleDeleteService(BuildContext context) async {
@@ -50,13 +53,18 @@ class ServiceDetailPage extends StatelessWidget {
       body: Column(
         children: [
           ListTile(
-            onTap: () => handleUploadSnapshot(context),
-            title: const Text('重新上传用户信息'),
+            onTap: () => to(context, ServiceResourcePage(url: url)),
+            title: const Text('资源使用情况'),
+            subtitle: const Text('查看服务器资源用量及限额'),
           ),
+          ReloadAccountSnapshotListTile(url: url),
           ListTile(
             onTap: () => handleDeleteService(context),
-            title: const Text('删除此服务器'),
-          )
+            title: const Text(
+              '删除此服务器',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
         ],
       ),
     );

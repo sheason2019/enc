@@ -54,7 +54,7 @@ class ScanResultController {
     final url = json['url'];
     final delegate = context.read<MainController>().rootDelegate;
     delegate.pages.removeLast();
-    await SearchContactController.handleSearch(context, url);
+    await SearchContactController.handleSearchAndEnterContactPage(context, url);
     delegate.notify();
   }
 }
