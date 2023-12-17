@@ -4,6 +4,7 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/replica/replica.controller.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class ReplicaProceedHostPendingQrcode extends StatelessWidget {
   const ReplicaProceedHostPendingQrcode({super.key});
@@ -11,6 +12,10 @@ class ReplicaProceedHostPendingQrcode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<ReplicaController>();
+
+    if (controller.namespace == null) {
+      return const CircularProgressIndicator().center();
+    }
 
     return Padding(
       padding: const EdgeInsets.all(24),
