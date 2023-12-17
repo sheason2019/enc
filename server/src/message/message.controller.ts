@@ -12,7 +12,7 @@ import { sheason_chat } from 'src/prototypes';
 import { MessageService } from './message.service';
 import { SubscribeGateway } from 'src/subscribe/subscribe.gateway';
 
-@Controller()
+@Controller('message')
 export class MessageController {
   constructor(
     private readonly accountService: AccountService,
@@ -20,7 +20,7 @@ export class MessageController {
     private readonly subscribeGateway: SubscribeGateway,
   ) {}
 
-  @Post(':signPubkey/messages')
+  @Post(':signPubkey')
   @UseInterceptors(NoFilesInterceptor())
   async handleMessage(
     @Body() body: { data: string },

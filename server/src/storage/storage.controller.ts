@@ -20,7 +20,7 @@ import { sheason_chat } from 'src/prototypes';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { DATA_ROOT } from 'src/env/env';
 
-@Controller()
+@Controller('storage')
 export class StorageController {
   constructor(
     private readonly storageService: StorageService,
@@ -28,7 +28,7 @@ export class StorageController {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  @Post(':signPubkey/storage')
+  @Post(':signPubkey')
   @UseInterceptors(NoFilesInterceptor())
   async postFile(
     @Param('signPubkey') id: string,
@@ -60,7 +60,7 @@ export class StorageController {
     }
   }
 
-  @Get(':signPubkey/storage/:fileId')
+  @Get(':signPubkey/:fileId')
   getFile(
     @Param('signPubkey') signPubkey: string,
     @Param('fileId') fileId: string,
@@ -80,7 +80,7 @@ export class StorageController {
     file.pipe(res);
   }
 
-  @Get(':signPubkey/storage/:fileId/size')
+  @Get(':signPubkey/:fileId/size')
   async getFileSize(
     @Param('signPubkey') signPubkey: string,
     @Param('fileId') fileId: string,

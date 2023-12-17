@@ -13,7 +13,7 @@ import { sheason_chat } from 'src/prototypes';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { prisma } from 'src/prisma/prisma';
 
-@Controller()
+@Controller('account')
 export class AccountController {
   constructor(
     private readonly accountService: AccountService,

@@ -17,7 +17,7 @@ class Uploader {
     String serviceUrl,
     String filePath,
   ) async {
-    final url = '$serviceUrl/${scope.secret.signPubKey}/storage';
+    final url = '$serviceUrl/storage/${scope.secret.signPubKey}';
     // 文件上传功能
     const blockSize = 512 * 1024;
 

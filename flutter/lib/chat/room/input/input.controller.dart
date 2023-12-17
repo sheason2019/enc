@@ -104,7 +104,7 @@ class MessageInputController extends ChangeNotifier {
       select.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
       final contact = await select.getSingle();
       await Future.wait(contact.snapshot.serviceMap.keys.map(
-        (e) => dio.post('$e/${contact.signPubkey}/messages', data: postData),
+        (e) => dio.post('$e/message/${contact.signPubkey}', data: postData),
       ));
       return;
     }

@@ -174,7 +174,7 @@ class Subscribe extends ChangeNotifier {
       ..sign = sign.bytes;
 
     await dio.put(
-      '$url/${scope.snapshot.index.signPubKey}',
+      '$url/account/${scope.snapshot.index.signPubKey}',
       data: FormData.fromMap({
         'snapshot': base64Encode(wrapper.writeToBuffer()),
       }),
