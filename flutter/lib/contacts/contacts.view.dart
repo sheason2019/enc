@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/contacts/search/search.view.dart';
 import 'package:sheason_chat/contacts/tabs/contact_tab.view.dart';
+import 'package:sheason_chat/contacts/tabs/group_tab.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -37,14 +38,12 @@ class ContactView extends StatelessWidget {
                 ).padding(vertical: 6),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  const ContactsTab(),
-                  Container(),
-                ],
-              ),
-            ),
+            const TabBarView(
+              children: [
+                ContactsTab(),
+                GroupsTab(),
+              ],
+            ).expanded(),
           ],
         ),
       ),
