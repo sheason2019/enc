@@ -7,7 +7,6 @@ import 'package:sheason_chat/chat/room/messages/checker.controller.dart';
 import 'package:sheason_chat/chat/room/messages_panel/messages_panel.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/chat/room/title/title.view.dart';
-import 'package:sheason_chat/extensions/conversation/conversation.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -28,9 +27,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     final scope = context.read<Scope>();
     final index = scope.anchor.list.indexOf(widget.conversation.id);
     if (index == -1) {
-      final portable = await widget.conversation.toPortableConversation(
-        scope,
-      );
+      final portable = widget.conversation.info;
       final operation = await scope.operator.factory.conversationAnchor(
         portable,
       );

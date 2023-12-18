@@ -33,6 +33,9 @@ class ChatRoomPageTitle extends StatelessWidget {
         builder: (context, snapshot) => Text(snapshot.requireData),
       );
     }
+    if (conversation.type == ConversationType.CONVERSATION_GROUP) {
+      return const Text('');
+    }
 
     throw UnimplementedError();
   }

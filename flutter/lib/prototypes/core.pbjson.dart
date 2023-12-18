@@ -223,6 +223,7 @@ const PortableConversation$json = {
     {'1': 'remote_url', '3': 4, '4': 1, '5': 9, '10': 'remoteUrl'},
     {'1': 'declared_secrets', '3': 5, '4': 3, '5': 11, '6': '.sheason_chat.PortableConversation.DeclaredSecretsEntry', '10': 'declaredSecrets'},
     {'1': 'agent', '3': 6, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'agent'},
+    {'1': 'version', '3': 7, '4': 1, '5': 5, '10': 'version'},
   ],
   '3': [PortableConversation_DeclaredSecretsEntry$json],
 };
@@ -245,8 +246,9 @@ final $typed_data.Uint8List portableConversationDescriptor = $convert.base64Deco
     'VudFNuYXBzaG90UgVvd25lchIdCgpyZW1vdGVfdXJsGAQgASgJUglyZW1vdGVVcmwSYgoQZGVj'
     'bGFyZWRfc2VjcmV0cxgFIAMoCzI3LnNoZWFzb25fY2hhdC5Qb3J0YWJsZUNvbnZlcnNhdGlvbi'
     '5EZWNsYXJlZFNlY3JldHNFbnRyeVIPZGVjbGFyZWRTZWNyZXRzEjAKBWFnZW50GAYgASgLMhou'
-    'c2hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIFYWdlbnQaQgoURGVjbGFyZWRTZWNyZXRzRW50cn'
-    'kSEAoDa2V5GAEgASgFUgNrZXkSFAoFdmFsdWUYAiABKAxSBXZhbHVlOgI4AQ==');
+    'c2hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIFYWdlbnQSGAoHdmVyc2lvbhgHIAEoBVIHdmVyc2'
+    'lvbhpCChREZWNsYXJlZFNlY3JldHNFbnRyeRIQCgNrZXkYASABKAVSA2tleRIUCgV2YWx1ZRgC'
+    'IAEoDFIFdmFsdWU6AjgB');
 
 @$core.Deprecated('Use portableMessageDescriptor instead')
 const PortableMessage$json = {

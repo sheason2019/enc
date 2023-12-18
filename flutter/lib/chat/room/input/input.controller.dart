@@ -97,14 +97,14 @@ class MessageInputController extends ChangeNotifier {
       'data': jsonEncode(wrappers
           .map((wrapper) => base64Encode(wrapper.writeToBuffer()))
           .toList()),
+      'receivers': jsonEncode([conversation.signPubkey]),
     });
     if (conversation.type == ConversationType.CONVERSATION_PRIVATE) {
-      final agent = conversation.info.findAgent(scope);
       final select = scope.db.contacts.select();
-      select.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
+      select.where((tbl) => tbl.signPubkey.equals(conversation.signPubkey));
       final contact = await select.getSingle();
       await Future.wait(contact.snapshot.serviceMap.keys.map(
-        (e) => dio.post('$e/message/${contact.signPubkey}', data: postData),
+        (e) => dio.post('$e/message', data: postData),
       ));
       return;
     }

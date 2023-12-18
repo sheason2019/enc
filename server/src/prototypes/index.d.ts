@@ -576,6 +576,7 @@ export namespace sheason_chat {
         PUT_CONVERSATION = 4,
         PUT_CONVERSATION_ANCHOR = 5,
         PUT_MESSAGE = 6,
+        PUT_AVATAR = 7,
         DELETE_SERVICE = 101
     }
 
@@ -721,6 +722,9 @@ export namespace sheason_chat {
 
         /** PortableConversation agent */
         agent?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableConversation version */
+        version?: (number|null);
     }
 
     /** Represents a PortableConversation. */
@@ -749,6 +753,9 @@ export namespace sheason_chat {
 
         /** PortableConversation agent. */
         public agent?: (sheason_chat.IAccountIndex|null);
+
+        /** PortableConversation version. */
+        public version: number;
 
         /**
          * Creates a new PortableConversation instance using the specified properties.
@@ -836,6 +843,7 @@ export namespace sheason_chat {
         MESSAGE_TYPE_IMAGE = 3,
         MESSAGE_TYPE_VIDEO = 4,
         MESSAGE_TYPE_FILE = 5,
+        MESSAGE_TYPE_RTC = 6,
         MESSAGE_TYPE_STATE_ONLY = 101
     }
 

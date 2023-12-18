@@ -37,6 +37,10 @@ class PutConversationAtomProceeder
         return null;
       }
 
+      if (exist.info.version >= portable.version) {
+        return null;
+      }
+
       // 群聊会话需要有一个 Version Key 避免重复写入
       final update = scope.db.conversations.update();
       update.where((tbl) => tbl.id.equals(exist.id));

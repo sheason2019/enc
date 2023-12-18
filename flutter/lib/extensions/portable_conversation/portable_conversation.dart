@@ -3,14 +3,14 @@ import 'package:sheason_chat/scope/scope.model.dart';
 
 extension PortableConversationExtension on PortableConversation {
   AccountIndex findAgent(Scope scope) {
-    if (type == ConversationType.CONVERSATION_PRIVATE) {
-      // 会话成员数为1时表示为仅对自己发出的消息
-      return findPrivateSnapshot(scope).index;
-    } else if (type == ConversationType.CONVERSATION_GROUP) {
-      // 群组会话直接返回 Conversation 中声明的 Agent
-      return agent;
+    switch (type) {
+      case ConversationType.CONVERSATION_PRIVATE:
+        return findPrivateSnapshot(scope).index;
+      case ConversationType.CONVERSATION_GROUP:
+        return agent;
+      default:
+        throw UnimplementedError();
     }
-    throw Exception('Unknown conversation type');
   }
 
   AccountSnapshot findPrivateSnapshot(Scope scope) {

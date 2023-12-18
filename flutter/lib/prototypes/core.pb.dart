@@ -433,6 +433,7 @@ class PortableConversation extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'remoteUrl')
     ..m<$core.int, $core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', entryClassName: 'PortableConversation.DeclaredSecretsEntry', keyFieldType: $pb.PbFieldType.O3, valueFieldType: $pb.PbFieldType.OY, packageName: const $pb.PackageName('sheason_chat'))
     ..aOM<AccountIndex>(6, _omitFieldNames ? '' : 'agent', subBuilder: AccountIndex.create)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -502,6 +503,15 @@ class PortableConversation extends $pb.GeneratedMessage {
   void clearAgent() => clearField(6);
   @$pb.TagNumber(6)
   AccountIndex ensureAgent() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $core.int get version => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set version($core.int v) { $_setSignedInt32(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasVersion() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearVersion() => clearField(7);
 }
 
 class PortableMessage extends $pb.GeneratedMessage {

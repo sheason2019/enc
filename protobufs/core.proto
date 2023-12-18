@@ -72,6 +72,8 @@ message PortableConversation {
   string remote_url = 4;
   map<int32, bytes> declared_secrets = 5;
   AccountIndex agent = 6;
+
+  int32 version = 7;
 }
 
 enum MessageType {

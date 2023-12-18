@@ -1451,6 +1451,7 @@
          * @property {number} PUT_CONVERSATION=4 PUT_CONVERSATION value
          * @property {number} PUT_CONVERSATION_ANCHOR=5 PUT_CONVERSATION_ANCHOR value
          * @property {number} PUT_MESSAGE=6 PUT_MESSAGE value
+         * @property {number} PUT_AVATAR=7 PUT_AVATAR value
          * @property {number} DELETE_SERVICE=101 DELETE_SERVICE value
          */
         sheason_chat.OperationType = (function() {
@@ -1462,6 +1463,7 @@
             values[valuesById[4] = "PUT_CONVERSATION"] = 4;
             values[valuesById[5] = "PUT_CONVERSATION_ANCHOR"] = 5;
             values[valuesById[6] = "PUT_MESSAGE"] = 6;
+            values[valuesById[7] = "PUT_AVATAR"] = 7;
             values[valuesById[101] = "DELETE_SERVICE"] = 101;
             return values;
         })();
@@ -1659,6 +1661,7 @@
                     case 4:
                     case 5:
                     case 6:
+                    case 7:
                     case 101:
                         break;
                     }
@@ -1718,6 +1721,10 @@
                 case "PUT_MESSAGE":
                 case 6:
                     message.type = 6;
+                    break;
+                case "PUT_AVATAR":
+                case 7:
+                    message.type = 7;
                     break;
                 case "DELETE_SERVICE":
                 case 101:
@@ -1816,6 +1823,7 @@
              * @property {string|null} [remoteUrl] PortableConversation remoteUrl
              * @property {Object.<string,Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
              * @property {sheason_chat.IAccountIndex|null} [agent] PortableConversation agent
+             * @property {number|null} [version] PortableConversation version
              */
     
             /**
@@ -1884,6 +1892,14 @@
             PortableConversation.prototype.agent = null;
     
             /**
+             * PortableConversation version.
+             * @member {number} version
+             * @memberof sheason_chat.PortableConversation
+             * @instance
+             */
+            PortableConversation.prototype.version = 0;
+    
+            /**
              * Creates a new PortableConversation instance using the specified properties.
              * @function create
              * @memberof sheason_chat.PortableConversation
@@ -1921,6 +1937,8 @@
                         writer.uint32(/* id 5, wireType 2 =*/42).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]).uint32(/* id 2, wireType 2 =*/18).bytes(message.declaredSecrets[keys[i]]).ldelim();
                 if (message.agent != null && Object.hasOwnProperty.call(message, "agent"))
                     $root.sheason_chat.AccountIndex.encode(message.agent, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.version != null && Object.hasOwnProperty.call(message, "version"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int32(message.version);
                 return writer;
             };
     
@@ -2000,6 +2018,10 @@
                             message.agent = $root.sheason_chat.AccountIndex.decode(reader, reader.uint32());
                             break;
                         }
+                    case 7: {
+                            message.version = reader.int32();
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -2077,6 +2099,9 @@
                     if (error)
                         return "agent." + error;
                 }
+                if (message.version != null && message.hasOwnProperty("version"))
+                    if (!$util.isInteger(message.version))
+                        return "version: integer expected";
                 return null;
             };
     
@@ -2144,6 +2169,8 @@
                         throw TypeError(".sheason_chat.PortableConversation.agent: object expected");
                     message.agent = $root.sheason_chat.AccountIndex.fromObject(object.agent);
                 }
+                if (object.version != null)
+                    message.version = object.version | 0;
                 return message;
             };
     
@@ -2169,6 +2196,7 @@
                     object.owner = null;
                     object.remoteUrl = "";
                     object.agent = null;
+                    object.version = 0;
                 }
                 if (message.type != null && message.hasOwnProperty("type"))
                     object.type = options.enums === String ? $root.sheason_chat.ConversationType[message.type] === undefined ? message.type : $root.sheason_chat.ConversationType[message.type] : message.type;
@@ -2189,6 +2217,8 @@
                 }
                 if (message.agent != null && message.hasOwnProperty("agent"))
                     object.agent = $root.sheason_chat.AccountIndex.toObject(message.agent, options);
+                if (message.version != null && message.hasOwnProperty("version"))
+                    object.version = message.version;
                 return object;
             };
     
@@ -2231,6 +2261,7 @@
          * @property {number} MESSAGE_TYPE_IMAGE=3 MESSAGE_TYPE_IMAGE value
          * @property {number} MESSAGE_TYPE_VIDEO=4 MESSAGE_TYPE_VIDEO value
          * @property {number} MESSAGE_TYPE_FILE=5 MESSAGE_TYPE_FILE value
+         * @property {number} MESSAGE_TYPE_RTC=6 MESSAGE_TYPE_RTC value
          * @property {number} MESSAGE_TYPE_STATE_ONLY=101 MESSAGE_TYPE_STATE_ONLY value
          */
         sheason_chat.MessageType = (function() {
@@ -2241,6 +2272,7 @@
             values[valuesById[3] = "MESSAGE_TYPE_IMAGE"] = 3;
             values[valuesById[4] = "MESSAGE_TYPE_VIDEO"] = 4;
             values[valuesById[5] = "MESSAGE_TYPE_FILE"] = 5;
+            values[valuesById[6] = "MESSAGE_TYPE_RTC"] = 6;
             values[valuesById[101] = "MESSAGE_TYPE_STATE_ONLY"] = 101;
             return values;
         })();
@@ -2483,6 +2515,7 @@
                     case 3:
                     case 4:
                     case 5:
+                    case 6:
                     case 101:
                         break;
                     }
@@ -2558,6 +2591,10 @@
                 case "MESSAGE_TYPE_FILE":
                 case 5:
                     message.messageType = 5;
+                    break;
+                case "MESSAGE_TYPE_RTC":
+                case 6:
+                    message.messageType = 6;
                     break;
                 case "MESSAGE_TYPE_STATE_ONLY":
                 case 101:

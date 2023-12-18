@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
@@ -5,6 +7,7 @@ import 'package:sheason_chat/accounts/accounts.view.dart';
 import 'package:sheason_chat/accounts/online_hint/scope_online_hint.view.dart';
 import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
 import 'package:sheason_chat/chat/anchors/anchors.view.dart';
+import 'package:sheason_chat/chat/create_group/create_group.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -12,9 +15,15 @@ import 'package:styled_widget/styled_widget.dart';
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
-  toBarcodeScanner(BuildContext context) {
+  void toBarcodeScanner(BuildContext context) {
     final delegate = context.read<MainController>().rootDelegate;
     delegate.pages.add(const BarcodeScannerPage());
+    delegate.notify();
+  }
+
+  void toCreateGroup(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(const CreateGroupPage());
     delegate.notify();
   }
 
@@ -27,6 +36,8 @@ class ChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scope = context.watch<Scope>();
+
+    final allowScan = Platform.isAndroid || Platform.isIOS;
 
     return Scaffold(
       appBar: AppBar(
@@ -55,14 +66,20 @@ class ChatView extends StatelessWidget {
               onSelected: (v) {
                 switch (v) {
                   case 0:
-                    toBarcodeScanner(context);
-                    return;
+                    return toBarcodeScanner(context);
+                  case 1:
+                    return toCreateGroup(context);
                 }
               },
               itemBuilder: (context) => [
+                if (allowScan)
+                  const PopupMenuItem(
+                    value: 0,
+                    child: Text('扫一扫'),
+                  ),
                 const PopupMenuItem(
-                  value: 0,
-                  child: Text('扫一扫'),
+                  value: 1,
+                  child: Text('创建群聊'),
                 ),
               ],
               icon: const Icon(Icons.add),

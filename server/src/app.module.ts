@@ -10,6 +10,7 @@ import { MessageModule } from './message/message.module';
 import { StorageModule } from './storage/storage.module';
 import { RtcModule } from './rtc/rtc.module';
 import { ResourceModule } from './resource/resource.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ResourceModule } from './resource/resource.module';
     StorageModule,
     RtcModule,
     ResourceModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

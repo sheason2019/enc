@@ -21,6 +21,7 @@ model Account {
   Operation Operation[]
   Message   Message[]
   RtcRecord RtcRecord[]
+  Group     Group[]
 }
 
 model Operation {
@@ -38,8 +39,7 @@ model Message {
   signature Bytes
   buffer    Bytes
 
-  accountID Int?
-  account   Account? @relation(fields: [accountID], references: [id])
+  Account Account[]
 }
 
 model RtcRecord {
@@ -50,4 +50,25 @@ model RtcRecord {
 
   accountID Int
   account   Account @relation(fields: [accountID], references: [id])
+}
+
+model Group {
+  id        Int     @id @default(autoincrement())
+  accountID Int
+  account   Account @relation(fields: [accountID], references: [id])
+
+  agentSecret          Bytes
+  portableConversation Bytes
+
+  GroupMembers GroupMembers[]
+}
+
+model GroupMembers {
+  id Int @id @default(autoincrement())
+
+  groupID Int
+  group   Group @relation(fields: [groupID], references: [id])
+
+  signPubkey String
+  snapshot   Bytes
 }

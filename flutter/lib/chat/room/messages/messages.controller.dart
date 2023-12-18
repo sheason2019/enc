@@ -65,11 +65,11 @@ class MessagesController extends ChangeNotifier {
         .watch()
         .map((event) => event.map((e) => e.read(db.messages.id)!).toList());
     messagesSub = stream.listen((messages) async {
-      var uncheckId = await _findUncheckId();
+      int? uncheckId = await _findUncheckId();
       inited = true;
       uncheckIndex = messages.indexOf(uncheckId);
       if (uncheckIndex < 0) {
-        uncheckId = messages.last;
+        uncheckId = messages.lastOrNull;
         uncheckIndex = messages.length;
       }
 

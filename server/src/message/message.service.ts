@@ -6,7 +6,7 @@ import { sheason_chat } from 'src/prototypes';
 @Injectable()
 export class MessageService {
   async put(
-    account: Account,
+    accounts: Account[],
     data: sheason_chat.SignWrapper,
   ): Promise<Message | undefined> {
     return prisma.$transaction(async (tx) => {
@@ -20,8 +20,8 @@ export class MessageService {
         data: {
           signature: Buffer.from(data.sign),
           buffer: Buffer.from(sheason_chat.SignWrapper.encode(data).finish()),
-          account: {
-            connect: account,
+          Account: {
+            connect: accounts,
           },
         },
       });

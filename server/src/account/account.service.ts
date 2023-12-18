@@ -55,4 +55,14 @@ export class AccountService {
       },
     });
   }
+
+  async findIn(checker: string[]): Promise<Account[]> {
+    return prisma.account.findMany({
+      where: {
+        signPubkey: {
+          in: checker,
+        },
+      },
+    });
+  }
 }

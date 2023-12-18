@@ -88,7 +88,11 @@ export class SubscribeGateway {
 
     const records = await prisma.message.findMany({
       where: {
-        account,
+        Account: {
+          some: {
+            id: account.id,
+          },
+        },
         signature: {
           notIn: payload.signatures.map((e) => Buffer.from(e, 'base64')),
         },

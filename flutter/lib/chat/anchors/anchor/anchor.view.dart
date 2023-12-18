@@ -34,6 +34,9 @@ class ConversationAnchorListTile extends StatelessWidget {
       select.where((tbl) => tbl.signPubkey.equals(conversation.signPubkey));
       return select.watchSingle().map((event) => event.snapshot.username);
     }
+    if (conversation.type == ConversationType.CONVERSATION_GROUP) {
+      return Stream.value('');
+    }
 
     throw UnimplementedError();
   }
@@ -154,6 +157,9 @@ class _ConversationAnchorAvatar extends StatelessWidget {
           snapshot: snapshot.requireData,
         ),
       );
+    }
+    if (conversation.type == ConversationType.CONVERSATION_GROUP) {
+      return CircleAvatar();
     }
 
     throw UnimplementedError();

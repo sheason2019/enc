@@ -14,12 +14,6 @@ import {
 } from 'crypto';
 import { sheason_chat } from '../prototypes';
 
-export interface SecretBox {
-  cipherData: Buffer;
-  nonce: Buffer;
-  mac: Buffer;
-}
-
 @Injectable()
 export class CryptoService {
   generate(): sheason_chat.AccountSecret {
@@ -57,7 +51,7 @@ export class CryptoService {
     return randomBytes(32);
   }
 
-  #sharedSecret(secret: sheason_chat.AccountSecret, targetPubKey: string) {
+  #sharedSecret(secret: sheason_chat.IAccountSecret, targetPubKey: string) {
     return diffieHellman({
       publicKey: createPublicKey({
         format: 'jwk',
@@ -76,23 +70,33 @@ export class CryptoService {
   }
 
   encrypt(
-    secret: sheason_chat.AccountSecret,
-    ecdhPubKey: string,
+    secret: sheason_chat.IAccountSecret,
+    target: sheason_chat.IAccountIndex,
     originData: Buffer,
-  ): SecretBox {
-    const sharedSecret = this.#sharedSecret(secret, ecdhPubKey);
-    return this.secretEncrypt(sharedSecret, originData);
+  ): sheason_chat.IPortableSecretBox {
+    const sharedSecret = this.#sharedSecret(secret, target.ecdhPubKey);
+    const box = this.secretEncrypt(sharedSecret, originData);
+    box.sender = {
+      ecdhPubKey: secret.ecdhPubKey,
+      signPubKey: secret.signPubKey,
+    };
+    box.receiver = target;
+
+    return box;
   }
   decrypt(
-    secret: sheason_chat.AccountSecret,
-    ecdhPubKey: string,
-    secretBox: SecretBox,
+    secret: sheason_chat.IAccountSecret,
+    target: sheason_chat.IAccountIndex,
+    secretBox: sheason_chat.IPortableSecretBox,
   ) {
-    const sharedSecret = this.#sharedSecret(secret, ecdhPubKey);
+    const sharedSecret = this.#sharedSecret(secret, target.ecdhPubKey);
     return this.secretDecrypt(sharedSecret, secretBox);
   }
 
-  secretEncrypt(key: Buffer, originData: Buffer): SecretBox {
+  secretEncrypt(
+    key: Buffer,
+    originData: Buffer,
+  ): sheason_chat.IPortableSecretBox {
     const nonce = randomBytes(12);
     const cipher = createCipheriv('chacha20-poly1305', key, nonce, {
       authTagLength: 16,
@@ -109,7 +113,7 @@ export class CryptoService {
       mac,
     };
   }
-  secretDecrypt(key: Buffer, secretBox: SecretBox) {
+  secretDecrypt(key: Buffer, secretBox: sheason_chat.IPortableSecretBox) {
     const decipher = createDecipheriv(
       'chacha20-poly1305',
       key,

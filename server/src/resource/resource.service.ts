@@ -76,7 +76,11 @@ export class ResourceService {
     let length = 0;
     const messages = await prisma.message.findMany({
       where: {
-        account,
+        Account: {
+          some: {
+            id: account.id,
+          },
+        },
       },
     });
     for (const message of messages) {

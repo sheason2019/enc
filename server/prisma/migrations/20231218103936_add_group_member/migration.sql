@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "GroupMembers" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "groupID" INTEGER NOT NULL,
+    "snapshot" BLOB NOT NULL,
+    CONSTRAINT "GroupMembers_groupID_fkey" FOREIGN KEY ("groupID") REFERENCES "Group" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
