@@ -1,13 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutMessageSignatureAtomProceeder implements AtomProceeder<Uint8List> {
   @override
-  Future<OperateAtom?> apply(Scope scope, Uint8List data) async {
+  Future<OperateAtom?> apply(OperateContext context, Uint8List data) async {
+    final scope = context.scope;
     final select = scope.db.messageSignatures.select();
     select.where((tbl) => tbl.signature.equals(data));
     final record = await select.getSingleOrNull();
@@ -26,7 +27,8 @@ class PutMessageSignatureAtomProceeder implements AtomProceeder<Uint8List> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     if (atom.from != null) return;
 
     final id = int.parse(atom.to);

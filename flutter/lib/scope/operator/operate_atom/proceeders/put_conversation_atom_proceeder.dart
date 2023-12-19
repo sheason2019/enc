@@ -4,15 +4,21 @@ import 'package:drift/drift.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/group_helper.dart';
 
 class PutConversationAtomProceeder
     implements AtomProceeder<PortableConversation> {
   @override
-  Future<OperateAtom?> apply(Scope scope, PortableConversation portable) async {
+  Future<OperateAtom?> apply(
+    OperateContext context,
+    PortableConversation portable,
+  ) async {
+    final scope = context.scope;
     final agent = portable.findAgent(scope);
     // 查询 Conversation 是否存在
     final select = scope.db.conversations.select();
@@ -31,6 +37,12 @@ class PutConversationAtomProceeder
           info: portable,
         ),
       );
+      if (portable.type == ConversationType.CONVERSATION_GROUP &&
+          !context.isReplay) {
+        context.afterTranscation.add(
+          () => GroupHelper.pullMessage(scope, conversation),
+        );
+      }
     } else {
       // 私聊 Conversation 不会发生变化，所以略过变更
       if (portable.type == ConversationType.CONVERSATION_PRIVATE) {
@@ -60,7 +72,8 @@ class PutConversationAtomProceeder
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final portableConversation = PortableConversation.fromBuffer(
       base64Decode(atom.to),
     );

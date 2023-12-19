@@ -1,34 +1,34 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/group_helper.dart';
 
 import 'atom_proceeder.dart';
 
 class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
   final Contact? contact;
   final Conversation? conversation;
-  final bool notifyMessage;
 
   PutMessageAtomProceeder({
     required this.contact,
     required this.conversation,
-    required this.notifyMessage,
   });
 
   @override
   Future<OperateAtom?> apply(
-    Scope scope,
+    OperateContext context,
     PortableMessage portableMessage,
   ) async {
+    final scope = context.scope;
     final db = scope.db;
-    final contact = this.contact!;
+    final contactId = contact?.id ?? 0;
     final conversation = this.conversation!;
 
     final selectMessage = db.messages.select();
-    selectMessage.where((tbl) => tbl.contactId.equals(contact.id));
+    selectMessage.where((tbl) => tbl.contactId.equals(contactId));
     selectMessage.where((tbl) => tbl.conversationId.equals(conversation.id));
     selectMessage.where((tbl) => tbl.uuid.equals(portableMessage.uuid));
     final message = await selectMessage.getSingleOrNull();
@@ -40,7 +40,7 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
 
     final insert = await db.messages.insertReturning(MessagesCompanion.insert(
       conversationId: conversation.id,
-      contactId: contact.id,
+      contactId: contactId,
       uuid: portableMessage.uuid,
       content: portableMessage.content,
       createdAt: DateTime.fromMillisecondsSinceEpoch(
@@ -49,8 +49,15 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
       messageType: portableMessage.messageType,
     ));
 
-    if (notifyMessage) {
-      scope.notifier.message(scope, insert);
+    if (!context.isReplay) {
+      if (portableMessage.messageType !=
+          MessageType.MESSAGE_TYPE_CONVERSATION_UPGRADE) {
+        scope.notifier.message(scope, insert);
+      } else {
+        context.afterTranscation.add(
+          () => GroupHelper.pullMessage(scope, conversation),
+        );
+      }
     }
 
     return OperateAtom(
@@ -61,7 +68,8 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     if (atom.from != null) return;
 
     final id = int.parse(atom.to);

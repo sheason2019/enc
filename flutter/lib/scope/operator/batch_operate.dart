@@ -1,5 +1,5 @@
 import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 
 import 'operate_strategy/operate_strategy.dart';
 
@@ -7,25 +7,23 @@ class BatchOperate {
   BatchOperate._();
 
   static Future<void> revert(
-    Scope scope,
+    OperateContext context,
     List<Operation> operations,
   ) async {
     for (final operation in operations) {
-      final strategy = OperateStrategy.create(scope, operation);
+      final strategy = OperateStrategy.create(context, operation);
       await strategy.revert();
     }
   }
 
   static Future<void> apply(
-    Scope scope,
-    List<Operation> operations, {
-    bool notifyMessage = false,
-  }) async {
+    OperateContext context,
+    List<Operation> operations,
+  ) async {
     for (final operation in operations) {
       final strategy = OperateStrategy.create(
-        scope,
+        context,
         operation,
-        notifyMessage: notifyMessage,
       );
       await strategy.apply();
     }

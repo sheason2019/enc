@@ -1,5 +1,6 @@
 // 使用 x25519 作为用户 ID
 import 'package:cryptography/cryptography.dart';
+import 'package:drift/drift.dart';
 import 'package:jwk/jwk.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/extensions/portable_secret_box/portable_secret_box.dart';
@@ -56,6 +57,7 @@ class CryptoUtils {
     final secretBox = await wand.encrypt(plainData);
 
     return PortableSecretBox()
+      ..encryptType = EncryptType.ENCRYPT_TYPE_SHARED_SECRET
       ..cipherData = secretBox.cipherText
       ..nonce = secretBox.nonce
       ..mac = secretBox.mac.bytes
@@ -67,7 +69,26 @@ class CryptoUtils {
     Scope scope,
     PortableSecretBox secretBox,
   ) async {
-    return secretDecrypt(scope.secret, secretBox);
+    if (secretBox.encryptType == EncryptType.ENCRYPT_TYPE_SHARED_SECRET) {
+      return secretDecrypt(scope.secret, secretBox);
+    }
+    if (secretBox.encryptType == EncryptType.ENCRYPT_TYPE_DECLARED_SECRET) {
+      final agent = secretBox.findAgent(scope.secret);
+      final select = scope.db.conversations.select();
+      select.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
+      final conversation = await select.getSingle();
+      final key = conversation.info.declaredSecrets[secretBox.declaredKey];
+      final algorithm = Chacha20.poly1305Aead();
+      final wand = await algorithm.newCipherWandFromSecretKey(SecretKey(key));
+      return wand.decrypt(
+        SecretBox(
+          secretBox.cipherData,
+          nonce: secretBox.nonce,
+          mac: Mac(secretBox.mac),
+        ),
+      );
+    }
+    throw UnimplementedError();
   }
 
   static Future<List<int>> secretDecrypt(

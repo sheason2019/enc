@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operation_factory/operation_factory.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
@@ -14,27 +15,31 @@ class Operator {
 
   Future<void> apply(
     List<PortableOperation> operations, {
-    bool notifyMessage = false,
+    bool isReplay = false,
   }) async {
+    final context = OperateContext(scope: scope, isReplay: isReplay);
     await scope.db.transaction(() async {
       // 写入 Operation
       await _write(operations);
       // 查询需要 Revert 的 Operation
       final revertList = await _getRevertList();
       // revert
-      await BatchOperate.revert(scope, revertList);
+      await BatchOperate.revert(context, revertList);
       // 查询未被应用的 Operation
       final applyList = await _getApplyList();
       // 应用所有 Operation
       await BatchOperate.apply(
-        scope,
+        context,
         applyList,
-        notifyMessage: notifyMessage,
       );
     });
     // 请求与服务器进行同步
     for (final subscribe in scope.subscribes.values) {
       subscribe.syncOperation();
+    }
+
+    for (final hook in context.afterTranscation) {
+      await hook();
     }
   }
 

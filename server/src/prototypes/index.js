@@ -1045,14 +1045,14 @@
         })();
     
         /**
-         * EcryptType enum.
-         * @name sheason_chat.EcryptType
+         * EncryptType enum.
+         * @name sheason_chat.EncryptType
          * @enum {number}
          * @property {number} ENCRYPT_TYPE_NONE=0 ENCRYPT_TYPE_NONE value
          * @property {number} ENCRYPT_TYPE_SHARED_SECRET=1 ENCRYPT_TYPE_SHARED_SECRET value
          * @property {number} ENCRYPT_TYPE_DECLARED_SECRET=2 ENCRYPT_TYPE_DECLARED_SECRET value
          */
-        sheason_chat.EcryptType = (function() {
+        sheason_chat.EncryptType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "ENCRYPT_TYPE_NONE"] = 0;
             values[valuesById[1] = "ENCRYPT_TYPE_SHARED_SECRET"] = 1;
@@ -1071,7 +1071,8 @@
              * @property {Uint8Array|null} [mac] PortableSecretBox mac
              * @property {sheason_chat.IAccountIndex|null} [sender] PortableSecretBox sender
              * @property {sheason_chat.IAccountIndex|null} [receiver] PortableSecretBox receiver
-             * @property {sheason_chat.EcryptType|null} [encryptType] PortableSecretBox encryptType
+             * @property {sheason_chat.EncryptType|null} [encryptType] PortableSecretBox encryptType
+             * @property {number|null} [declaredKey] PortableSecretBox declaredKey
              */
     
             /**
@@ -1131,11 +1132,19 @@
     
             /**
              * PortableSecretBox encryptType.
-             * @member {sheason_chat.EcryptType} encryptType
+             * @member {sheason_chat.EncryptType} encryptType
              * @memberof sheason_chat.PortableSecretBox
              * @instance
              */
             PortableSecretBox.prototype.encryptType = 0;
+    
+            /**
+             * PortableSecretBox declaredKey.
+             * @member {number} declaredKey
+             * @memberof sheason_chat.PortableSecretBox
+             * @instance
+             */
+            PortableSecretBox.prototype.declaredKey = 0;
     
             /**
              * Creates a new PortableSecretBox instance using the specified properties.
@@ -1173,6 +1182,8 @@
                     $root.sheason_chat.AccountIndex.encode(message.receiver, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 if (message.encryptType != null && Object.hasOwnProperty.call(message, "encryptType"))
                     writer.uint32(/* id 6, wireType 0 =*/48).int32(message.encryptType);
+                if (message.declaredKey != null && Object.hasOwnProperty.call(message, "declaredKey"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int32(message.declaredKey);
                 return writer;
             };
     
@@ -1229,6 +1240,10 @@
                         }
                     case 6: {
                             message.encryptType = reader.int32();
+                            break;
+                        }
+                    case 7: {
+                            message.declaredKey = reader.int32();
                             break;
                         }
                     default:
@@ -1294,6 +1309,9 @@
                     case 2:
                         break;
                     }
+                if (message.declaredKey != null && message.hasOwnProperty("declaredKey"))
+                    if (!$util.isInteger(message.declaredKey))
+                        return "declaredKey: integer expected";
                 return null;
             };
     
@@ -1354,6 +1372,8 @@
                     message.encryptType = 2;
                     break;
                 }
+                if (object.declaredKey != null)
+                    message.declaredKey = object.declaredKey | 0;
                 return message;
             };
     
@@ -1395,6 +1415,7 @@
                     object.sender = null;
                     object.receiver = null;
                     object.encryptType = options.enums === String ? "ENCRYPT_TYPE_NONE" : 0;
+                    object.declaredKey = 0;
                 }
                 if (message.cipherData != null && message.hasOwnProperty("cipherData"))
                     object.cipherData = options.bytes === String ? $util.base64.encode(message.cipherData, 0, message.cipherData.length) : options.bytes === Array ? Array.prototype.slice.call(message.cipherData) : message.cipherData;
@@ -1407,7 +1428,9 @@
                 if (message.receiver != null && message.hasOwnProperty("receiver"))
                     object.receiver = $root.sheason_chat.AccountIndex.toObject(message.receiver, options);
                 if (message.encryptType != null && message.hasOwnProperty("encryptType"))
-                    object.encryptType = options.enums === String ? $root.sheason_chat.EcryptType[message.encryptType] === undefined ? message.encryptType : $root.sheason_chat.EcryptType[message.encryptType] : message.encryptType;
+                    object.encryptType = options.enums === String ? $root.sheason_chat.EncryptType[message.encryptType] === undefined ? message.encryptType : $root.sheason_chat.EncryptType[message.encryptType] : message.encryptType;
+                if (message.declaredKey != null && message.hasOwnProperty("declaredKey"))
+                    object.declaredKey = message.declaredKey;
                 return object;
             };
     
@@ -1821,7 +1844,7 @@
              * @property {Array.<sheason_chat.IAccountSnapshot>|null} [members] PortableConversation members
              * @property {sheason_chat.IAccountSnapshot|null} [owner] PortableConversation owner
              * @property {string|null} [remoteUrl] PortableConversation remoteUrl
-             * @property {Object.<string,Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
+             * @property {Array.<Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
              * @property {sheason_chat.IAccountIndex|null} [agent] PortableConversation agent
              * @property {number|null} [version] PortableConversation version
              */
@@ -1836,7 +1859,7 @@
              */
             function PortableConversation(properties) {
                 this.members = [];
-                this.declaredSecrets = {};
+                this.declaredSecrets = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -1877,11 +1900,11 @@
     
             /**
              * PortableConversation declaredSecrets.
-             * @member {Object.<string,Uint8Array>} declaredSecrets
+             * @member {Array.<Uint8Array>} declaredSecrets
              * @memberof sheason_chat.PortableConversation
              * @instance
              */
-            PortableConversation.prototype.declaredSecrets = $util.emptyObject;
+            PortableConversation.prototype.declaredSecrets = $util.emptyArray;
     
             /**
              * PortableConversation agent.
@@ -1932,9 +1955,9 @@
                     $root.sheason_chat.AccountSnapshot.encode(message.owner, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 if (message.remoteUrl != null && Object.hasOwnProperty.call(message, "remoteUrl"))
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.remoteUrl);
-                if (message.declaredSecrets != null && Object.hasOwnProperty.call(message, "declaredSecrets"))
-                    for (var keys = Object.keys(message.declaredSecrets), i = 0; i < keys.length; ++i)
-                        writer.uint32(/* id 5, wireType 2 =*/42).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]).uint32(/* id 2, wireType 2 =*/18).bytes(message.declaredSecrets[keys[i]]).ldelim();
+                if (message.declaredSecrets != null && message.declaredSecrets.length)
+                    for (var i = 0; i < message.declaredSecrets.length; ++i)
+                        writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.declaredSecrets[i]);
                 if (message.agent != null && Object.hasOwnProperty.call(message, "agent"))
                     $root.sheason_chat.AccountIndex.encode(message.agent, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                 if (message.version != null && Object.hasOwnProperty.call(message, "version"))
@@ -1969,7 +1992,7 @@
             PortableConversation.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.PortableConversation(), key, value;
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.sheason_chat.PortableConversation();
                 while (reader.pos < end) {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -1992,26 +2015,9 @@
                             break;
                         }
                     case 5: {
-                            if (message.declaredSecrets === $util.emptyObject)
-                                message.declaredSecrets = {};
-                            var end2 = reader.uint32() + reader.pos;
-                            key = 0;
-                            value = [];
-                            while (reader.pos < end2) {
-                                var tag2 = reader.uint32();
-                                switch (tag2 >>> 3) {
-                                case 1:
-                                    key = reader.int32();
-                                    break;
-                                case 2:
-                                    value = reader.bytes();
-                                    break;
-                                default:
-                                    reader.skipType(tag2 & 7);
-                                    break;
-                                }
-                            }
-                            message.declaredSecrets[key] = value;
+                            if (!(message.declaredSecrets && message.declaredSecrets.length))
+                                message.declaredSecrets = [];
+                            message.declaredSecrets.push(reader.bytes());
                             break;
                         }
                     case 6: {
@@ -2084,15 +2090,11 @@
                     if (!$util.isString(message.remoteUrl))
                         return "remoteUrl: string expected";
                 if (message.declaredSecrets != null && message.hasOwnProperty("declaredSecrets")) {
-                    if (!$util.isObject(message.declaredSecrets))
-                        return "declaredSecrets: object expected";
-                    var key = Object.keys(message.declaredSecrets);
-                    for (var i = 0; i < key.length; ++i) {
-                        if (!$util.key32Re.test(key[i]))
-                            return "declaredSecrets: integer key{k:int32} expected";
-                        if (!(message.declaredSecrets[key[i]] && typeof message.declaredSecrets[key[i]].length === "number" || $util.isString(message.declaredSecrets[key[i]])))
-                            return "declaredSecrets: buffer{k:int32} expected";
-                    }
+                    if (!Array.isArray(message.declaredSecrets))
+                        return "declaredSecrets: array expected";
+                    for (var i = 0; i < message.declaredSecrets.length; ++i)
+                        if (!(message.declaredSecrets[i] && typeof message.declaredSecrets[i].length === "number" || $util.isString(message.declaredSecrets[i])))
+                            return "declaredSecrets: buffer[] expected";
                 }
                 if (message.agent != null && message.hasOwnProperty("agent")) {
                     var error = $root.sheason_chat.AccountIndex.verify(message.agent);
@@ -2155,14 +2157,14 @@
                 if (object.remoteUrl != null)
                     message.remoteUrl = String(object.remoteUrl);
                 if (object.declaredSecrets) {
-                    if (typeof object.declaredSecrets !== "object")
-                        throw TypeError(".sheason_chat.PortableConversation.declaredSecrets: object expected");
-                    message.declaredSecrets = {};
-                    for (var keys = Object.keys(object.declaredSecrets), i = 0; i < keys.length; ++i)
-                        if (typeof object.declaredSecrets[keys[i]] === "string")
-                            $util.base64.decode(object.declaredSecrets[keys[i]], message.declaredSecrets[keys[i]] = $util.newBuffer($util.base64.length(object.declaredSecrets[keys[i]])), 0);
-                        else if (object.declaredSecrets[keys[i]].length >= 0)
-                            message.declaredSecrets[keys[i]] = object.declaredSecrets[keys[i]];
+                    if (!Array.isArray(object.declaredSecrets))
+                        throw TypeError(".sheason_chat.PortableConversation.declaredSecrets: array expected");
+                    message.declaredSecrets = [];
+                    for (var i = 0; i < object.declaredSecrets.length; ++i)
+                        if (typeof object.declaredSecrets[i] === "string")
+                            $util.base64.decode(object.declaredSecrets[i], message.declaredSecrets[i] = $util.newBuffer($util.base64.length(object.declaredSecrets[i])), 0);
+                        else if (object.declaredSecrets[i].length >= 0)
+                            message.declaredSecrets[i] = object.declaredSecrets[i];
                 }
                 if (object.agent != null) {
                     if (typeof object.agent !== "object")
@@ -2187,10 +2189,10 @@
                 if (!options)
                     options = {};
                 var object = {};
-                if (options.arrays || options.defaults)
+                if (options.arrays || options.defaults) {
                     object.members = [];
-                if (options.objects || options.defaults)
-                    object.declaredSecrets = {};
+                    object.declaredSecrets = [];
+                }
                 if (options.defaults) {
                     object.type = options.enums === String ? "CONVERSATION_UNKNOWN" : 0;
                     object.owner = null;
@@ -2209,11 +2211,10 @@
                     object.owner = $root.sheason_chat.AccountSnapshot.toObject(message.owner, options);
                 if (message.remoteUrl != null && message.hasOwnProperty("remoteUrl"))
                     object.remoteUrl = message.remoteUrl;
-                var keys2;
-                if (message.declaredSecrets && (keys2 = Object.keys(message.declaredSecrets)).length) {
-                    object.declaredSecrets = {};
-                    for (var j = 0; j < keys2.length; ++j)
-                        object.declaredSecrets[keys2[j]] = options.bytes === String ? $util.base64.encode(message.declaredSecrets[keys2[j]], 0, message.declaredSecrets[keys2[j]].length) : options.bytes === Array ? Array.prototype.slice.call(message.declaredSecrets[keys2[j]]) : message.declaredSecrets[keys2[j]];
+                if (message.declaredSecrets && message.declaredSecrets.length) {
+                    object.declaredSecrets = [];
+                    for (var j = 0; j < message.declaredSecrets.length; ++j)
+                        object.declaredSecrets[j] = options.bytes === String ? $util.base64.encode(message.declaredSecrets[j], 0, message.declaredSecrets[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.declaredSecrets[j]) : message.declaredSecrets[j];
                 }
                 if (message.agent != null && message.hasOwnProperty("agent"))
                     object.agent = $root.sheason_chat.AccountIndex.toObject(message.agent, options);
@@ -2263,6 +2264,8 @@
          * @property {number} MESSAGE_TYPE_FILE=5 MESSAGE_TYPE_FILE value
          * @property {number} MESSAGE_TYPE_RTC=6 MESSAGE_TYPE_RTC value
          * @property {number} MESSAGE_TYPE_STATE_ONLY=101 MESSAGE_TYPE_STATE_ONLY value
+         * @property {number} MESSAGE_TYPE_NOTIFY=102 MESSAGE_TYPE_NOTIFY value
+         * @property {number} MESSAGE_TYPE_CONVERSATION_UPGRADE=103 MESSAGE_TYPE_CONVERSATION_UPGRADE value
          */
         sheason_chat.MessageType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
@@ -2274,6 +2277,8 @@
             values[valuesById[5] = "MESSAGE_TYPE_FILE"] = 5;
             values[valuesById[6] = "MESSAGE_TYPE_RTC"] = 6;
             values[valuesById[101] = "MESSAGE_TYPE_STATE_ONLY"] = 101;
+            values[valuesById[102] = "MESSAGE_TYPE_NOTIFY"] = 102;
+            values[valuesById[103] = "MESSAGE_TYPE_CONVERSATION_UPGRADE"] = 103;
             return values;
         })();
     
@@ -2517,6 +2522,8 @@
                     case 5:
                     case 6:
                     case 101:
+                    case 102:
+                    case 103:
                         break;
                     }
                 if (message.content != null && message.hasOwnProperty("content"))
@@ -2599,6 +2606,14 @@
                 case "MESSAGE_TYPE_STATE_ONLY":
                 case 101:
                     message.messageType = 101;
+                    break;
+                case "MESSAGE_TYPE_NOTIFY":
+                case 102:
+                    message.messageType = 102;
+                    break;
+                case "MESSAGE_TYPE_CONVERSATION_UPGRADE":
+                case 103:
+                    message.messageType = 103;
                     break;
                 }
                 if (object.content != null)

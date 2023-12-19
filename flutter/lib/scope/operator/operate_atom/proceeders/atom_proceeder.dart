@@ -1,3 +1,4 @@
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
@@ -9,13 +10,12 @@ import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_state_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_username_atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 import 'put_service_atom_proceeder.dart';
 
 abstract class AtomProceeder<T> {
-  Future<OperateAtom?> apply(Scope scope, T data);
-  Future<void> revert(Scope scope, OperateAtom atom);
+  Future<OperateAtom?> apply(OperateContext context, T data);
+  Future<void> revert(OperateContext context, OperateAtom atom);
 
   static AtomProceeder<dynamic> fetch(OperateAtom atom) {
     switch (atom.type) {
@@ -35,7 +35,6 @@ abstract class AtomProceeder<T> {
         return PutConversationAnchorAtomProceder();
       case OperateAtomType.putMessage:
         return PutMessageAtomProceeder(
-          notifyMessage: false,
           contact: null,
           conversation: null,
         );

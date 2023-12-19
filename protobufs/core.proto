@@ -23,7 +23,7 @@ message AccountSnapshot {
 
 message PortableService {}
 
-enum EcryptType {
+enum EncryptType {
   ENCRYPT_TYPE_NONE = 0;
   ENCRYPT_TYPE_SHARED_SECRET = 1;
   ENCRYPT_TYPE_DECLARED_SECRET = 2;
@@ -35,7 +35,8 @@ message PortableSecretBox {
   bytes mac = 3;
   AccountIndex sender = 4;
   AccountIndex receiver = 5;
-  EcryptType encrypt_type = 6;
+  EncryptType encrypt_type = 6;
+  int32 declared_key = 7;
 }
 
 enum OperationType {
@@ -70,7 +71,7 @@ message PortableConversation {
   
   AccountSnapshot owner = 3;
   string remote_url = 4;
-  map<int32, bytes> declared_secrets = 5;
+  repeated bytes declared_secrets = 5;
   AccountIndex agent = 6;
 
   int32 version = 7;
@@ -85,6 +86,8 @@ enum MessageType {
   MESSAGE_TYPE_FILE = 5;
   MESSAGE_TYPE_RTC = 6;
   MESSAGE_TYPE_STATE_ONLY = 101;
+  MESSAGE_TYPE_NOTIFY = 102;
+  MESSAGE_TYPE_CONVERSATION_UPGRADE = 103;
 }
 
 message PortableMessage {

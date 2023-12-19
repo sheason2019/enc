@@ -1,12 +1,13 @@
 import 'package:protobuf/protobuf.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutAvatarAtomProceeder implements AtomProceeder<String> {
   @override
-  Future<OperateAtom> apply(Scope scope, String url) async {
+  Future<OperateAtom> apply(OperateContext context, String url) async {
+    final scope = context.scope;
     final currentAvatar = scope.snapshot.avatarUrl;
     final snapshot = scope.snapshot.deepCopy()..avatarUrl = url;
     await scope.handleSetSnapshot(snapshot);
@@ -19,7 +20,8 @@ class PutAvatarAtomProceeder implements AtomProceeder<String> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final snapshot = scope.snapshot.deepCopy()..avatarUrl = atom.from ?? '';
     await scope.handleSetSnapshot(snapshot);
   }

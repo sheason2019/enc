@@ -18,10 +18,12 @@ model Account {
   snapshot  Bytes
   signature Bytes?
 
-  Operation Operation[]
-  Message   Message[]
-  RtcRecord RtcRecord[]
-  Group     Group[]
+  operations Operation[]
+  messages   Message[]
+  rtcRecords RtcRecord[]
+  groups     Group[]
+
+  @@index([signPubkey])
 }
 
 model Operation {
@@ -32,6 +34,8 @@ model Operation {
 
   accountID Int
   account   Account @relation(fields: [accountID], references: [id])
+
+  @@index([accountID, clientId, clock])
 }
 
 model Message {
@@ -39,7 +43,12 @@ model Message {
   signature Bytes
   buffer    Bytes
 
-  Account Account[]
+  accounts Account[]
+
+  groupID Int?
+  group   Group? @relation(fields: [groupID], references: [id])
+
+  @@index([signature, groupID])
 }
 
 model RtcRecord {
@@ -57,10 +66,15 @@ model Group {
   accountID Int
   account   Account @relation(fields: [accountID], references: [id])
 
+  signPubkey           String
   agentSecret          Bytes
   portableConversation Bytes
 
-  GroupMembers GroupMembers[]
+  messages Message[]
+
+  groupMembers GroupMembers[]
+
+  @@index([signPubkey])
 }
 
 model GroupMembers {
@@ -71,4 +85,6 @@ model GroupMembers {
 
   signPubkey String
   snapshot   Bytes
+
+  @@index([groupID, signPubkey])
 }

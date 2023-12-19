@@ -88,7 +88,7 @@ export class SubscribeGateway {
 
     const records = await prisma.message.findMany({
       where: {
-        Account: {
+        accounts: {
           some: {
             id: account.id,
           },

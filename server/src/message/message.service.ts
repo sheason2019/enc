@@ -20,7 +20,7 @@ export class MessageService {
         data: {
           signature: Buffer.from(data.sign),
           buffer: Buffer.from(sheason_chat.SignWrapper.encode(data).finish()),
-          Account: {
+          accounts: {
             connect: accounts,
           },
         },

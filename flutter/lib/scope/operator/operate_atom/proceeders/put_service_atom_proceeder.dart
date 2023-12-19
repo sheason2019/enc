@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:protobuf/protobuf.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutServiceAtomProceeder implements AtomProceeder<String> {
   @override
-  Future<OperateAtom> apply(Scope scope, String url) async {
+  Future<OperateAtom> apply(OperateContext context, String url) async {
+    final scope = context.scope;
     final service = PortableService();
     final prevService = scope.snapshot.serviceMap[url];
 
@@ -26,7 +27,8 @@ class PutServiceAtomProceeder implements AtomProceeder<String> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final url = atom.to;
     final snapshot = scope.snapshot.deepCopy();
     if (atom.from == null) {

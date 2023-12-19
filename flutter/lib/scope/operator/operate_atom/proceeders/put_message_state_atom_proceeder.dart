@@ -5,10 +5,10 @@ import 'package:fixnum/fixnum.dart';
 import 'package:sheason_chat/extensions/int64/int64.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutMessageStateAtomProceeder
     implements AtomProceeder<PortableMessageState> {
@@ -20,9 +20,10 @@ class PutMessageStateAtomProceeder
 
   @override
   Future<OperateAtom> apply(
-    Scope scope,
+    OperateContext context,
     PortableMessageState portable,
   ) async {
+    final scope = context.scope;
     final message = this.message!;
 
     final selectStateContact = scope.db.contacts.select();
@@ -78,7 +79,8 @@ class PutMessageStateAtomProceeder
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final int id = int.parse(atom.to);
     if (atom.from == null) {
       await scope.db.messageStates.deleteWhere((tbl) => tbl.id.equals(id));

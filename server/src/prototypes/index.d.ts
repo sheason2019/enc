@@ -433,8 +433,8 @@ export namespace sheason_chat {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
-    /** EcryptType enum. */
-    enum EcryptType {
+    /** EncryptType enum. */
+    enum EncryptType {
         ENCRYPT_TYPE_NONE = 0,
         ENCRYPT_TYPE_SHARED_SECRET = 1,
         ENCRYPT_TYPE_DECLARED_SECRET = 2
@@ -459,7 +459,10 @@ export namespace sheason_chat {
         receiver?: (sheason_chat.IAccountIndex|null);
 
         /** PortableSecretBox encryptType */
-        encryptType?: (sheason_chat.EcryptType|null);
+        encryptType?: (sheason_chat.EncryptType|null);
+
+        /** PortableSecretBox declaredKey */
+        declaredKey?: (number|null);
     }
 
     /** Represents a PortableSecretBox. */
@@ -487,7 +490,10 @@ export namespace sheason_chat {
         public receiver?: (sheason_chat.IAccountIndex|null);
 
         /** PortableSecretBox encryptType. */
-        public encryptType: sheason_chat.EcryptType;
+        public encryptType: sheason_chat.EncryptType;
+
+        /** PortableSecretBox declaredKey. */
+        public declaredKey: number;
 
         /**
          * Creates a new PortableSecretBox instance using the specified properties.
@@ -718,7 +724,7 @@ export namespace sheason_chat {
         remoteUrl?: (string|null);
 
         /** PortableConversation declaredSecrets */
-        declaredSecrets?: ({ [k: string]: Uint8Array }|null);
+        declaredSecrets?: (Uint8Array[]|null);
 
         /** PortableConversation agent */
         agent?: (sheason_chat.IAccountIndex|null);
@@ -749,7 +755,7 @@ export namespace sheason_chat {
         public remoteUrl: string;
 
         /** PortableConversation declaredSecrets. */
-        public declaredSecrets: { [k: string]: Uint8Array };
+        public declaredSecrets: Uint8Array[];
 
         /** PortableConversation agent. */
         public agent?: (sheason_chat.IAccountIndex|null);
@@ -844,7 +850,9 @@ export namespace sheason_chat {
         MESSAGE_TYPE_VIDEO = 4,
         MESSAGE_TYPE_FILE = 5,
         MESSAGE_TYPE_RTC = 6,
-        MESSAGE_TYPE_STATE_ONLY = 101
+        MESSAGE_TYPE_STATE_ONLY = 101,
+        MESSAGE_TYPE_NOTIFY = 102,
+        MESSAGE_TYPE_CONVERSATION_UPGRADE = 103
     }
 
     /** Properties of a PortableMessage. */

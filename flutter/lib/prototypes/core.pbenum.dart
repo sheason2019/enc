@@ -13,21 +13,21 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class EcryptType extends $pb.ProtobufEnum {
-  static const EcryptType ENCRYPT_TYPE_NONE = EcryptType._(0, _omitEnumNames ? '' : 'ENCRYPT_TYPE_NONE');
-  static const EcryptType ENCRYPT_TYPE_SHARED_SECRET = EcryptType._(1, _omitEnumNames ? '' : 'ENCRYPT_TYPE_SHARED_SECRET');
-  static const EcryptType ENCRYPT_TYPE_DECLARED_SECRET = EcryptType._(2, _omitEnumNames ? '' : 'ENCRYPT_TYPE_DECLARED_SECRET');
+class EncryptType extends $pb.ProtobufEnum {
+  static const EncryptType ENCRYPT_TYPE_NONE = EncryptType._(0, _omitEnumNames ? '' : 'ENCRYPT_TYPE_NONE');
+  static const EncryptType ENCRYPT_TYPE_SHARED_SECRET = EncryptType._(1, _omitEnumNames ? '' : 'ENCRYPT_TYPE_SHARED_SECRET');
+  static const EncryptType ENCRYPT_TYPE_DECLARED_SECRET = EncryptType._(2, _omitEnumNames ? '' : 'ENCRYPT_TYPE_DECLARED_SECRET');
 
-  static const $core.List<EcryptType> values = <EcryptType> [
+  static const $core.List<EncryptType> values = <EncryptType> [
     ENCRYPT_TYPE_NONE,
     ENCRYPT_TYPE_SHARED_SECRET,
     ENCRYPT_TYPE_DECLARED_SECRET,
   ];
 
-  static final $core.Map<$core.int, EcryptType> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static EcryptType? valueOf($core.int value) => _byValue[value];
+  static final $core.Map<$core.int, EncryptType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static EncryptType? valueOf($core.int value) => _byValue[value];
 
-  const EcryptType._($core.int v, $core.String n) : super(v, n);
+  const EncryptType._($core.int v, $core.String n) : super(v, n);
 }
 
 class OperationType extends $pb.ProtobufEnum {
@@ -85,6 +85,8 @@ class MessageType extends $pb.ProtobufEnum {
   static const MessageType MESSAGE_TYPE_FILE = MessageType._(5, _omitEnumNames ? '' : 'MESSAGE_TYPE_FILE');
   static const MessageType MESSAGE_TYPE_RTC = MessageType._(6, _omitEnumNames ? '' : 'MESSAGE_TYPE_RTC');
   static const MessageType MESSAGE_TYPE_STATE_ONLY = MessageType._(101, _omitEnumNames ? '' : 'MESSAGE_TYPE_STATE_ONLY');
+  static const MessageType MESSAGE_TYPE_NOTIFY = MessageType._(102, _omitEnumNames ? '' : 'MESSAGE_TYPE_NOTIFY');
+  static const MessageType MESSAGE_TYPE_CONVERSATION_UPGRADE = MessageType._(103, _omitEnumNames ? '' : 'MESSAGE_TYPE_CONVERSATION_UPGRADE');
 
   static const $core.List<MessageType> values = <MessageType> [
     MESSAGE_TYPE_UNKNOWN,
@@ -95,6 +97,8 @@ class MessageType extends $pb.ProtobufEnum {
     MESSAGE_TYPE_FILE,
     MESSAGE_TYPE_RTC,
     MESSAGE_TYPE_STATE_ONLY,
+    MESSAGE_TYPE_NOTIFY,
+    MESSAGE_TYPE_CONVERSATION_UPGRADE,
   ];
 
   static final $core.Map<$core.int, MessageType> _byValue = $pb.ProtobufEnum.initByValue(values);

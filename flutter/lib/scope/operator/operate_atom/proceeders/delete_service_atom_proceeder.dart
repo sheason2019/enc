@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:protobuf/protobuf.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class DeleteServiceAtomProceeder implements AtomProceeder<String> {
   @override
-  Future<OperateAtom> apply(Scope scope, String data) async {
+  Future<OperateAtom> apply(OperateContext context, String data) async {
+    final scope = context.scope;
     final snapshot = scope.snapshot.deepCopy();
     final removed = snapshot.serviceMap.remove(data);
     await scope.handleSetSnapshot(snapshot);
@@ -24,7 +25,8 @@ class DeleteServiceAtomProceeder implements AtomProceeder<String> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final from = atom.from;
     final url = atom.extra?['url'];
     if (from == null || url == null) return;

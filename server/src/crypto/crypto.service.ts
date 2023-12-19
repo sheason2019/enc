@@ -81,14 +81,21 @@ export class CryptoService {
       signPubKey: secret.signPubKey,
     };
     box.receiver = target;
+    box.encryptType = sheason_chat.EncryptType.ENCRYPT_TYPE_SHARED_SECRET;
 
     return box;
   }
+
   decrypt(
     secret: sheason_chat.IAccountSecret,
-    target: sheason_chat.IAccountIndex,
     secretBox: sheason_chat.IPortableSecretBox,
   ) {
+    let target: sheason_chat.IAccountIndex;
+    if (secret.signPubKey === secretBox.sender.signPubKey) {
+      target = secretBox.receiver;
+    } else {
+      target = secretBox.sender;
+    }
     const sharedSecret = this.#sharedSecret(secret, target.ecdhPubKey);
     return this.secretDecrypt(sharedSecret, secretBox);
   }
@@ -111,6 +118,7 @@ export class CryptoService {
       cipherData,
       nonce,
       mac,
+      encryptType: sheason_chat.EncryptType.ENCRYPT_TYPE_DECLARED_SECRET,
     };
   }
   secretDecrypt(key: Buffer, secretBox: sheason_chat.IPortableSecretBox) {

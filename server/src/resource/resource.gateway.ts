@@ -1,6 +1,8 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { IServerResource, ResourceService } from './resource.service';
+import * as fs from 'fs';
+import { DATA_ROOT } from 'src/env/env';
 
 @WebSocketGateway({ path: '/resource.io' })
 export class ResourceGateway {
@@ -11,6 +13,9 @@ export class ResourceGateway {
   }
 
   initialStream() {
+    if (!fs.existsSync(DATA_ROOT)) {
+      fs.mkdirSync(DATA_ROOT, { recursive: true });
+    }
     setInterval(async () => {
       const serverResource = await this.resourceService.getServerResource();
       this.server.emit('server-resource', serverResource);

@@ -61,8 +61,13 @@ export class ResourceService {
     const messageLength = await this.getAccountMessageUsage(account);
     // 统计 Storage 使用情况
     const storageLength = await this.getAccountStorageUsage(account);
+    // 统计 Operations 使用情况
+    const operationLength = await this.getAccountOperationUsage(account);
 
-    return { used: messageLength + storageLength, total: null };
+    return {
+      used: messageLength + storageLength + operationLength,
+      total: null,
+    };
   }
 
   async getCurrentConnectionCount(): Promise<number> {
@@ -76,7 +81,7 @@ export class ResourceService {
     let length = 0;
     const messages = await prisma.message.findMany({
       where: {
-        Account: {
+        accounts: {
           some: {
             id: account.id,
           },
@@ -112,6 +117,20 @@ export class ResourceService {
     walk(dirPath);
 
     return size;
+  }
+
+  async getAccountOperationUsage(account: Account): Promise<number> {
+    let length = 0;
+    const operations = await prisma.operation.findMany({
+      where: {
+        account,
+      },
+    });
+    for (const operation of operations) {
+      length += Buffer.from(operation.data, 'base64').length;
+    }
+
+    return length;
   }
 
   async getCpuUsage(): Promise<{ idle: number; total: number }> {

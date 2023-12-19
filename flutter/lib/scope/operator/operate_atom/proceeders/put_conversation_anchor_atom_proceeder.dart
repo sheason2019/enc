@@ -2,18 +2,19 @@ import 'package:drift/drift.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/models/conversation_anchor.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutConversationAnchorAtomProceder
     implements AtomProceeder<PortableConversation> {
   @override
   Future<OperateAtom> apply(
-    Scope scope,
+    OperateContext context,
     PortableConversation portableConversation,
   ) async {
+    final scope = context.scope;
     final agent = portableConversation.findAgent(scope);
     final select = scope.db.conversations.select();
     select.where((tbl) => tbl.type.equalsValue(portableConversation.type));
@@ -40,7 +41,8 @@ class PutConversationAnchorAtomProceder
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final conversationId = atom.extra!['conversationId'];
     final list = scope.anchor.list.toList();
     list.remove(conversationId);

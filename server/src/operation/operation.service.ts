@@ -91,7 +91,11 @@ export class OperationService {
             clientId: operation.clientId,
             clock: operation.clock,
             data: operation.data,
-            account: { connect: account },
+            account: {
+              connect: {
+                id: account.id,
+              },
+            },
           },
         });
         records.push(record);

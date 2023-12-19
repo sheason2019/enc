@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
@@ -12,31 +12,29 @@ import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_state_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/operate_strategy.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 
 class PutMessageStrategy implements OperateStrategy {
   @override
   final Operation operation;
   @override
-  final Scope scope;
-
-  final bool notifyMessage;
+  final OperateContext context;
 
   final SignWrapper wrapper;
   PutMessageStrategy({
-    required this.scope,
+    required this.context,
     required this.operation,
     required this.wrapper,
-    required this.notifyMessage,
   });
 
   @override
   Future<void> apply() async {
+    final scope = context.scope;
     final atoms = <OperateAtom>[];
 
     final signatureProceeder = PutMessageSignatureAtomProceeder();
     final signatureAtom = await signatureProceeder.apply(
-      scope,
+      context,
       Uint8List.fromList(wrapper.sign),
     );
     if (signatureAtom == null) {
@@ -48,12 +46,11 @@ class PutMessageStrategy implements OperateStrategy {
       return;
     }
 
-    final secretBox = PortableSecretBox.fromBuffer(wrapper.buffer);
-    final buffer = await CryptoUtils.decrypt(scope, secretBox);
+    final buffer = await SignHelper.unwrap(scope, wrapper);
     final portableMessage = PortableMessage.fromBuffer(buffer);
     final contactProceeder = PutContactAtomProceeder();
     for (final member in portableMessage.conversation.members) {
-      final atom = await contactProceeder.apply(scope, member);
+      final atom = await contactProceeder.apply(context, member);
       if (atom != null) {
         atoms.add(atom);
       }
@@ -61,7 +58,7 @@ class PutMessageStrategy implements OperateStrategy {
 
     final conversationProceeder = PutConversationAtomProceeder();
     final atom = await conversationProceeder.apply(
-      scope,
+      context,
       portableMessage.conversation,
     );
     if (atom != null) {
@@ -78,14 +75,16 @@ class PutMessageStrategy implements OperateStrategy {
       selectContact.where(
         (tbl) => tbl.signPubkey.equals(portableMessage.sender.index.signPubKey),
       );
-      final contact = await selectContact.getSingle();
+      final contact = await selectContact.getSingleOrNull();
 
       final messageProceeder = PutMessageAtomProceeder(
         contact: contact,
         conversation: conversation,
-        notifyMessage: notifyMessage,
       );
-      final messageAtom = await messageProceeder.apply(scope, portableMessage);
+      final messageAtom = await messageProceeder.apply(
+        context,
+        portableMessage,
+      );
       if (messageAtom != null) {
         atoms.add(messageAtom);
       }
@@ -93,7 +92,7 @@ class PutMessageStrategy implements OperateStrategy {
       // Conversation Anchor
       final anchorProceeder = PutConversationAnchorAtomProceder();
       final anchorAtom = await anchorProceeder.apply(
-        scope,
+        context,
         portableMessage.conversation,
       );
       atoms.add(anchorAtom);
@@ -108,7 +107,7 @@ class PutMessageStrategy implements OperateStrategy {
       );
       for (final messageState in portableMessage.messageStates) {
         final messageStateAtom = await messageStateProceeder.apply(
-          scope,
+          context,
           messageState,
         );
         atoms.add(messageStateAtom);
@@ -124,9 +123,10 @@ class PutMessageStrategy implements OperateStrategy {
 
   @override
   Future<void> revert() async {
+    final scope = context.scope;
     for (final atom in operation.atoms!.reversed) {
       final proceeder = AtomProceeder.fetch(atom);
-      await proceeder.revert(scope, atom);
+      await proceeder.revert(context, atom);
     }
 
     final update = scope.db.operations.update();

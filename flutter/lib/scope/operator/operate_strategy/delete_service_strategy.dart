@@ -1,13 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/operate_strategy.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class DeleteServiceStrategy implements OperateStrategy {
   @override
-  final Scope scope;
+  final OperateContext context;
 
   @override
   final Operation operation;
@@ -15,15 +15,16 @@ class DeleteServiceStrategy implements OperateStrategy {
   final String url;
 
   const DeleteServiceStrategy({
-    required this.scope,
+    required this.context,
     required this.operation,
     required this.url,
   });
 
   @override
   Future<void> apply() async {
+    final scope = context.scope;
     final proceeder = DeleteServiceAtomProceeder();
-    final atom = await proceeder.apply(scope, url);
+    final atom = await proceeder.apply(context, url);
 
     final update = scope.db.operations.update();
     update.where((tbl) => tbl.id.equals(operation.id));
@@ -34,11 +35,12 @@ class DeleteServiceStrategy implements OperateStrategy {
 
   @override
   Future<void> revert() async {
+    final scope = context.scope;
     final atoms = operation.atoms;
     if (atoms == null) return;
     for (final atom in atoms) {
       final proceeder = AtomProceeder.fetch(atom);
-      await proceeder.revert(scope, atom);
+      await proceeder.revert(context, atom);
     }
 
     final update = scope.db.operations.update();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
@@ -38,6 +39,7 @@ class Subscribe extends ChangeNotifier {
     );
 
     socket.onDisconnect((data) {
+      debugPrint('disconnect data $data');
       connected = false;
       notifyListeners();
     });
@@ -79,11 +81,16 @@ class Subscribe extends ChangeNotifier {
         scope,
         operations,
       );
-      if (cipherOperations.isNotEmpty) {
-        socket.emit(
-          'push-operation',
-          {'operations': cipherOperations},
-        );
+      var blocks = (cipherOperations.length / 20).ceil();
+      if (blocks == 0) return;
+
+      for (var i = 0; i < blocks; i++) {
+        socket.emit('push-operation', {
+          'operations': cipherOperations.sublist(
+            i * 20,
+            min((i + 1) * 20, cipherOperations.length),
+          ),
+        });
       }
     });
     socket.on('push-operation', (data) async {
@@ -118,7 +125,7 @@ class Subscribe extends ChangeNotifier {
         );
         operations.add(operation);
       }
-      await scope.operator.apply(operations, notifyMessage: true);
+      await scope.operator.apply(operations, isReplay: true);
     });
 
     socket.on('sync-operation', (data) => syncOperation());

@@ -3,10 +3,11 @@ import { GroupService } from './group.service';
 import { GroupController } from './group.controller';
 import { AccountModule } from 'src/account/account.module';
 import { CryptoModule } from 'src/crypto/crypto.module';
+import { SubscribeModule } from 'src/subscribe/subscribe.module';
 
 @Module({
   providers: [GroupService],
   controllers: [GroupController],
-  imports: [AccountModule, CryptoModule],
+  imports: [AccountModule, CryptoModule, SubscribeModule],
 })
 export class GroupModule {}

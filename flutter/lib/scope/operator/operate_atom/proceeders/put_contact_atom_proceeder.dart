@@ -3,14 +3,18 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
+import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
 
 class PutContactAtomProceeder implements AtomProceeder<AccountSnapshot> {
   @override
-  Future<OperateAtom?> apply(Scope scope, AccountSnapshot snapshot) async {
+  Future<OperateAtom?> apply(
+    OperateContext context,
+    AccountSnapshot snapshot,
+  ) async {
+    final scope = context.scope;
     final select = scope.db.contacts.select();
     select.where((tbl) => tbl.signPubkey.equals(snapshot.index.signPubKey));
     final exist = await select.getSingleOrNull();
@@ -46,7 +50,8 @@ class PutContactAtomProceeder implements AtomProceeder<AccountSnapshot> {
   }
 
   @override
-  Future<void> revert(Scope scope, OperateAtom atom) async {
+  Future<void> revert(OperateContext context, OperateAtom atom) async {
+    final scope = context.scope;
     final id = int.parse(atom.to);
     if (atom.from == null) {
       final delete = scope.db.contacts.delete();

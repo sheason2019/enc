@@ -264,7 +264,8 @@ class PortableSecretBox extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'mac', $pb.PbFieldType.OY)
     ..aOM<AccountIndex>(4, _omitFieldNames ? '' : 'sender', subBuilder: AccountIndex.create)
     ..aOM<AccountIndex>(5, _omitFieldNames ? '' : 'receiver', subBuilder: AccountIndex.create)
-    ..e<EcryptType>(6, _omitFieldNames ? '' : 'encryptType', $pb.PbFieldType.OE, defaultOrMaker: EcryptType.ENCRYPT_TYPE_NONE, valueOf: EcryptType.valueOf, enumValues: EcryptType.values)
+    ..e<EncryptType>(6, _omitFieldNames ? '' : 'encryptType', $pb.PbFieldType.OE, defaultOrMaker: EncryptType.ENCRYPT_TYPE_NONE, valueOf: EncryptType.valueOf, enumValues: EncryptType.values)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'declaredKey', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -339,13 +340,22 @@ class PortableSecretBox extends $pb.GeneratedMessage {
   AccountIndex ensureReceiver() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  EcryptType get encryptType => $_getN(5);
+  EncryptType get encryptType => $_getN(5);
   @$pb.TagNumber(6)
-  set encryptType(EcryptType v) { setField(6, v); }
+  set encryptType(EncryptType v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasEncryptType() => $_has(5);
   @$pb.TagNumber(6)
   void clearEncryptType() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get declaredKey => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set declaredKey($core.int v) { $_setSignedInt32(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasDeclaredKey() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearDeclaredKey() => clearField(7);
 }
 
 class PortableOperation extends $pb.GeneratedMessage {
@@ -431,7 +441,7 @@ class PortableConversation extends $pb.GeneratedMessage {
     ..pc<AccountSnapshot>(2, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM, subBuilder: AccountSnapshot.create)
     ..aOM<AccountSnapshot>(3, _omitFieldNames ? '' : 'owner', subBuilder: AccountSnapshot.create)
     ..aOS(4, _omitFieldNames ? '' : 'remoteUrl')
-    ..m<$core.int, $core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', entryClassName: 'PortableConversation.DeclaredSecretsEntry', keyFieldType: $pb.PbFieldType.O3, valueFieldType: $pb.PbFieldType.OY, packageName: const $pb.PackageName('sheason_chat'))
+    ..p<$core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', $pb.PbFieldType.PY)
     ..aOM<AccountIndex>(6, _omitFieldNames ? '' : 'agent', subBuilder: AccountIndex.create)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
@@ -491,7 +501,7 @@ class PortableConversation extends $pb.GeneratedMessage {
   void clearRemoteUrl() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.Map<$core.int, $core.List<$core.int>> get declaredSecrets => $_getMap(4);
+  $core.List<$core.List<$core.int>> get declaredSecrets => $_getList(4);
 
   @$pb.TagNumber(6)
   AccountIndex get agent => $_getN(5);

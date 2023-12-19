@@ -8,9 +8,19 @@
 CREATE TABLE "Group" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "accountID" INTEGER NOT NULL,
+    "signPubkey" TEXT NOT NULL,
     "agentSecret" BLOB NOT NULL,
     "portableConversation" BLOB NOT NULL,
     CONSTRAINT "Group_accountID_fkey" FOREIGN KEY ("accountID") REFERENCES "Account" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "GroupMembers" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "groupID" INTEGER NOT NULL,
+    "signPubkey" TEXT NOT NULL,
+    "snapshot" BLOB NOT NULL,
+    CONSTRAINT "GroupMembers_groupID_fkey" FOREIGN KEY ("groupID") REFERENCES "Group" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -26,7 +36,9 @@ PRAGMA foreign_keys=OFF;
 CREATE TABLE "new_Message" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "signature" BLOB NOT NULL,
-    "buffer" BLOB NOT NULL
+    "buffer" BLOB NOT NULL,
+    "groupID" INTEGER,
+    CONSTRAINT "Message_groupID_fkey" FOREIGN KEY ("groupID") REFERENCES "Group" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 INSERT INTO "new_Message" ("buffer", "id", "signature") SELECT "buffer", "id", "signature" FROM "Message";
 DROP TABLE "Message";
