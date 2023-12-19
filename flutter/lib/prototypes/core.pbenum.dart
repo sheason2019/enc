@@ -111,11 +111,13 @@ class ContentType extends $pb.ProtobufEnum {
   static const ContentType CONTENT_BUFFER = ContentType._(0, _omitEnumNames ? '' : 'CONTENT_BUFFER');
   static const ContentType CONTENT_MESSAGE = ContentType._(1, _omitEnumNames ? '' : 'CONTENT_MESSAGE');
   static const ContentType CONTENT_OPERATION = ContentType._(2, _omitEnumNames ? '' : 'CONTENT_OPERATION');
+  static const ContentType CONTENT_CONVERSATION = ContentType._(3, _omitEnumNames ? '' : 'CONTENT_CONVERSATION');
 
   static const $core.List<ContentType> values = <ContentType> [
     CONTENT_BUFFER,
     CONTENT_MESSAGE,
     CONTENT_OPERATION,
+    CONTENT_CONVERSATION,
   ];
 
   static final $core.Map<$core.int, ContentType> _byValue = $pb.ProtobufEnum.initByValue(values);

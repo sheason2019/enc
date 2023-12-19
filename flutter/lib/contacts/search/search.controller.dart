@@ -23,7 +23,7 @@ class SearchContactController {
     final snapshot = await handleSearch(url);
     // 更新联系人信息
     final operation = await scope.operator.factory.contact(snapshot);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
 
     delegate.pages.add(ContactDetailPage(snapshot: snapshot));
     delegate.notify();

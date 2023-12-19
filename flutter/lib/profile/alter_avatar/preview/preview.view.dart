@@ -39,7 +39,7 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
       widget.imagePath,
     );
     final operation = await scope.operator.factory.avatar(url);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
     delegate.pages.removeLast();
     delegate.pages.removeLast();
     delegate.notify();

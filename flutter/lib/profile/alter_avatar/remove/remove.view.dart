@@ -10,7 +10,7 @@ class AlterAvatarRemoveDialog extends StatelessWidget {
 
   void handleClick(BuildContext context) async {
     final operation = await scope.operator.factory.avatar('');
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
 
     if (context.mounted) {
       Navigator.of(context).pop();

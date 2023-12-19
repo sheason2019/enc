@@ -6,6 +6,7 @@ import 'package:sheason_chat/chat/room/messages/message/message_context.model.da
 import 'package:sheason_chat/chat/room/messages/message/types/audio.view.dart';
 import 'package:sheason_chat/chat/room/messages/message/types/file/file.view.dart';
 import 'package:sheason_chat/chat/room/messages/message/types/image.view.dart';
+import 'package:sheason_chat/chat/room/messages/message/types/notify.view.dart';
 import 'package:sheason_chat/chat/room/messages/message/types/rtc.view.dart';
 import 'package:sheason_chat/chat/room/messages/message/types/text.view.dart';
 import 'package:sheason_chat/chat/room/messages/message/types/video.view.dart';
@@ -22,7 +23,7 @@ class MessageListItemView extends StatelessWidget {
   Future<MessageContext> fetchMessage(BuildContext context) async {
     final scope = context.watch<Scope>();
     final select = scope.db.messages.select().join([
-      innerJoin(
+      leftOuterJoin(
         scope.db.contacts,
         scope.db.contacts.id.equalsExp(
           scope.db.messages.contactId,
@@ -32,7 +33,7 @@ class MessageListItemView extends StatelessWidget {
     select.where(scope.db.messages.id.equals(messageId));
     final record = await select.getSingle();
     return MessageContext(
-      contact: record.readTable(scope.db.contacts),
+      contact: record.readTableOrNull(scope.db.contacts),
       message: record.readTable(scope.db.messages),
     );
   }
@@ -75,6 +76,8 @@ class _MessageItemRenderer extends StatelessWidget {
         return const FileMessageView();
       case MessageType.MESSAGE_TYPE_RTC:
         return const RtcMessageView();
+      case MessageType.MESSAGE_TYPE_NOTIFY:
+        return const NotifyMessageView();
       default:
         return Text('无法解析的消息类型 ${message.messageType.name}').center();
     }

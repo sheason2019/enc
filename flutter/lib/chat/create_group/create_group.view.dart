@@ -96,6 +96,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     final postData = await SignHelper.wrap(
       scope,
       portableConversation.writeToBuffer(),
+      contentType: ContentType.CONTENT_CONVERSATION,
     );
 
     // 发送请求，请求内容为 SignWrapper<PortableConversation>
@@ -111,7 +112,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       await SignHelper.unwrap(scope, wrapper),
     );
     final operation = await scope.operator.factory.conversation(conversation);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
 
     final agent = conversation.findAgent(scope);
     final selectConversation = scope.db.conversations.select();

@@ -3056,12 +3056,14 @@
          * @property {number} CONTENT_BUFFER=0 CONTENT_BUFFER value
          * @property {number} CONTENT_MESSAGE=1 CONTENT_MESSAGE value
          * @property {number} CONTENT_OPERATION=2 CONTENT_OPERATION value
+         * @property {number} CONTENT_CONVERSATION=3 CONTENT_CONVERSATION value
          */
         sheason_chat.ContentType = (function() {
             var valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "CONTENT_BUFFER"] = 0;
             values[valuesById[1] = "CONTENT_MESSAGE"] = 1;
             values[valuesById[2] = "CONTENT_OPERATION"] = 2;
+            values[valuesById[3] = "CONTENT_CONVERSATION"] = 3;
             return values;
         })();
     
@@ -3277,6 +3279,7 @@
                     case 0:
                     case 1:
                     case 2:
+                    case 3:
                         break;
                     }
                 return null;
@@ -3329,6 +3332,10 @@
                 case "CONTENT_OPERATION":
                 case 2:
                     message.contentType = 2;
+                    break;
+                case "CONTENT_CONVERSATION":
+                case 3:
+                    message.contentType = 3;
                     break;
                 }
                 return message;

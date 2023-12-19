@@ -26,7 +26,7 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
     final delegate = context.read<MainController>().rootDelegate;
     final newName = textController.text;
     final operation = await scope.operator.factory.username(newName);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
     delegate.pages.removeLast();
     delegate.notify();
   }

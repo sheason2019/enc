@@ -87,6 +87,7 @@ class RtcController extends ChangeNotifier {
           'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
           'uuid': model.uuid,
         }).codeUnits,
+        contentType: ContentType.CONTENT_BUFFER,
       );
 
       socket.emitWithAck(
@@ -290,6 +291,7 @@ class RtcController extends ChangeNotifier {
       scope,
       jsonEncode(data).codeUnits,
       encryptTarget: member!.snapshot.index,
+      contentType: ContentType.CONTENT_BUFFER,
     );
     socket!.emit('exchange', {
       'clientId': clientId,

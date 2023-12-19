@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class MessageInputController extends ChangeNotifier {
@@ -68,18 +68,12 @@ class MessageInputController extends ChangeNotifier {
     var i = 0;
     for (final message in messages) {
       final agent = conversation.info.findAgent(scope);
-      final secretBox = await CryptoUtils.encrypt(
+      final wrapper = await SignHelper.wrap(
         scope,
-        agent,
         message.writeToBuffer(),
+        encryptTarget: agent,
+        contentType: ContentType.CONTENT_MESSAGE,
       );
-      final buffer = secretBox.writeToBuffer();
-      final signature = await CryptoUtils.createSignature(scope, buffer);
-      final wrapper = SignWrapper()
-        ..buffer = buffer
-        ..signer = scope.snapshot.index
-        ..sign = signature.bytes
-        ..encrypt = true;
       wrappers.add(wrapper);
       final operation = await scope.operator.factory.message(
         wrapper,
@@ -89,7 +83,7 @@ class MessageInputController extends ChangeNotifier {
     }
 
     await _sendMessage(wrappers);
-    await scope.operator.apply(operations);
+    await scope.operator.apply(operations, isReplay: false);
   }
 
   Future<void> _sendMessage(List<SignWrapper> wrappers) async {

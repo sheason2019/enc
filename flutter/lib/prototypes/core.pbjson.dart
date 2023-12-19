@@ -98,13 +98,14 @@ const ContentType$json = {
     {'1': 'CONTENT_BUFFER', '2': 0},
     {'1': 'CONTENT_MESSAGE', '2': 1},
     {'1': 'CONTENT_OPERATION', '2': 2},
+    {'1': 'CONTENT_CONVERSATION', '2': 3},
   ],
 };
 
 /// Descriptor for `ContentType`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List contentTypeDescriptor = $convert.base64Decode(
     'CgtDb250ZW50VHlwZRISCg5DT05URU5UX0JVRkZFUhAAEhMKD0NPTlRFTlRfTUVTU0FHRRABEh'
-    'UKEUNPTlRFTlRfT1BFUkFUSU9OEAI=');
+    'UKEUNPTlRFTlRfT1BFUkFUSU9OEAISGAoUQ09OVEVOVF9DT05WRVJTQVRJT04QAw==');
 
 @$core.Deprecated('Use accountSecretDescriptor instead')
 const AccountSecret$json = {

@@ -1107,7 +1107,8 @@ export namespace sheason_chat {
     enum ContentType {
         CONTENT_BUFFER = 0,
         CONTENT_MESSAGE = 1,
-        CONTENT_OPERATION = 2
+        CONTENT_OPERATION = 2,
+        CONTENT_CONVERSATION = 3
     }
 
     /** Properties of a SignWrapper. */

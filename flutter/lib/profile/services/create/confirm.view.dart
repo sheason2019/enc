@@ -17,7 +17,7 @@ class ConfirmCreateServicePage extends StatelessWidget {
     final scope = context.read<Scope>();
     final delegate = context.read<MainController>().rootDelegate;
     final operation = await scope.operator.factory.service(url);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
 
     await scope.handleUpdateSubscribe();
 

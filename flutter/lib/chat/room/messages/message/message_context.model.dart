@@ -4,7 +4,7 @@ import 'package:sheason_chat/schema/database.dart';
 @immutable
 class MessageContext {
   final Message message;
-  final Contact contact;
+  final Contact? contact;
 
   const MessageContext({
     required this.contact,

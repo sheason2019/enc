@@ -10,7 +10,7 @@ class SignHelper {
   static Future<SignWrapper> wrap(
     Scope scope,
     List<int> buffer, {
-    ContentType contentType = ContentType.CONTENT_BUFFER,
+    required ContentType contentType,
     AccountIndex? encryptTarget,
   }) async {
     if (encryptTarget == null) {

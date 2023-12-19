@@ -35,7 +35,7 @@ class ContactDetailPage extends StatelessWidget {
     }
 
     final operation = await scope.operator.factory.conversation(portable);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
     return select.getSingle();
   }
 

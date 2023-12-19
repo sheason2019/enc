@@ -75,6 +75,7 @@ export class GroupService {
         payload: account.signPubkey,
       }),
       uuid: randomUUID(),
+      createdAt: new Date().getTime(),
     });
     initialMessageWrappers.push(this.encodeMessage(group, createMessage));
     if (conversation.members.length > 1) {
@@ -91,6 +92,7 @@ export class GroupService {
           },
         }),
         uuid: randomUUID(),
+        createdAt: new Date().getTime(),
       });
       initialMessageWrappers.push(this.encodeMessage(group, inviteMessage));
     }
@@ -118,6 +120,7 @@ export class GroupService {
       });
     }
 
+    await this.emitGroupUpdate(group);
     await this.distrobuteMessage(group, initialMessageWrappers);
 
     return group;
@@ -147,6 +150,7 @@ export class GroupService {
     );
     const wrapper = this.cryptoService.createSignature(agentSecret, buffer);
     wrapper.encrypt = true;
+    wrapper.contentType = sheason_chat.ContentType.CONTENT_MESSAGE;
     return wrapper;
   }
 
@@ -182,6 +186,46 @@ export class GroupService {
       axios
         .postForm(`${url}/message`, formData)
         .catch((e) => console.log('[WARN] distrobute message failed', e));
+    }
+  }
+
+  // 通知相关用户群组信息已更新
+  async emitGroupUpdate(group: Group) {
+    const agentSecret = sheason_chat.AccountSecret.decode(group.agentSecret);
+    const members = await prisma.groupMembers.findMany({
+      where: {
+        groupID: group.id,
+      },
+    });
+
+    for (const member of members) {
+      const snapshot = sheason_chat.AccountSnapshot.decode(member.snapshot);
+      const secretBox = this.cryptoService.encrypt(
+        agentSecret,
+        snapshot.index,
+        group.portableConversation,
+      );
+      const wrapper = this.cryptoService.createSignature(
+        agentSecret,
+        Buffer.from(sheason_chat.PortableSecretBox.encode(secretBox).finish()),
+      );
+      wrapper.contentType = sheason_chat.ContentType.CONTENT_CONVERSATION;
+      wrapper.encrypt = true;
+
+      const formData = new FormData();
+      formData.append(
+        'data',
+        JSON.stringify([
+          Buffer.from(
+            sheason_chat.SignWrapper.encode(wrapper).finish(),
+          ).toString('base64'),
+        ]),
+      );
+      formData.append('receivers', JSON.stringify([member.signPubkey]));
+
+      for (const url of Object.keys(snapshot.serviceMap)) {
+        axios.postForm(`${url}/message`, formData);
+      }
     }
   }
 

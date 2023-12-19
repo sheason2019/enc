@@ -15,7 +15,7 @@ class Operator {
 
   Future<void> apply(
     List<PortableOperation> operations, {
-    bool isReplay = false,
+    required bool isReplay,
   }) async {
     final context = OperateContext(scope: scope, isReplay: isReplay);
     await scope.db.transaction(() async {

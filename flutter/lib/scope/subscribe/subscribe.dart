@@ -10,6 +10,7 @@ import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/operation_cipher/operation_cipher.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Subscribe extends ChangeNotifier {
@@ -100,7 +101,7 @@ class Subscribe extends ChangeNotifier {
           scope,
           operations,
         );
-        await scope.operator.apply(portableOperations);
+        await scope.operator.apply(portableOperations, isReplay: true);
       }
 
       if (!_syncMessage) {
@@ -119,13 +120,29 @@ class Subscribe extends ChangeNotifier {
         final valid = await wrapper.verify();
         if (!valid) continue;
 
-        final operation = await scope.operator.factory.message(
-          wrapper,
-          offset: i++,
-        );
-        operations.add(operation);
+        switch (wrapper.contentType) {
+          case ContentType.CONTENT_MESSAGE:
+            final operation = await scope.operator.factory.message(
+              wrapper,
+              offset: i++,
+            );
+            operations.add(operation);
+            break;
+          case ContentType.CONTENT_CONVERSATION:
+            final operation = await scope.operator.factory.conversation(
+              PortableConversation.fromBuffer(
+                await SignHelper.unwrap(scope, wrapper),
+              ),
+            );
+            operations.add(operation);
+            break;
+          default:
+            debugPrint('[WARN] Unproceed wrapper');
+        }
       }
-      await scope.operator.apply(operations, isReplay: true);
+      if (operations.isNotEmpty) {
+        await scope.operator.apply(operations, isReplay: false);
+      }
     });
 
     socket.on('sync-operation', (data) => syncOperation());

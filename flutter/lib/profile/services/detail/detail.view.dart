@@ -38,7 +38,7 @@ class ServiceDetailPage extends StatelessWidget {
     if (confirm != true) return;
 
     final operation = await scope.operator.factory.deleteService(url);
-    await scope.operator.apply([operation]);
+    await scope.operator.apply([operation], isReplay: false);
 
     delegate.pages.removeLast();
     delegate.notify();

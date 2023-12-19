@@ -31,7 +31,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       final operation = await scope.operator.factory.conversationAnchor(
         portable,
       );
-      await scope.operator.apply([operation]);
+      await scope.operator.apply([operation], isReplay: false);
     }
   }
 
