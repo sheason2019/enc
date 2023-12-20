@@ -8,14 +8,14 @@ import 'package:sheason_chat/scope/scope.model.dart';
 class ConversationAnchorsView extends StatelessWidget {
   const ConversationAnchorsView({super.key});
 
-  Future<Conversation> fetchConversation(
+  Stream<Conversation> fetchConversation(
     BuildContext context,
     int id,
   ) {
     final scope = context.watch<Scope>();
     final select = scope.db.conversations.select();
     select.where((tbl) => tbl.id.equals(id));
-    return select.getSingle();
+    return select.watchSingle();
   }
 
   @override
@@ -24,8 +24,8 @@ class ConversationAnchorsView extends StatelessWidget {
     final list = scope.anchor.list;
     return ListView.builder(
       itemCount: list.length,
-      itemBuilder: (context, index) => FutureBuilder(
-        future: fetchConversation(context, list[index]),
+      itemBuilder: (context, index) => StreamBuilder(
+        stream: fetchConversation(context, list[index]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox.shrink();

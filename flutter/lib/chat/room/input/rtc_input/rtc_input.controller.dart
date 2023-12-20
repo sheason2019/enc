@@ -34,7 +34,7 @@ class CreateRTCInviteController extends ChangeNotifier {
       serviceUrl: url,
     );
 
-    final buffer = jsonEncode(rtcModel.toJson()).codeUnits;
+    final buffer = utf8.encode(jsonEncode(rtcModel.toJson()));
     final signature = await CryptoUtils.createSignature(
       chatController.scope,
       buffer,

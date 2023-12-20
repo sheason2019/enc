@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
@@ -10,14 +11,14 @@ import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:synchronized/synchronized.dart';
 
 class MessageChecker {
-  final Scope scope;
-  final Conversation conversation;
-  final ChatController chatController;
+  final BuildContext context;
+
+  ChatController get chatController => context.read<ChatController>();
+  Scope get scope => context.read<Scope>();
+  Conversation get conversation => context.read<Conversation>();
 
   MessageChecker({
-    required this.scope,
-    required this.conversation,
-    required this.chatController,
+    required this.context,
   });
 
   var _messageSet = <Message>{};

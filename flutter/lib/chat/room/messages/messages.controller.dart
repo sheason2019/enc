@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class MessagesController extends ChangeNotifier {
-  final Scope scope;
-  final Conversation conversation;
+  final BuildContext context;
+
+  Scope get scope => context.read<Scope>();
+  Conversation get conversation => context.read<Conversation>();
 
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
@@ -19,8 +22,7 @@ class MessagesController extends ChangeNotifier {
   var lockBottom = false;
 
   MessagesController({
-    required this.scope,
-    required this.conversation,
+    required this.context,
   }) {
     _watchMessages();
   }

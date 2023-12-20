@@ -31,7 +31,7 @@ export class RtcGateway {
     }
 
     const joinData: { snapshot: string; uuid: string } = JSON.parse(
-      Buffer.from(wrapper.buffer).toString(),
+      Buffer.from(wrapper.buffer).toString('utf-8'),
     );
     const rtcRecord = await this.rtcService.findRtc(joinData.uuid);
     if (!rtcRecord) {
@@ -86,7 +86,7 @@ export class RtcGateway {
 
     this.clientMap.delete(client.id);
     const joinData: { snapshot: string; uuid: string } = JSON.parse(
-      Buffer.from(wrapper.buffer).toString(),
+      Buffer.from(wrapper.buffer).toString('utf-8'),
     );
     this.server.to(joinData.uuid).emit('leave', {
       clientId: client.id,

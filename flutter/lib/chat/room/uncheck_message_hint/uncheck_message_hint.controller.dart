@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 
 class UncheckMessageHintController extends ValueNotifier<int> {
-  final Scope scope;
-  final Conversation conversation;
+  final BuildContext context;
+
+  Scope get scope => context.read<Scope>();
+  Conversation get conversation => context.read<Conversation>();
 
   UncheckMessageHintController({
-    required this.scope,
-    required this.conversation,
+    required this.context,
   }) : super(0) {
     _watchUncheck();
   }

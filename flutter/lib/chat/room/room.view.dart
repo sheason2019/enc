@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/conversation_setting/conversation_setting.view.dart';
@@ -23,6 +24,13 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   late final scope = context.read<Scope>();
+
+  Stream<Conversation> createStream() {
+    final scope = context.read<Scope>();
+    final select = scope.db.conversations.select();
+    select.where((tbl) => tbl.id.equals(widget.conversation.id));
+    return select.watchSingle();
+  }
 
   handleTriggerAnchor() async {
     // 查询 Anchor 中是否存在此会话，若不存在则创建 Anchor
@@ -55,10 +63,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     super.initState();
   }
 
-  toSettings() {
+  toSettings(BuildContext context) {
+    final conversation = context.read<Conversation>();
     final delegate = context.read<MainController>().rootDelegate;
     delegate.pages.add(
-      ConversationSettingPage(conversation: widget.conversation),
+      ConversationSettingPage(conversation: conversation),
     );
     delegate.notify();
   }
@@ -71,51 +80,47 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    final scope = context.watch<Scope>();
-    return MultiProvider(
-      providers: [
-        Provider.value(value: widget.conversation),
-        Provider(
-          create: (context) => ChatController(
-            scope: scope,
-            conversation: widget.conversation,
+    return StreamBuilder<Conversation>(
+      initialData: widget.conversation,
+      stream: createStream(),
+      builder: (context, snapshot) => MultiProvider(
+        providers: [
+          Provider.value(value: snapshot.requireData),
+          Provider(
+            create: (context) => ChatController(context: context),
+            dispose: (context, controller) => controller.dispose(),
           ),
-          dispose: (context, controller) => controller.dispose(),
-        ),
-        Provider(
-          lazy: false,
-          create: (context) => MessageChecker(
-            scope: scope,
-            conversation: widget.conversation,
-            chatController: context.read<ChatController>(),
+          Provider(
+            lazy: false,
+            create: (context) => MessageChecker(context: context),
           ),
-        ),
-        Provider(
-          create: (context) => MediaInputController(context: context),
-        ),
-        Provider(
-          create: (context) => FileInputController(context: context),
-        ),
-      ],
-      builder: (context, _) => Scaffold(
-        appBar: AppBar(
-          title: const ChatRoomPageTitle(),
-          scrolledUnderElevation: 0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: toSettings,
-                icon: const Icon(Icons.menu),
+          Provider(
+            create: (context) => MediaInputController(context: context),
+          ),
+          Provider(
+            create: (context) => FileInputController(context: context),
+          ),
+        ],
+        builder: (context, _) => Scaffold(
+          appBar: AppBar(
+            title: const ChatRoomPageTitle(),
+            scrolledUnderElevation: 0,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  onPressed: () => toSettings(context),
+                  icon: const Icon(Icons.menu),
+                ),
               ),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            const MessagesPanelView().expanded(),
-            const ChatRoomInputView(),
-          ],
+            ],
+          ),
+          body: Column(
+            children: [
+              const MessagesPanelView().expanded(),
+              const ChatRoomInputView(),
+            ],
+          ),
         ),
       ),
     );

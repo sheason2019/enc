@@ -160,7 +160,7 @@ export class GroupController {
     }
 
     const data: { groupId: string; avatarUrl: string } = JSON.parse(
-      Buffer.from(wrapper.buffer).toString(),
+      Buffer.from(wrapper.buffer).toString('utf8'),
     );
     if (data.groupId !== groupId) {
       throw new HttpException('content invalid', 400);
@@ -174,6 +174,57 @@ export class GroupController {
     }
 
     conversation.avatarUrl = data.avatarUrl;
+    conversation.version++;
+    const newConv = Buffer.from(
+      sheason_chat.PortableConversation.encode(conversation).finish(),
+    );
+    const updated = await prisma.group.update({
+      where: {
+        id: group.id,
+      },
+      data: {
+        portableConversation: newConv,
+      },
+    });
+
+    await this.groupService.emitGroupUpdate(updated);
+    return 'OK';
+  }
+
+  @Put(':groupId/name')
+  @UseInterceptors(NoFilesInterceptor())
+  async handlePutName(
+    @Param('groupId') groupId: string,
+    @Body() body: { data: string },
+  ) {
+    const group = await this.groupService.findGroup(groupId);
+    if (!group) {
+      throw new HttpException('cannot find group', 404);
+    }
+
+    const wrapper = sheason_chat.SignWrapper.decode(
+      Buffer.from(body.data, 'base64'),
+    );
+    if (!this.cryptoService.verifySignature(wrapper)) {
+      throw new HttpException('verify signautre failed', 403);
+    }
+
+    console.log(Buffer.from(wrapper.buffer).toString('utf-8'));
+    const data: { groupId: string; name: string } = JSON.parse(
+      Buffer.from(wrapper.buffer).toString('utf-8'),
+    );
+    if (data.groupId !== groupId) {
+      throw new HttpException('content invalid', 400);
+    }
+
+    const conversation = sheason_chat.PortableConversation.decode(
+      group.portableConversation,
+    );
+    if (conversation.name === data.name) {
+      return 'OK';
+    }
+
+    conversation.name = data.name;
     conversation.version++;
     const newConv = Buffer.from(
       sheason_chat.PortableConversation.encode(conversation).finish(),

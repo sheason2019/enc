@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -13,12 +14,13 @@ import 'package:sheason_chat/utils/sign_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class MessageInputController extends ChangeNotifier {
-  final Scope scope;
-  final Conversation conversation;
+  final BuildContext context;
+
+  Scope get scope => context.read<Scope>();
+  Conversation get conversation => context.read<Conversation>();
 
   MessageInputController({
-    required this.scope,
-    required this.conversation,
+    required this.context,
   });
 
   bool get useTextInput => _useTextInput;

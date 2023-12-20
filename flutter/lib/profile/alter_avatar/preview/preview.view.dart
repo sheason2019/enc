@@ -86,10 +86,10 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
 
     final wrapper = await SignHelper.wrap(
       scope,
-      jsonEncode({
+      utf8.encode(jsonEncode({
         'groupId': id,
         'avatarUrl': url,
-      }).codeUnits,
+      })),
       contentType: ContentType.CONTENT_BUFFER,
     );
 

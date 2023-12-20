@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/anchors/anchor/anchor.view.dart';
+import 'package:sheason_chat/chat/room/conversation_setting/group/alter_name.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/alter_avatar/edit/edit.view.dart';
 import 'package:sheason_chat/profile/alter_avatar/preview/preview.view.dart';
@@ -26,7 +27,11 @@ class GroupSettings extends StatelessWidget {
     delegate.notify();
   }
 
-  toAlterGroupName(BuildContext context) {}
+  toAlterGroupName(BuildContext context) {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(AlterGroupNamePage(conversation: conversation));
+    delegate.notify();
+  }
 
   @override
   Widget build(BuildContext context) {

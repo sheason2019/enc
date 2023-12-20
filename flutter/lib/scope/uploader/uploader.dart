@@ -59,7 +59,7 @@ class Uploader {
       return '$url/${chunkList.first}';
     }
 
-    final mergeData = jsonEncode(chunkList).codeUnits;
+    final mergeData = utf8.encode(jsonEncode(chunkList));
     final mergeSignature = await CryptoUtils.createSignature(
       scope,
       mergeData,

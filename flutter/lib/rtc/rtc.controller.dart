@@ -83,10 +83,10 @@ class RtcController extends ChangeNotifier {
       // 为身份校验和接入通话创建 SignWrapper
       final wrapper = await SignHelper.wrap(
         scope,
-        jsonEncode({
+        utf8.encode(jsonEncode({
           'snapshot': base64Encode(scope.snapshot.writeToBuffer()),
           'uuid': model.uuid,
-        }).codeUnits,
+        })),
         contentType: ContentType.CONTENT_BUFFER,
       );
 
@@ -289,7 +289,7 @@ class RtcController extends ChangeNotifier {
 
     final wrapper = await SignHelper.wrap(
       scope,
-      jsonEncode(data).codeUnits,
+      utf8.encode(jsonEncode(data)),
       encryptTarget: member!.snapshot.index,
       contentType: ContentType.CONTENT_BUFFER,
     );

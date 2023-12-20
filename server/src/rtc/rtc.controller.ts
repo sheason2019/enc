@@ -43,7 +43,9 @@ export class RtcController {
       throw new HttpException('cannot find account', 404);
     }
 
-    const model: IRtcModel = JSON.parse(Buffer.from(wrapper.buffer).toString());
+    const model: IRtcModel = JSON.parse(
+      Buffer.from(wrapper.buffer).toString('utf-8'),
+    );
     const rtcRecord = await this.rtcService.createRtc(account, model);
 
     return {
