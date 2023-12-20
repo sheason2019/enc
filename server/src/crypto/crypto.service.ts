@@ -158,10 +158,21 @@ export class CryptoService {
       buffer: originData,
       signer: { signPubKey: secret.signPubKey, ecdhPubKey: secret.ecdhPubKey },
       sign: signData,
+      createdAt: new Date().getTime(),
     });
   }
 
   verifySignature(wrapper: sheason_chat.SignWrapper) {
+    const createdAt = wrapper.createdAt;
+    if (typeof createdAt === 'number') {
+      const now = new Date().getTime();
+      if (now - createdAt > 1000 * 60 * 3) {
+        return false;
+      }
+    } else {
+      console.warn("cannot proceed sign wrapper's createdAt field");
+    }
+
     return verify(
       null,
       wrapper.buffer,

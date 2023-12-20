@@ -444,6 +444,8 @@ class PortableConversation extends $pb.GeneratedMessage {
     ..p<$core.List<$core.int>>(5, _omitFieldNames ? '' : 'declaredSecrets', $pb.PbFieldType.PY)
     ..aOM<AccountIndex>(6, _omitFieldNames ? '' : 'agent', subBuilder: AccountIndex.create)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
+    ..aOS(10, _omitFieldNames ? '' : 'name')
+    ..aOS(11, _omitFieldNames ? '' : 'avatarUrl')
     ..hasRequiredFields = false
   ;
 
@@ -522,6 +524,24 @@ class PortableConversation extends $pb.GeneratedMessage {
   $core.bool hasVersion() => $_has(6);
   @$pb.TagNumber(7)
   void clearVersion() => clearField(7);
+
+  @$pb.TagNumber(10)
+  $core.String get name => $_getSZ(7);
+  @$pb.TagNumber(10)
+  set name($core.String v) { $_setString(7, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasName() => $_has(7);
+  @$pb.TagNumber(10)
+  void clearName() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.String get avatarUrl => $_getSZ(8);
+  @$pb.TagNumber(11)
+  set avatarUrl($core.String v) { $_setString(8, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasAvatarUrl() => $_has(8);
+  @$pb.TagNumber(11)
+  void clearAvatarUrl() => clearField(11);
 }
 
 class PortableMessage extends $pb.GeneratedMessage {
@@ -710,6 +730,7 @@ class SignWrapper extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'sign', $pb.PbFieldType.OY)
     ..aOB(4, _omitFieldNames ? '' : 'encrypt')
     ..e<ContentType>(5, _omitFieldNames ? '' : 'contentType', $pb.PbFieldType.OE, defaultOrMaker: ContentType.CONTENT_BUFFER, valueOf: ContentType.valueOf, enumValues: ContentType.values)
+    ..aInt64(6, _omitFieldNames ? '' : 'createdAt')
     ..hasRequiredFields = false
   ;
 
@@ -780,6 +801,15 @@ class SignWrapper extends $pb.GeneratedMessage {
   $core.bool hasContentType() => $_has(4);
   @$pb.TagNumber(5)
   void clearContentType() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get createdAt => $_getI64(5);
+  @$pb.TagNumber(6)
+  set createdAt($fixnum.Int64 v) { $_setInt64(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasCreatedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCreatedAt() => clearField(6);
 }
 
 

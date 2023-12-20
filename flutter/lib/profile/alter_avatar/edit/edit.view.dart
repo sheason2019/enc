@@ -8,13 +8,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/alter_avatar/preview/preview.view.dart';
+import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:uuid/uuid.dart';
 
 class AlterAvatarEditPage extends StatefulWidget {
   final XFile imageFile;
-  const AlterAvatarEditPage({super.key, required this.imageFile});
+  final AvatarSubmitTarget target;
+  final Conversation? conversation;
+  const AlterAvatarEditPage({
+    super.key,
+    required this.imageFile,
+    required this.target,
+    this.conversation,
+  });
 
   @override
   State<StatefulWidget> createState() => _AlterAvatarEditPageState();
@@ -43,7 +51,13 @@ class _AlterAvatarEditPageState extends State<AlterAvatarEditPage> {
       const Uuid().v4(),
     );
     await image.encodePngFile(cachePath, croped);
-    delegate.pages.add(AlterAvatarPreviewPage(imagePath: cachePath));
+    delegate.pages.add(
+      AlterAvatarPreviewPage(
+        imagePath: cachePath,
+        target: widget.target,
+        conversation: widget.conversation,
+      ),
+    );
     delegate.notify();
   }
 

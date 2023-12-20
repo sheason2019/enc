@@ -75,6 +75,9 @@ message PortableConversation {
   AccountIndex agent = 6;
 
   int32 version = 7;
+
+  string name = 10;
+  string avatar_url = 11;
 }
 
 enum MessageType {
@@ -120,4 +123,5 @@ message SignWrapper {
   bytes sign = 3;
   bool encrypt = 4; // 内容是否为 PortableSecretBox
   ContentType content_type = 5;
+  int64 created_at = 6;
 }

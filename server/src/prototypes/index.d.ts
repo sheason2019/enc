@@ -731,6 +731,12 @@ export namespace sheason_chat {
 
         /** PortableConversation version */
         version?: (number|null);
+
+        /** PortableConversation name */
+        name?: (string|null);
+
+        /** PortableConversation avatarUrl */
+        avatarUrl?: (string|null);
     }
 
     /** Represents a PortableConversation. */
@@ -762,6 +768,12 @@ export namespace sheason_chat {
 
         /** PortableConversation version. */
         public version: number;
+
+        /** PortableConversation name. */
+        public name: string;
+
+        /** PortableConversation avatarUrl. */
+        public avatarUrl: string;
 
         /**
          * Creates a new PortableConversation instance using the specified properties.
@@ -1128,6 +1140,9 @@ export namespace sheason_chat {
 
         /** SignWrapper contentType */
         contentType?: (sheason_chat.ContentType|null);
+
+        /** SignWrapper createdAt */
+        createdAt?: (number|Long|null);
     }
 
     /** Represents a SignWrapper. */
@@ -1153,6 +1168,9 @@ export namespace sheason_chat {
 
         /** SignWrapper contentType. */
         public contentType: sheason_chat.ContentType;
+
+        /** SignWrapper createdAt. */
+        public createdAt: (number|Long);
 
         /**
          * Creates a new SignWrapper instance using the specified properties.

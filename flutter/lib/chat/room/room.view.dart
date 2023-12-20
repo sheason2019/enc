@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/room/conversation_setting/conversation_setting.view.dart';
 import 'package:sheason_chat/chat/room/input/file_input/file_input.controller.dart';
 import 'package:sheason_chat/chat/room/input/input.view.dart';
 import 'package:sheason_chat/chat/room/input/media_input/media_input.controller.dart';
@@ -7,6 +8,7 @@ import 'package:sheason_chat/chat/room/messages/checker.controller.dart';
 import 'package:sheason_chat/chat/room/messages_panel/messages_panel.view.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
 import 'package:sheason_chat/chat/room/title/title.view.dart';
+import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -53,6 +55,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     super.initState();
   }
 
+  toSettings() {
+    final delegate = context.read<MainController>().rootDelegate;
+    delegate.pages.add(
+      ConversationSettingPage(conversation: widget.conversation),
+    );
+    delegate.notify();
+  }
+
   @override
   void dispose() {
     handleCancelBlockNotifier();
@@ -91,6 +101,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         appBar: AppBar(
           title: const ChatRoomPageTitle(),
           scrolledUnderElevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                onPressed: toSettings,
+                icon: const Icon(Icons.menu),
+              ),
+            ),
+          ],
         ),
         body: Column(
           children: [

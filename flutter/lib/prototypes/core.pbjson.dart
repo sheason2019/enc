@@ -230,6 +230,8 @@ const PortableConversation$json = {
     {'1': 'declared_secrets', '3': 5, '4': 3, '5': 12, '10': 'declaredSecrets'},
     {'1': 'agent', '3': 6, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'agent'},
     {'1': 'version', '3': 7, '4': 1, '5': 5, '10': 'version'},
+    {'1': 'name', '3': 10, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'avatar_url', '3': 11, '4': 1, '5': 9, '10': 'avatarUrl'},
   ],
 };
 
@@ -241,7 +243,7 @@ final $typed_data.Uint8List portableConversationDescriptor = $convert.base64Deco
     'VudFNuYXBzaG90UgVvd25lchIdCgpyZW1vdGVfdXJsGAQgASgJUglyZW1vdGVVcmwSKQoQZGVj'
     'bGFyZWRfc2VjcmV0cxgFIAMoDFIPZGVjbGFyZWRTZWNyZXRzEjAKBWFnZW50GAYgASgLMhouc2'
     'hlYXNvbl9jaGF0LkFjY291bnRJbmRleFIFYWdlbnQSGAoHdmVyc2lvbhgHIAEoBVIHdmVyc2lv'
-    'bg==');
+    'bhISCgRuYW1lGAogASgJUgRuYW1lEh0KCmF2YXRhcl91cmwYCyABKAlSCWF2YXRhclVybA==');
 
 @$core.Deprecated('Use portableMessageDescriptor instead')
 const PortableMessage$json = {
@@ -294,6 +296,7 @@ const SignWrapper$json = {
     {'1': 'sign', '3': 3, '4': 1, '5': 12, '10': 'sign'},
     {'1': 'encrypt', '3': 4, '4': 1, '5': 8, '10': 'encrypt'},
     {'1': 'content_type', '3': 5, '4': 1, '5': 14, '6': '.sheason_chat.ContentType', '10': 'contentType'},
+    {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
   ],
 };
 
@@ -302,5 +305,6 @@ final $typed_data.Uint8List signWrapperDescriptor = $convert.base64Decode(
     'CgtTaWduV3JhcHBlchIyCgZzaWduZXIYASABKAsyGi5zaGVhc29uX2NoYXQuQWNjb3VudEluZG'
     'V4UgZzaWduZXISFgoGYnVmZmVyGAIgASgMUgZidWZmZXISEgoEc2lnbhgDIAEoDFIEc2lnbhIY'
     'CgdlbmNyeXB0GAQgASgIUgdlbmNyeXB0EjwKDGNvbnRlbnRfdHlwZRgFIAEoDjIZLnNoZWFzb2'
-    '5fY2hhdC5Db250ZW50VHlwZVILY29udGVudFR5cGU=');
+    '5fY2hhdC5Db250ZW50VHlwZVILY29udGVudFR5cGUSHQoKY3JlYXRlZF9hdBgGIAEoA1IJY3Jl'
+    'YXRlZEF0');
 

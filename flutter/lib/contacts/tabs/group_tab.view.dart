@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheason_chat/chat/anchors/anchor/anchor.view.dart';
 import 'package:sheason_chat/chat/room/room.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -71,8 +72,8 @@ class GroupListTile extends StatelessWidget {
 
         return ListTile(
           onTap: () => toConversation(context, snapshot.requireData),
-          leading: const CircleAvatar(),
-          title: const Text(''),
+          leading: ConversationAvatar(conversation: snapshot.requireData),
+          title: Text(snapshot.requireData.info.name),
           subtitle: Text(snapshot.requireData.signPubkey),
         );
       },

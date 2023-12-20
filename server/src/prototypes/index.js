@@ -1847,6 +1847,8 @@
              * @property {Array.<Uint8Array>|null} [declaredSecrets] PortableConversation declaredSecrets
              * @property {sheason_chat.IAccountIndex|null} [agent] PortableConversation agent
              * @property {number|null} [version] PortableConversation version
+             * @property {string|null} [name] PortableConversation name
+             * @property {string|null} [avatarUrl] PortableConversation avatarUrl
              */
     
             /**
@@ -1923,6 +1925,22 @@
             PortableConversation.prototype.version = 0;
     
             /**
+             * PortableConversation name.
+             * @member {string} name
+             * @memberof sheason_chat.PortableConversation
+             * @instance
+             */
+            PortableConversation.prototype.name = "";
+    
+            /**
+             * PortableConversation avatarUrl.
+             * @member {string} avatarUrl
+             * @memberof sheason_chat.PortableConversation
+             * @instance
+             */
+            PortableConversation.prototype.avatarUrl = "";
+    
+            /**
              * Creates a new PortableConversation instance using the specified properties.
              * @function create
              * @memberof sheason_chat.PortableConversation
@@ -1962,6 +1980,10 @@
                     $root.sheason_chat.AccountIndex.encode(message.agent, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                 if (message.version != null && Object.hasOwnProperty.call(message, "version"))
                     writer.uint32(/* id 7, wireType 0 =*/56).int32(message.version);
+                if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.name);
+                if (message.avatarUrl != null && Object.hasOwnProperty.call(message, "avatarUrl"))
+                    writer.uint32(/* id 11, wireType 2 =*/90).string(message.avatarUrl);
                 return writer;
             };
     
@@ -2026,6 +2048,14 @@
                         }
                     case 7: {
                             message.version = reader.int32();
+                            break;
+                        }
+                    case 10: {
+                            message.name = reader.string();
+                            break;
+                        }
+                    case 11: {
+                            message.avatarUrl = reader.string();
                             break;
                         }
                     default:
@@ -2104,6 +2134,12 @@
                 if (message.version != null && message.hasOwnProperty("version"))
                     if (!$util.isInteger(message.version))
                         return "version: integer expected";
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.avatarUrl != null && message.hasOwnProperty("avatarUrl"))
+                    if (!$util.isString(message.avatarUrl))
+                        return "avatarUrl: string expected";
                 return null;
             };
     
@@ -2173,6 +2209,10 @@
                 }
                 if (object.version != null)
                     message.version = object.version | 0;
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.avatarUrl != null)
+                    message.avatarUrl = String(object.avatarUrl);
                 return message;
             };
     
@@ -2199,6 +2239,8 @@
                     object.remoteUrl = "";
                     object.agent = null;
                     object.version = 0;
+                    object.name = "";
+                    object.avatarUrl = "";
                 }
                 if (message.type != null && message.hasOwnProperty("type"))
                     object.type = options.enums === String ? $root.sheason_chat.ConversationType[message.type] === undefined ? message.type : $root.sheason_chat.ConversationType[message.type] : message.type;
@@ -2220,6 +2262,10 @@
                     object.agent = $root.sheason_chat.AccountIndex.toObject(message.agent, options);
                 if (message.version != null && message.hasOwnProperty("version"))
                     object.version = message.version;
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.avatarUrl != null && message.hasOwnProperty("avatarUrl"))
+                    object.avatarUrl = message.avatarUrl;
                 return object;
             };
     
@@ -3078,6 +3124,7 @@
              * @property {Uint8Array|null} [sign] SignWrapper sign
              * @property {boolean|null} [encrypt] SignWrapper encrypt
              * @property {sheason_chat.ContentType|null} [contentType] SignWrapper contentType
+             * @property {number|Long|null} [createdAt] SignWrapper createdAt
              */
     
             /**
@@ -3136,6 +3183,14 @@
             SignWrapper.prototype.contentType = 0;
     
             /**
+             * SignWrapper createdAt.
+             * @member {number|Long} createdAt
+             * @memberof sheason_chat.SignWrapper
+             * @instance
+             */
+            SignWrapper.prototype.createdAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
              * Creates a new SignWrapper instance using the specified properties.
              * @function create
              * @memberof sheason_chat.SignWrapper
@@ -3169,6 +3224,8 @@
                     writer.uint32(/* id 4, wireType 0 =*/32).bool(message.encrypt);
                 if (message.contentType != null && Object.hasOwnProperty.call(message, "contentType"))
                     writer.uint32(/* id 5, wireType 0 =*/40).int32(message.contentType);
+                if (message.createdAt != null && Object.hasOwnProperty.call(message, "createdAt"))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.createdAt);
                 return writer;
             };
     
@@ -3221,6 +3278,10 @@
                         }
                     case 5: {
                             message.contentType = reader.int32();
+                            break;
+                        }
+                    case 6: {
+                            message.createdAt = reader.int64();
                             break;
                         }
                     default:
@@ -3282,6 +3343,9 @@
                     case 3:
                         break;
                     }
+                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
+                    if (!$util.isInteger(message.createdAt) && !(message.createdAt && $util.isInteger(message.createdAt.low) && $util.isInteger(message.createdAt.high)))
+                        return "createdAt: integer|Long expected";
                 return null;
             };
     
@@ -3338,6 +3402,15 @@
                     message.contentType = 3;
                     break;
                 }
+                if (object.createdAt != null)
+                    if ($util.Long)
+                        (message.createdAt = $util.Long.fromValue(object.createdAt)).unsigned = false;
+                    else if (typeof object.createdAt === "string")
+                        message.createdAt = parseInt(object.createdAt, 10);
+                    else if (typeof object.createdAt === "number")
+                        message.createdAt = object.createdAt;
+                    else if (typeof object.createdAt === "object")
+                        message.createdAt = new $util.LongBits(object.createdAt.low >>> 0, object.createdAt.high >>> 0).toNumber();
                 return message;
             };
     
@@ -3372,6 +3445,11 @@
                     }
                     object.encrypt = false;
                     object.contentType = options.enums === String ? "CONTENT_BUFFER" : 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.createdAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.createdAt = options.longs === String ? "0" : 0;
                 }
                 if (message.signer != null && message.hasOwnProperty("signer"))
                     object.signer = $root.sheason_chat.AccountIndex.toObject(message.signer, options);
@@ -3383,6 +3461,11 @@
                     object.encrypt = message.encrypt;
                 if (message.contentType != null && message.hasOwnProperty("contentType"))
                     object.contentType = options.enums === String ? $root.sheason_chat.ContentType[message.contentType] === undefined ? message.contentType : $root.sheason_chat.ContentType[message.contentType] : message.contentType;
+                if (message.createdAt != null && message.hasOwnProperty("createdAt"))
+                    if (typeof message.createdAt === "number")
+                        object.createdAt = options.longs === String ? String(message.createdAt) : message.createdAt;
+                    else
+                        object.createdAt = options.longs === String ? $util.Long.prototype.toString.call(message.createdAt) : options.longs === Number ? new $util.LongBits(message.createdAt.low >>> 0, message.createdAt.high >>> 0).toNumber() : message.createdAt;
                 return object;
             };
     

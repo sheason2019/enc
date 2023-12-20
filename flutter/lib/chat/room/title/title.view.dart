@@ -34,7 +34,7 @@ class ChatRoomPageTitle extends StatelessWidget {
       );
     }
     if (conversation.type == ConversationType.CONVERSATION_GROUP) {
-      return const Text('');
+      return Text(conversation.info.name);
     }
 
     throw UnimplementedError();

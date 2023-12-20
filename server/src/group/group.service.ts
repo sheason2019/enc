@@ -40,6 +40,8 @@ export class GroupService {
       agent: groupAgent,
       version: 1,
       declaredSecrets: [this.cryptoService.generateSecret()],
+      name: `Group-${groupAgent.signPubKey}`,
+      avatarUrl: '',
     });
 
     const group = await prisma.group.create({

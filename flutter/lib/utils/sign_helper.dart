@@ -1,4 +1,5 @@
 import 'package:cryptography/cryptography.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:sheason_chat/cyprto/crypto_keypair.dart';
 import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -32,7 +33,8 @@ class SignHelper {
         ..sign = signature.bytes
         ..signer = scope.snapshot.index
         ..contentType = contentType
-        ..encrypt = true;
+        ..encrypt = true
+        ..createdAt = Int64(DateTime.now().millisecondsSinceEpoch);
     }
   }
 

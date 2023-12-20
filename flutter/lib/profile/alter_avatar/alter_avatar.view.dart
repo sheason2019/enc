@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
 import 'package:sheason_chat/main.controller.dart';
 import 'package:sheason_chat/profile/alter_avatar/edit/edit.view.dart';
+import 'package:sheason_chat/profile/alter_avatar/preview/preview.view.dart';
 import 'package:sheason_chat/profile/alter_avatar/remove/remove.view.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -34,7 +35,10 @@ class AlterAvatarWidget extends StatelessWidget {
     final imageFile = await picker.pickImage(source: ImageSource.gallery);
     if (imageFile == null) return;
 
-    delegate.pages.add(AlterAvatarEditPage(imageFile: imageFile));
+    delegate.pages.add(AlterAvatarEditPage(
+      imageFile: imageFile,
+      target: AvatarSubmitTarget.snapshot,
+    ));
     delegate.notify();
   }
 

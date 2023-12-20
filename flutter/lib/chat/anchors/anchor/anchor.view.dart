@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/accounts/account_avatar.view.dart';
@@ -35,7 +36,7 @@ class ConversationAnchorListTile extends StatelessWidget {
       return select.watchSingle().map((event) => event.snapshot.username);
     }
     if (conversation.type == ConversationType.CONVERSATION_GROUP) {
-      return Stream.value('');
+      return Stream.value(conversation.info.name);
     }
 
     throw UnimplementedError();
@@ -83,7 +84,7 @@ class ConversationAnchorListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => handleClick(context),
-      leading: _ConversationAnchorAvatar(conversation: conversation),
+      leading: ConversationAvatar(conversation: conversation),
       title: Row(
         children: [
           StreamBuilder(
@@ -131,10 +132,13 @@ class ConversationAnchorListTile extends StatelessWidget {
   }
 }
 
-class _ConversationAnchorAvatar extends StatelessWidget {
+class ConversationAvatar extends StatelessWidget {
+  final double size;
   final Conversation conversation;
-  const _ConversationAnchorAvatar({
+  const ConversationAvatar({
+    super.key,
     required this.conversation,
+    this.size = 40,
   });
 
   Stream<AccountSnapshot> fetchContact(BuildContext context) {
@@ -155,11 +159,16 @@ class _ConversationAnchorAvatar extends StatelessWidget {
         stream: fetchContact(context),
         builder: (context, snapshot) => AccountAvatar(
           snapshot: snapshot.requireData,
+          size: size,
         ),
       );
     }
     if (conversation.type == ConversationType.CONVERSATION_GROUP) {
-      return CircleAvatar();
+      final avatarUrl = conversation.info.avatarUrl;
+      return CircleAvatar(
+        radius: size / 2,
+        child: avatarUrl.isEmpty ? null : ExtendedImage.network(avatarUrl),
+      ).clipRRect(all: 9999);
     }
 
     throw UnimplementedError();

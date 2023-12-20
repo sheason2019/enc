@@ -5,6 +5,7 @@ import {
   HttpException,
   Param,
   Post,
+  Put,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -138,6 +139,56 @@ export class GroupController {
         .map((e) => Buffer.from(e).toString('base64')),
     );
     await this.groupService.distrobuteMessage(group, encodeWrappers);
+  }
+
+  @Put(':groupId/avatar')
+  @UseInterceptors(NoFilesInterceptor())
+  async handlePutAvatar(
+    @Param('groupId') groupId: string,
+    @Body() body: { data: string },
+  ) {
+    const group = await this.groupService.findGroup(groupId);
+    if (!group) {
+      throw new HttpException('cannot find group', 404);
+    }
+
+    const wrapper = sheason_chat.SignWrapper.decode(
+      Buffer.from(body.data, 'base64'),
+    );
+    if (!this.cryptoService.verifySignature(wrapper)) {
+      throw new HttpException('verify signautre failed', 403);
+    }
+
+    const data: { groupId: string; avatarUrl: string } = JSON.parse(
+      Buffer.from(wrapper.buffer).toString(),
+    );
+    if (data.groupId !== groupId) {
+      throw new HttpException('content invalid', 400);
+    }
+
+    const conversation = sheason_chat.PortableConversation.decode(
+      group.portableConversation,
+    );
+    if (conversation.avatarUrl === data.avatarUrl) {
+      return 'OK';
+    }
+
+    conversation.avatarUrl = data.avatarUrl;
+    conversation.version++;
+    const newConv = Buffer.from(
+      sheason_chat.PortableConversation.encode(conversation).finish(),
+    );
+    const updated = await prisma.group.update({
+      where: {
+        id: group.id,
+      },
+      data: {
+        portableConversation: newConv,
+      },
+    });
+
+    await this.groupService.emitGroupUpdate(updated);
+    return 'OK';
   }
 
   @Get(':groupId')
