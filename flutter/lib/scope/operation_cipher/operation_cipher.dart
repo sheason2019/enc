@@ -7,6 +7,7 @@ import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 
 class OperationCipher {
   OperationCipher._();
@@ -23,17 +24,16 @@ class OperationCipher {
         operation.info.writeToBuffer(),
       );
       final buffer = secretBox.writeToBuffer();
-      final sign = await CryptoUtils.createSignature(scope, buffer);
-      final signWrapper = SignWrapper()
-        ..buffer = buffer
-        ..contentType = ContentType.CONTENT_OPERATION
-        ..signer = scope.snapshot.index
-        ..encrypt = true
-        ..sign = sign.bytes;
+      final wrapper = await SignHelper.wrap(
+        scope,
+        buffer,
+        contentType: ContentType.CONTENT_OPERATION,
+        encryptTarget: scope.snapshot.index,
+      );
       output.add({
         'clientId': operation.clientId,
         'clock': operation.clock,
-        'data': base64Encode(signWrapper.writeToBuffer()),
+        'data': base64Encode(wrapper.writeToBuffer()),
       });
     }
 

@@ -72,19 +72,5 @@ model Group {
 
   messages Message[]
 
-  groupMembers GroupMembers[]
-
   @@index([signPubkey])
-}
-
-model GroupMembers {
-  id Int @id @default(autoincrement())
-
-  groupID Int
-  group   Group @relation(fields: [groupID], references: [id])
-
-  signPubkey String
-  snapshot   Bytes
-
-  @@index([groupID, signPubkey])
 }

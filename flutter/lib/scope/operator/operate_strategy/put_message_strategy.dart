@@ -12,6 +12,7 @@ import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_state_atom_proceeder.dart';
 import 'package:sheason_chat/scope/operator/operate_strategy/operate_strategy.dart';
+import 'package:sheason_chat/scope/scope.model.dart';
 import 'package:sheason_chat/utils/sign_helper.dart';
 
 class PutMessageStrategy implements OperateStrategy {
@@ -47,7 +48,37 @@ class PutMessageStrategy implements OperateStrategy {
     }
 
     final buffer = await SignHelper.unwrap(scope, wrapper);
-    final portableMessage = PortableMessage.fromBuffer(buffer);
+    switch (wrapper.contentType) {
+      case ContentType.CONTENT_MESSAGE:
+        final portableMessage = PortableMessage.fromBuffer(buffer);
+        await applyMessage(scope, portableMessage, atoms);
+        break;
+      case ContentType.CONTENT_CONVERSATION:
+        final portableConversation = PortableConversation.fromBuffer(buffer);
+        final putConversationAtom = await PutConversationAtomProceeder().apply(
+          context,
+          portableConversation,
+        );
+        if (putConversationAtom != null) {
+          atoms.add(putConversationAtom);
+        }
+        break;
+      default:
+        throw UnimplementedError();
+    }
+
+    final update = scope.db.operations.update();
+    update.where((tbl) => tbl.id.equals(operation.id));
+    await update.write(OperationsCompanion(
+      atoms: Value(atoms),
+    ));
+  }
+
+  applyMessage(
+    Scope scope,
+    PortableMessage portableMessage,
+    List<OperateAtom> atoms,
+  ) async {
     final contactProceeder = PutContactAtomProceeder();
     for (final member in portableMessage.conversation.members) {
       final atom = await contactProceeder.apply(context, member);
@@ -113,12 +144,6 @@ class PutMessageStrategy implements OperateStrategy {
         atoms.add(messageStateAtom);
       }
     }
-
-    final update = scope.db.operations.update();
-    update.where((tbl) => tbl.id.equals(operation.id));
-    await update.write(OperationsCompanion(
-      atoms: Value(atoms),
-    ));
   }
 
   @override

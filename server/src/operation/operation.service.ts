@@ -72,7 +72,7 @@ export class OperationService {
     account: Account,
     operations: IPushOperation[],
   ): Promise<Operation[]> {
-    return prisma.$transaction(async (tx) => {
+    const operationRecords = await prisma.$transaction(async (tx) => {
       const records: Operation[] = [];
       for (const operation of operations) {
         const exist = await tx.operation.findFirst({
@@ -102,5 +102,6 @@ export class OperationService {
       }
       return records;
     });
+    return operationRecords;
   }
 }

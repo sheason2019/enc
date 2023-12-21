@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { Account, Group } from '@prisma/client';
-import axios from 'axios';
-import { randomUUID } from 'crypto';
 import { AccountService } from 'src/account/account.service';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { prisma } from 'src/prisma/prisma';
 import { sheason_chat } from 'src/prototypes';
+import { GroupMessageFactory } from './message/message.factory';
+import { GroupMessageService } from './message/message.service';
 
 @Injectable()
 export class GroupService {
   constructor(
     private readonly cryptoService: CryptoService,
     private readonly accountService: AccountService,
+    private readonly groupMessageFactory: GroupMessageFactory,
+    private readonly groupMessageService: GroupMessageService,
   ) {}
 
   findGroup(groupId: string) {
@@ -31,6 +33,7 @@ export class GroupService {
       signPubKey: secret.signPubKey,
       ecdhPubKey: secret.ecdhPubKey,
     };
+    const operator = sheason_chat.AccountSnapshot.decode(account.snapshot);
 
     const portable = sheason_chat.PortableConversation.create({
       type: sheason_chat.ConversationType.CONVERSATION_GROUP,
@@ -56,189 +59,115 @@ export class GroupService {
           sheason_chat.PortableConversation.encode(portable).finish(),
         ),
         signPubkey: secret.signPubKey,
-        groupMembers: {
-          create: conversation.members.map((e) => ({
-            signPubkey: e.index.signPubKey,
-            snapshot: Buffer.from(
-              sheason_chat.AccountSnapshot.encode(e).finish(),
-            ),
-          })),
-        },
       },
     });
-    const desenConv = this.desensitiveConversation(group);
 
     const initialMessageWrappers: sheason_chat.SignWrapper[] = [];
-    const createMessage = sheason_chat.PortableMessage.create({
-      conversation: desenConv,
-      messageType: sheason_chat.MessageType.MESSAGE_TYPE_NOTIFY,
-      content: JSON.stringify({
-        type: 'create',
-        payload: account.signPubkey,
-      }),
-      uuid: randomUUID(),
-      createdAt: new Date().getTime(),
-    });
-    initialMessageWrappers.push(this.encodeMessage(group, createMessage));
-    if (conversation.members.length > 1) {
-      const inviteMessage = sheason_chat.PortableMessage.create({
-        conversation: desenConv,
-        messageType: sheason_chat.MessageType.MESSAGE_TYPE_NOTIFY,
-        content: JSON.stringify({
-          type: 'invite',
-          payload: {
-            operator: account.signPubkey,
-            members: conversation.members
-              .filter((e) => e.index.signPubKey !== account.signPubkey)
-              .map((e) => e.index.signPubKey),
-          },
-        }),
-        uuid: randomUUID(),
-        createdAt: new Date().getTime(),
-      });
-      initialMessageWrappers.push(this.encodeMessage(group, inviteMessage));
-    }
-
-    const accounts = await this.accountService.findIn(
-      conversation.members.map((e) => e.index.signPubKey),
+    const createMessage = this.groupMessageFactory.create(portable, operator);
+    initialMessageWrappers.push(
+      this.groupMessageService.encodeMessage(group, createMessage),
     );
-
-    for (const wrapper of initialMessageWrappers) {
-      await prisma.message.create({
-        data: {
-          signature: Buffer.from(wrapper.sign),
-          buffer: Buffer.from(
-            sheason_chat.SignWrapper.encode(wrapper).finish(),
-          ),
-          accounts: {
-            connect: accounts,
-          },
-          group: {
-            connect: {
-              id: group.id,
-            },
-          },
-        },
-      });
+    if (portable.members.length > 1) {
+      const inviteMessage = this.groupMessageFactory.invite(
+        portable,
+        operator,
+        portable.members.filter(
+          (e) => e.index.signPubKey !== operator.index.signPubKey,
+        ),
+      );
+      inviteMessage.createdAt = new Date().getTime() + 1000;
+      initialMessageWrappers.push(
+        this.groupMessageService.encodeMessage(group, inviteMessage),
+      );
     }
 
-    await this.emitGroupUpdate(group);
-    await this.distrobuteMessage(group, initialMessageWrappers);
+    await this.groupMessageService.emitGroupUpdate(group);
+    await this.groupMessageService.distrobuteMessage(
+      group,
+      initialMessageWrappers,
+    );
 
     return group;
   }
 
-  encodeMessage(
+  async applyMembers(
     group: Group,
-    message: sheason_chat.IPortableMessage,
-  ): sheason_chat.SignWrapper {
-    const agentSecret = sheason_chat.AccountSecret.decode(group.agentSecret);
-    const conversation = sheason_chat.PortableConversation.decode(
-      group.portableConversation,
-    );
-    const secrets = conversation.declaredSecrets;
-    const key = secrets[secrets.length - 1];
-    const secretBox = this.cryptoService.secretEncrypt(
-      Buffer.from(key),
-      Buffer.from(sheason_chat.PortableMessage.encode(message).finish()),
-    );
-    secretBox.sender = {
-      signPubKey: agentSecret.signPubKey,
-      ecdhPubKey: agentSecret.ecdhPubKey,
-    };
-    secretBox.receiver = secretBox.sender;
-    const buffer = Buffer.from(
-      sheason_chat.PortableSecretBox.encode(secretBox).finish(),
-    );
-    const wrapper = this.cryptoService.createSignature(agentSecret, buffer);
-    wrapper.encrypt = true;
-    wrapper.contentType = sheason_chat.ContentType.CONTENT_MESSAGE;
-    return wrapper;
-  }
-
-  async distrobuteMessage(group: Group, wrappers: sheason_chat.SignWrapper[]) {
-    const members = await prisma.groupMembers.findMany({
-      where: {
-        groupID: group.id,
-      },
-    });
-    const urlSet = new Set<string>();
-    for (const member of members) {
-      const snapshot = sheason_chat.AccountSnapshot.decode(member.snapshot);
-      for (const url of Object.keys(snapshot.serviceMap)) {
-        urlSet.add(url);
-      }
-    }
-
-    const formData = new FormData();
-    formData.append(
-      'data',
-      JSON.stringify(
-        wrappers
-          .map((e) => sheason_chat.SignWrapper.encode(e).finish())
-          .map((e) => Buffer.from(e).toString('base64')),
-      ),
-    );
-    formData.append(
-      'receivers',
-      JSON.stringify(members.map((e) => e.signPubkey)),
-    );
-
-    for (const url of urlSet) {
-      axios
-        .postForm(`${url}/message`, formData)
-        .catch((e) => console.log('[WARN] distrobute message failed', e));
-    }
-  }
-
-  // 通知相关用户群组信息已更新
-  async emitGroupUpdate(group: Group) {
-    const agentSecret = sheason_chat.AccountSecret.decode(group.agentSecret);
-    const members = await prisma.groupMembers.findMany({
-      where: {
-        groupID: group.id,
-      },
-    });
-
-    for (const member of members) {
-      const snapshot = sheason_chat.AccountSnapshot.decode(member.snapshot);
-      const secretBox = this.cryptoService.encrypt(
-        agentSecret,
-        snapshot.index,
-        group.portableConversation,
-      );
-      const wrapper = this.cryptoService.createSignature(
-        agentSecret,
-        Buffer.from(sheason_chat.PortableSecretBox.encode(secretBox).finish()),
-      );
-      wrapper.contentType = sheason_chat.ContentType.CONTENT_CONVERSATION;
-      wrapper.encrypt = true;
-
-      const formData = new FormData();
-      formData.append(
-        'data',
-        JSON.stringify([
-          Buffer.from(
-            sheason_chat.SignWrapper.encode(wrapper).finish(),
-          ).toString('base64'),
-        ]),
-      );
-      formData.append('receivers', JSON.stringify([member.signPubkey]));
-
-      for (const url of Object.keys(snapshot.serviceMap)) {
-        axios.postForm(`${url}/message`, formData);
-      }
-    }
-  }
-
-  desensitiveConversation(group: Group) {
+    operator: sheason_chat.IAccountSnapshot,
+    members: sheason_chat.IAccountSnapshot[],
+  ) {
     const conversation = sheason_chat.PortableConversation.decode(
       group.portableConversation,
     );
 
-    conversation.declaredSecrets = [];
-    conversation.owner = null;
-    conversation.members = [];
-    return conversation;
+    const oldMembers = conversation.members;
+    const newMembers = members;
+
+    const removeMap = new Map<string, sheason_chat.IAccountSnapshot>();
+    for (const member of oldMembers) {
+      removeMap.set(member.index.signPubKey, member);
+    }
+    for (const member of newMembers) {
+      removeMap.delete(member.index.signPubKey);
+    }
+
+    const removedMember = [...removeMap.values()];
+
+    const inviteMap = new Map<string, sheason_chat.IAccountSnapshot>();
+    for (const member of newMembers) {
+      inviteMap.set(member.index.signPubKey, member);
+    }
+    for (const member of oldMembers) {
+      inviteMap.delete(member.index.signPubKey);
+    }
+    const invitedMember = [...inviteMap.values()];
+
+    if (removedMember.length > 0) {
+      // 发送移除成员信息
+      const removeMemberMessage = this.groupMessageFactory.remove(
+        conversation,
+        operator,
+        removedMember,
+      );
+      await this.groupMessageService.distrobuteMessage(group, [
+        this.groupMessageService.encodeMessage(group, removeMemberMessage),
+      ]);
+      // 发送会话更新通知
+      conversation.members = members;
+      conversation.version++;
+      group.portableConversation = Buffer.from(
+        sheason_chat.PortableConversation.encode(conversation).finish(),
+      );
+      await this.groupMessageService.emitGroupUpdate(group, removedMember);
+
+      // 创建新的密钥
+      conversation.declaredSecrets.push(this.cryptoService.generateSecret());
+    }
+
+    conversation.members = members;
+    conversation.version++;
+    group.portableConversation = Buffer.from(
+      sheason_chat.PortableConversation.encode(conversation).finish(),
+    );
+    await this.groupMessageService.emitGroupUpdate(group);
+
+    if (invitedMember.length > 0) {
+      const inviteMemberMessage = this.groupMessageFactory.invite(
+        conversation,
+        operator,
+        invitedMember,
+      );
+      await this.groupMessageService.distrobuteMessage(group, [
+        this.groupMessageService.encodeMessage(group, inviteMemberMessage),
+      ]);
+    }
+
+    return prisma.group.update({
+      where: {
+        id: group.id,
+      },
+      data: {
+        portableConversation: group.portableConversation,
+      },
+    });
   }
 }

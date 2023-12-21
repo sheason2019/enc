@@ -67,7 +67,6 @@ class MessageInputController extends ChangeNotifier {
     // 通过 ConversationAgent 加密消息内容
     final wrappers = <SignWrapper>[];
     final operations = <PortableOperation>[];
-    var i = 0;
     for (final message in messages) {
       final agent = conversation.info.findAgent(scope);
       final wrapper = await SignHelper.wrap(
@@ -77,10 +76,7 @@ class MessageInputController extends ChangeNotifier {
         contentType: ContentType.CONTENT_MESSAGE,
       );
       wrappers.add(wrapper);
-      final operation = await scope.operator.factory.message(
-        wrapper,
-        offset: i++,
-      );
+      final operation = await scope.operator.factory.message(wrapper);
       operations.add(operation);
     }
 

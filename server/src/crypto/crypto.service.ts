@@ -163,15 +163,7 @@ export class CryptoService {
   }
 
   verifySignature(wrapper: sheason_chat.SignWrapper) {
-    const createdAt = wrapper.createdAt;
-    if (typeof createdAt === 'number') {
-      const now = new Date().getTime();
-      if (now - createdAt > 1000 * 60 * 3) {
-        return false;
-      }
-    } else {
-      console.warn("cannot proceed sign wrapper's createdAt field");
-    }
+    // TODO: 通过 CreatedAt 校验 Wrapper 是否过期，默认时间为 3min
 
     return verify(
       null,

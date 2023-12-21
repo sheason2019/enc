@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sheason_chat/chat/room/room.controller.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/models/rtc_model.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/utils/service_selector/service_selector.controller.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateRTCInviteController extends ChangeNotifier {
@@ -35,17 +35,12 @@ class CreateRTCInviteController extends ChangeNotifier {
     );
 
     final buffer = utf8.encode(jsonEncode(rtcModel.toJson()));
-    final signature = await CryptoUtils.createSignature(
+
+    final wrapper = await SignHelper.wrap(
       chatController.scope,
       buffer,
+      contentType: ContentType.CONTENT_BUFFER,
     );
-
-    final wrapper = SignWrapper()
-      ..buffer = buffer
-      ..sign = signature.bytes
-      ..signer = chatController.scope.snapshot.index
-      ..encrypt = false
-      ..contentType = ContentType.CONTENT_BUFFER;
     final data = FormData.fromMap({
       'payload': base64Encode(wrapper.writeToBuffer()),
     });

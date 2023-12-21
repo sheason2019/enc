@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
@@ -114,31 +113,13 @@ class Subscribe extends ChangeNotifier {
       final wrappers = messages
           .map((e) => base64Decode(e))
           .map((e) => SignWrapper.fromBuffer(e));
-      var i = 0;
       final operations = <PortableOperation>[];
       for (final wrapper in wrappers) {
         final valid = await wrapper.verify();
         if (!valid) continue;
 
-        switch (wrapper.contentType) {
-          case ContentType.CONTENT_MESSAGE:
-            final operation = await scope.operator.factory.message(
-              wrapper,
-              offset: i++,
-            );
-            operations.add(operation);
-            break;
-          case ContentType.CONTENT_CONVERSATION:
-            final operation = await scope.operator.factory.conversation(
-              PortableConversation.fromBuffer(
-                await SignHelper.unwrap(scope, wrapper),
-              ),
-            );
-            operations.add(operation);
-            break;
-          default:
-            debugPrint('[WARN] Unproceed wrapper');
-        }
+        final operation = await scope.operator.factory.message(wrapper);
+        operations.add(operation);
       }
       if (operations.isNotEmpty) {
         await scope.operator.apply(operations, isReplay: false);
@@ -190,12 +171,12 @@ class Subscribe extends ChangeNotifier {
 
   handleUploadSnapshot() async {
     final buffer = scope.snapshot.writeToBuffer();
-    final sign = await CryptoUtils.createSignature(scope, buffer);
 
-    final wrapper = SignWrapper()
-      ..buffer = buffer
-      ..signer = scope.snapshot.index
-      ..sign = sign.bytes;
+    final wrapper = await SignHelper.wrap(
+      scope,
+      buffer,
+      contentType: ContentType.CONTENT_BUFFER,
+    );
 
     await dio.put(
       '$url/account/${scope.snapshot.index.signPubKey}',

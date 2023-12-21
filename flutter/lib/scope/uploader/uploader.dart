@@ -3,10 +3,10 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
 import 'package:sheason_chat/dio.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:sheason_chat/utils/sign_helper.dart';
 
 class Uploader {
   final Scope scope;
@@ -31,15 +31,11 @@ class Uploader {
     for (var block = 0; block < blockCount; block++) {
       final readLength = math.min(blockSize, fileSize - block * blockSize);
       final data = await file.read(readLength);
-      final signature = await CryptoUtils.createSignature(
+      final wrapper = await SignHelper.wrap(
         scope,
         data,
+        contentType: ContentType.CONTENT_BUFFER,
       );
-      final wrapper = SignWrapper()
-        ..buffer = data
-        ..sign = signature.bytes
-        ..signer = scope.snapshot.index
-        ..contentType = ContentType.CONTENT_BUFFER;
 
       final formData = FormData.fromMap({
         'type': 'upload',
@@ -60,15 +56,11 @@ class Uploader {
     }
 
     final mergeData = utf8.encode(jsonEncode(chunkList));
-    final mergeSignature = await CryptoUtils.createSignature(
+    final mergeWrapper = await SignHelper.wrap(
       scope,
       mergeData,
+      contentType: ContentType.CONTENT_BUFFER,
     );
-    final mergeWrapper = SignWrapper()
-      ..buffer = mergeData
-      ..sign = mergeSignature.bytes
-      ..signer = scope.snapshot.index
-      ..contentType = ContentType.CONTENT_BUFFER;
 
     final resp = await dio.post(
       url,

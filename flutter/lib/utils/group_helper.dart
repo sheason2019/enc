@@ -24,13 +24,9 @@ class GroupHelper {
     final wrappers = (resp.data as List)
         .map((e) => base64Decode(e))
         .map((e) => SignWrapper.fromBuffer(e));
-    var i = 0;
     final operations = <PortableOperation>[];
     for (final wrapper in wrappers) {
-      final operation = await scope.operator.factory.message(
-        wrapper,
-        offset: i++,
-      );
+      final operation = await scope.operator.factory.message(wrapper);
       operations.add(operation);
     }
     await scope.operator.apply(operations, isReplay: true);

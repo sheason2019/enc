@@ -9,13 +9,23 @@ export class MessageService {
     accounts: Account[],
     data: sheason_chat.SignWrapper,
   ): Promise<Message | undefined> {
-    return prisma.$transaction(async (tx) => {
+    const message = await prisma.$transaction(async (tx) => {
       const exist = await tx.message.findFirst({
         where: {
           signature: Buffer.from(data.sign),
         },
       });
       if (!!exist) return exist;
+
+      let group = await tx.group.findFirst({
+        where: {
+          signPubkey: data.signer.signPubKey,
+        },
+      });
+      if (data.contentType !== sheason_chat.ContentType.CONTENT_MESSAGE) {
+        group = undefined;
+      }
+
       return tx.message.create({
         data: {
           signature: Buffer.from(data.sign),
@@ -23,8 +33,10 @@ export class MessageService {
           accounts: {
             connect: accounts,
           },
+          groupID: group?.id,
         },
       });
     });
+    return message;
   }
 }

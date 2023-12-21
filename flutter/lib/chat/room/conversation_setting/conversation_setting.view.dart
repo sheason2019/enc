@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheason_chat/chat/room/conversation_setting/group/group.view.dart';
+import 'package:sheason_chat/chat/room/conversation_setting/member/member.view.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/scope.model.dart';
@@ -42,6 +43,7 @@ class ConversationSettingPage extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
+            GroupMembers(conversation: snapshot.requireData),
             if (snapshot.requireData.type ==
                 ConversationType.CONVERSATION_GROUP)
               GroupSettings(conversation: snapshot.requireData),

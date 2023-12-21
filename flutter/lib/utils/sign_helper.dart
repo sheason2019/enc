@@ -22,7 +22,8 @@ class SignHelper {
         ..sign = signature.bytes
         ..signer = scope.snapshot.index
         ..contentType = contentType
-        ..encrypt = false;
+        ..encrypt = false
+        ..createdAt = Int64(DateTime.now().millisecondsSinceEpoch);
     } else {
       final secret = await CryptoUtils.encrypt(scope, encryptTarget, buffer);
       final wrapperBuffer = secret.writeToBuffer();

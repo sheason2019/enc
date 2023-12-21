@@ -57,7 +57,8 @@ class WinNotifier implements Notifier {
 
     final select = scope.db.contacts.select();
     select.where((tbl) => tbl.id.equals(message.contactId));
-    final contact = await select.getSingle();
+    final contact = await select.getSingleOrNull();
+    if (contact == null) return;
 
     final avatarPath = await NotifierHelper.avatarPath(scope, contact);
 

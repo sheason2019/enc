@@ -10,7 +10,7 @@ export class AccountService {
     buffer: Buffer,
     signature: Buffer,
   ): Promise<Account> {
-    return prisma.$transaction(async (tx) => {
+    const account = await prisma.$transaction(async (tx) => {
       const exist = await tx.account.findFirst({
         where: {
           signPubkey: snapshot.index.signPubKey,
@@ -47,6 +47,8 @@ export class AccountService {
         },
       });
     });
+
+    return account;
   }
   async find(signPubkey: string): Promise<Account | undefined> {
     return prisma.account.findFirst({

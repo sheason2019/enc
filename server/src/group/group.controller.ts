@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { GroupService } from './group.service';
@@ -16,6 +15,8 @@ import { CryptoService } from 'src/crypto/crypto.service';
 import { AccountService } from 'src/account/account.service';
 import { prisma } from 'src/prisma/prisma';
 import { SubscribeGateway } from 'src/subscribe/subscribe.gateway';
+import { GroupMessageService } from './message/message.service';
+import { GroupMessageFactory } from './message/message.factory';
 
 @Controller('group')
 export class GroupController {
@@ -24,6 +25,8 @@ export class GroupController {
     private readonly cryptoService: CryptoService,
     private readonly accountService: AccountService,
     private readonly subscribeGateway: SubscribeGateway,
+    private readonly groupMessageService: GroupMessageService,
+    private readonly groupMessageFactory: GroupMessageFactory,
   ) {}
 
   @Post()
@@ -91,6 +94,14 @@ export class GroupController {
       throw new HttpException('cannot find group', 404);
     }
 
+    const portable = sheason_chat.PortableConversation.decode(
+      group.portableConversation,
+    );
+    const memberSet = new Set<string>();
+    for (const member of portable.members) {
+      memberSet.add(member.index.signPubKey);
+    }
+
     const agentSecret = sheason_chat.AccountSecret.decode(group.agentSecret);
     const wrappers = (JSON.parse(body.data) as string[])
       .map((e) => Buffer.from(e, 'base64'))
@@ -102,11 +113,18 @@ export class GroupController {
         continue;
       }
 
+      if (!memberSet.has(wrapper.signer.signPubKey)) {
+        console.error('wrapper signer is not group member');
+        continue;
+      }
+
       const secretBox = sheason_chat.PortableSecretBox.decode(wrapper.buffer);
       const message = sheason_chat.PortableMessage.decode(
         this.cryptoService.decrypt(agentSecret, secretBox),
       );
-      encodeWrappers.push(this.groupService.encodeMessage(group, message));
+      encodeWrappers.push(
+        this.groupMessageService.encodeMessage(group, message),
+      );
     }
 
     if (encodeWrappers.length === 0) return;
@@ -138,7 +156,7 @@ export class GroupController {
         .map((e) => sheason_chat.SignWrapper.encode(e).finish())
         .map((e) => Buffer.from(e).toString('base64')),
     );
-    await this.groupService.distrobuteMessage(group, encodeWrappers);
+    await this.groupMessageService.distrobuteMessage(group, encodeWrappers);
   }
 
   @Put(':groupId/avatar')
@@ -157,6 +175,15 @@ export class GroupController {
     );
     if (!this.cryptoService.verifySignature(wrapper)) {
       throw new HttpException('verify signautre failed', 403);
+    }
+
+    const owner = await prisma.account.findUnique({
+      where: {
+        id: group.accountID,
+      },
+    });
+    if (wrapper.signer.signPubKey !== owner.signPubkey) {
+      throw new HttpException('signer should be group owner', 403);
     }
 
     const data: { groupId: string; avatarUrl: string } = JSON.parse(
@@ -187,7 +214,7 @@ export class GroupController {
       },
     });
 
-    await this.groupService.emitGroupUpdate(updated);
+    await this.groupMessageService.emitGroupUpdate(updated);
     return 'OK';
   }
 
@@ -209,7 +236,15 @@ export class GroupController {
       throw new HttpException('verify signautre failed', 403);
     }
 
-    console.log(Buffer.from(wrapper.buffer).toString('utf-8'));
+    const owner = await prisma.account.findUnique({
+      where: {
+        id: group.accountID,
+      },
+    });
+    if (wrapper.signer.signPubKey !== owner.signPubkey) {
+      throw new HttpException('signer should be group owner', 403);
+    }
+
     const data: { groupId: string; name: string } = JSON.parse(
       Buffer.from(wrapper.buffer).toString('utf-8'),
     );
@@ -238,51 +273,54 @@ export class GroupController {
       },
     });
 
-    await this.groupService.emitGroupUpdate(updated);
+    await this.groupMessageService.emitGroupUpdate(updated);
     return 'OK';
   }
 
-  @Get(':groupId')
-  async handleGetGroup(
+  @Put(':groupId/members')
+  @UseInterceptors(NoFilesInterceptor())
+  async handlePutMember(
     @Param('groupId') groupId: string,
-    @Query('member') member: string,
+    @Body() body: { data: string },
   ) {
     const group = await this.groupService.findGroup(groupId);
     if (!group) {
       throw new HttpException('cannot find group', 404);
     }
 
-    if (!member) {
-      const conversation = this.groupService.desensitiveConversation(group);
-      return Buffer.from(
-        sheason_chat.PortableConversation.encode(conversation).finish(),
-      ).toString('base64');
+    const wrapper = sheason_chat.SignWrapper.decode(
+      Buffer.from(body.data, 'base64'),
+    );
+    if (!this.cryptoService.verifySignature(wrapper)) {
+      throw new HttpException('verify signautre failed', 403);
     }
 
-    const groupMember = await prisma.groupMembers.findFirst({
+    const owner = await prisma.account.findUnique({
       where: {
-        signPubkey: member,
-        groupID: group.id,
+        id: group.accountID,
       },
     });
-    if (!groupMember) {
-      throw new HttpException('cannot find group member', 404);
+    if (wrapper.signer.signPubKey !== owner.signPubkey) {
+      throw new HttpException('signer should be group owner', 403);
     }
 
-    const groupSecret = sheason_chat.AccountSecret.decode(group.agentSecret);
-    const snapshot = sheason_chat.AccountSnapshot.decode(groupMember.snapshot);
-    const secretBox = this.cryptoService.encrypt(
-      groupSecret,
-      snapshot.index,
-      group.portableConversation,
+    const data: { groupId: string; members: string[] } = JSON.parse(
+      Buffer.from(wrapper.buffer).toString('utf-8'),
     );
-    const wrapper = this.cryptoService.createSignature(
-      groupSecret,
-      Buffer.from(sheason_chat.PortableSecretBox.encode(secretBox).finish()),
+    if (data.groupId !== groupId) {
+      throw new HttpException('content invalid', 400);
+    }
+
+    const members = data.members
+      .map((e) => Buffer.from(e, 'base64'))
+      .map((e) => sheason_chat.AccountSnapshot.decode(e));
+    const updated = await this.groupService.applyMembers(
+      group,
+      sheason_chat.AccountSnapshot.decode(owner.snapshot),
+      members,
     );
 
-    return Buffer.from(
-      sheason_chat.SignWrapper.encode(wrapper).finish(),
-    ).toString('base64');
+    await this.groupMessageService.emitGroupUpdate(updated);
+    return 'OK';
   }
 }

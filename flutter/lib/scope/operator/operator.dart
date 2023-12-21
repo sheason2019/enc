@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:sheason_chat/prototypes/core.pb.dart';
 import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/context.dart';
@@ -18,6 +19,7 @@ class Operator {
     required bool isReplay,
   }) async {
     final context = OperateContext(scope: scope, isReplay: isReplay);
+
     await scope.db.transaction(() async {
       // 写入 Operation
       await _write(operations);
@@ -33,6 +35,7 @@ class Operator {
         applyList,
       );
     });
+
     // 请求与服务器进行同步
     for (final subscribe in scope.subscribes.values) {
       subscribe.syncOperation();
@@ -44,6 +47,8 @@ class Operator {
   }
 
   Future<void> _write(List<PortableOperation> operations) async {
+    debugPrint(
+        '${scope.secret.signPubKey} operations clock ${operations.map((e) => e.clock)}');
     for (final operation in operations) {
       final select = scope.db.operations.select();
       select.where((tbl) => tbl.clientId.equals(operation.clientId));

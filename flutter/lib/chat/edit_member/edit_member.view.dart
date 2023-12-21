@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sheason_chat/chat/edit_member/edit_member.controller.dart';
 import 'package:sheason_chat/chat/edit_member/list_tile/list_tile.view.dart';
 
 class EditMemberView extends StatelessWidget {
+  final FutureOr<void> Function()? onSubmited;
   final EditMemberController controller;
   const EditMemberView({
     super.key,
     required this.controller,
+    this.onSubmited,
   });
 
   @override
@@ -30,11 +34,16 @@ class EditMemberView extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           controller.memberSet.clear();
           controller.memberSet.addAll(controller.selectSet);
           controller.notify();
-          Navigator.of(context).pop();
+          if (onSubmited != null) {
+            await onSubmited!();
+          }
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
         },
         child: const Icon(Icons.check),
       ),
