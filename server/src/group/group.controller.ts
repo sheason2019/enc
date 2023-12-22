@@ -109,13 +109,11 @@ export class GroupController {
     const encodeWrappers: sheason_chat.SignWrapper[] = [];
     for (const wrapper of wrappers) {
       if (!this.cryptoService.verifySignature(wrapper)) {
-        console.warn('verify wrapper signature failed');
-        continue;
+        throw new HttpException('verify wrapper signature failed', 403);
       }
 
       if (!memberSet.has(wrapper.signer.signPubKey)) {
-        console.error('wrapper signer is not group member');
-        continue;
+        throw new HttpException('wrapper signer is not group member', 403);
       }
 
       const secretBox = sheason_chat.PortableSecretBox.decode(wrapper.buffer);

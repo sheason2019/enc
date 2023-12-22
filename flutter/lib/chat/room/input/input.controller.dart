@@ -101,6 +101,13 @@ class MessageInputController extends ChangeNotifier {
       return;
     }
 
+    if (conversation.type == ConversationType.CONVERSATION_GROUP) {
+      final url = conversation.info.remoteUrl;
+      final id = conversation.info.agent.signPubKey;
+      await dio.post('$url/group/$id/message', data: postData);
+      return;
+    }
+
     throw UnimplementedError();
   }
 }
