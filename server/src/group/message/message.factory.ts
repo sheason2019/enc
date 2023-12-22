@@ -51,7 +51,7 @@ export class GroupMessageFactory {
       content: JSON.stringify({
         type: 'remove',
         payload: {
-          operator,
+          operator: operator.index.signPubKey,
           members: members.map((e) => e.index.signPubKey),
         },
       }),
