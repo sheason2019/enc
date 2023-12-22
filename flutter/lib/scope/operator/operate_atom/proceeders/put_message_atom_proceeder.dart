@@ -4,7 +4,6 @@ import 'package:sheason_chat/schema/database.dart';
 import 'package:sheason_chat/scope/operator/context.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
 import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
-import 'package:sheason_chat/utils/group_helper.dart';
 
 import 'atom_proceeder.dart';
 
@@ -48,17 +47,6 @@ class PutMessageAtomProceeder implements AtomProceeder<PortableMessage> {
       ),
       messageType: portableMessage.messageType,
     ));
-
-    if (!context.isReplay) {
-      if (portableMessage.messageType !=
-          MessageType.MESSAGE_TYPE_CONVERSATION_UPGRADE) {
-        scope.notifier.message(scope, insert);
-      } else {
-        context.afterTranscation.add(
-          () => GroupHelper.pullMessage(scope, conversation),
-        );
-      }
-    }
 
     return OperateAtom(
       type: OperateAtomType.putMessage,
