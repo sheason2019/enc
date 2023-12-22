@@ -1,6 +1,6 @@
 {
-    "name": "sheason_chat",
-    "short_name": "sheason_chat",
+    "name": "ENC",
+    "short_name": "ENC",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

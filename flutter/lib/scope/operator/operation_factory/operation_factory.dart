@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class OperationFactory {
   final Scope scope;

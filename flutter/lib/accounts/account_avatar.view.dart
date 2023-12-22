@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:random_avatar/random_avatar.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class AccountAvatar extends StatelessWidget {

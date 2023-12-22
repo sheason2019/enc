@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
+import 'package:ENC/replica/replica.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ReplicaProceedHostPendingQrcode extends StatelessWidget {

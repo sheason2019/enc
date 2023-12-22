@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:uuid/uuid.dart';
 

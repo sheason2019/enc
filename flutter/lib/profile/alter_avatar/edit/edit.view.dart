@@ -6,10 +6,10 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/profile/alter_avatar/preview/preview.view.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/profile/alter_avatar/preview/preview.view.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:uuid/uuid.dart';
 

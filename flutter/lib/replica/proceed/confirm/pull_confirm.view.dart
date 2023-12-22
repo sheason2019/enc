@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/replica/replica.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ReplicaProceedConfirmPull extends StatelessWidget {

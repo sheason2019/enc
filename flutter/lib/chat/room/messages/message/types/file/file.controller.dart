@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:open_file/open_file.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/models/network_resource.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/models/network_resource.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/string_helper.dart';
 
 class FileMessageController extends ChangeNotifier {
   final Scope scope;

@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as path;
-import 'package:sheason_chat/chat/room/room.view.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/room/room.view.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class NotifierHelper {
   NotifierHelper._();

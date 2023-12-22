@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ServiceSelectorController extends ChangeNotifier {
   final Scope scope;

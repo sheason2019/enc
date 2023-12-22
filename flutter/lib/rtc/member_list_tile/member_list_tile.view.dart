@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/rtc/rtc.model/member.dart';
-import 'package:sheason_chat/rtc/rtc.model/session.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/rtc/rtc.model/member.dart';
+import 'package:ENC/rtc/rtc.model/session.dart';
 
 class MemberListTile extends StatelessWidget {
   final RtcMember member;

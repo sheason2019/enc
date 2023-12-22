@@ -1,7 +1,7 @@
 import 'package:cryptography/cryptography.dart';
-import 'package:sheason_chat/cyprto/crypto_keypair.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/cyprto/crypto_keypair.dart';
+import 'package:ENC/cyprto/crypto_utils.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 
 extension SignWrapperExtension on SignWrapper {
   Future<bool> verify() async {

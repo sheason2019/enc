@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/input/media_input/media_input.model.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/room/input/media_input/media_input.model.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 import 'media_input.view.dart';
 

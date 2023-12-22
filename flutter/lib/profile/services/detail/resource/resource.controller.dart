@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ServiceResourceController extends ChangeNotifier {

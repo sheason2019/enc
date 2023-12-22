@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/schema/database.dart';
 
 class OperationDetailPage extends StatelessWidget {
   final Operation operation;

@@ -4,13 +4,13 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/account_paths/account_paths.dart';
-import 'package:sheason_chat/scope/notifier/notifier.controller.dart';
-import 'package:sheason_chat/scope/operator/operator.dart';
-import 'package:sheason_chat/scope/subscribe/subscribe.dart';
-import 'package:sheason_chat/scope/uploader/uploader.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/account_paths/account_paths.dart';
+import 'package:ENC/scope/notifier/notifier.controller.dart';
+import 'package:ENC/scope/operator/operator.dart';
+import 'package:ENC/scope/subscribe/subscribe.dart';
+import 'package:ENC/scope/uploader/uploader.dart';
 
 import '../models/conversation_anchor.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:sheason_chat/chat/room/messages/message/message.view.dart';
-import 'package:sheason_chat/chat/room/room.controller.dart';
+import 'package:ENC/chat/room/messages/message/message.view.dart';
+import 'package:ENC/chat/room/room.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 

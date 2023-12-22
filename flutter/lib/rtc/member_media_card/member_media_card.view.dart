@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/rtc/member_focus/member_focus.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
-import 'package:sheason_chat/rtc/rtc.model/member.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/rtc/member_focus/member_focus.view.dart';
+import 'package:ENC/rtc/rtc.controller.dart';
+import 'package:ENC/rtc/rtc.model/member.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class MemberMediaCard extends StatefulWidget {

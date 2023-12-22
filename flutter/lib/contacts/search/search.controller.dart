@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/contacts/detail/detail.view.dart';
-import 'package:sheason_chat/cyprto/crypto_keypair.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/contacts/detail/detail.view.dart';
+import 'package:ENC/cyprto/crypto_keypair.dart';
+import 'package:ENC/cyprto/crypto_utils.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class SearchContactController {
   SearchContactController._();

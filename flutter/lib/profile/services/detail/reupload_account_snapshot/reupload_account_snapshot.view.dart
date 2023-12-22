@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/contacts/search/search.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/contacts/search/search.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ReloadAccountSnapshotListTile extends StatelessWidget {
   final String url;

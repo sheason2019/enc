@@ -4,8 +4,8 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class MessagesController extends ChangeNotifier {
   final BuildContext context;

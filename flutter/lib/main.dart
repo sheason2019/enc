@@ -2,8 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/main.controller.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/main.controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/replica/proceed/pending/host_pending/qrcode.view.dart';
-import 'package:sheason_chat/replica/proceed/pending/host_pending/text.view.dart';
+import 'package:ENC/replica/proceed/pending/host_pending/qrcode.view.dart';
+import 'package:ENC/replica/proceed/pending/host_pending/text.view.dart';
 
 class ReplicaProceedHostPending extends StatefulWidget {
   const ReplicaProceedHostPending({super.key});

@@ -1,5 +1,5 @@
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/operator/context.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/operator/context.dart';
 
 import 'operate_strategy/operate_strategy.dart';
 

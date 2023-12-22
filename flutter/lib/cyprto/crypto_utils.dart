@@ -2,10 +2,10 @@
 import 'package:cryptography/cryptography.dart';
 import 'package:drift/drift.dart';
 import 'package:jwk/jwk.dart';
-import 'package:sheason_chat/cyprto/crypto_keypair.dart';
-import 'package:sheason_chat/extensions/portable_secret_box/portable_secret_box.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/cyprto/crypto_keypair.dart';
+import 'package:ENC/extensions/portable_secret_box/portable_secret_box.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class CryptoUtils {
   static Future<SecretKey> _sharedSecret(

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/schema/database.dart';
 
 @immutable
 class MessageContext {

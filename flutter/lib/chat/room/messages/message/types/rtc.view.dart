@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/messages/message/wrapper.view.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/models/rtc_model.dart';
-import 'package:sheason_chat/rtc/rtc.view.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/room/messages/message/wrapper.view.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/models/rtc_model.dart';
+import 'package:ENC/rtc/rtc.view.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class RtcMessageView extends StatelessWidget {

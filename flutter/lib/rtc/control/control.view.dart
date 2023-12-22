@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/rtc/member_list/member_list.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/rtc/member_list/member_list.view.dart';
+import 'package:ENC/rtc/rtc.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class RtcPageControl extends StatelessWidget {

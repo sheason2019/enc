@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/rtc/member_list_tile/member_list_tile.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
+import 'package:ENC/rtc/member_list_tile/member_list_tile.view.dart';
+import 'package:ENC/rtc/rtc.controller.dart';
 
 class RtcMemberListPage extends StatelessWidget {
   final RtcController controller;

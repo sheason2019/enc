@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/operator/context.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/operate_strategy.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/operator/context.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_strategy/operate_strategy.dart';
 
 class DeleteServiceStrategy implements OperateStrategy {
   @override

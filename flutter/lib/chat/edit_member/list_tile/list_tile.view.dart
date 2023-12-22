@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/chat/edit_member/edit_member.controller.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/chat/edit_member/edit_member.controller.dart';
+import 'package:ENC/schema/database.dart';
 
 class EditMemberListTile extends StatelessWidget {
   final EditMemberController controller;

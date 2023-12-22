@@ -2,15 +2,15 @@ import 'package:drift/drift.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/chat/anchors/anchor/anchor_message_preview/anchor_message_preview.view.dart';
-import 'package:sheason_chat/chat/room/room.view.dart';
-import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/chat/anchors/anchor/anchor_message_preview/anchor_message_preview.view.dart';
+import 'package:ENC/chat/room/room.view.dart';
+import 'package:ENC/extensions/portable_conversation/portable_conversation.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/string_helper.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ConversationAnchorListTile extends StatelessWidget {

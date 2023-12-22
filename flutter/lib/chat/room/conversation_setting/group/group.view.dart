@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/anchors/anchor/anchor.view.dart';
-import 'package:sheason_chat/chat/room/conversation_setting/group/alter_name.view.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/profile/alter_avatar/edit/edit.view.dart';
-import 'package:sheason_chat/profile/alter_avatar/preview/preview.view.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/chat/anchors/anchor/anchor.view.dart';
+import 'package:ENC/chat/room/conversation_setting/group/alter_name.view.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/profile/alter_avatar/edit/edit.view.dart';
+import 'package:ENC/profile/alter_avatar/preview/preview.view.dart';
+import 'package:ENC/schema/database.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class GroupSettings extends StatelessWidget {

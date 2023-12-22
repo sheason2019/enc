@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/accounts/accounts.view.dart';
-import 'package:sheason_chat/home/home.view.dart';
-import 'package:sheason_chat/router/base_delegate.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/scope/scope.view.dart';
+import 'package:ENC/accounts/accounts.view.dart';
+import 'package:ENC/home/home.view.dart';
+import 'package:ENC/router/base_delegate.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/scope/scope.view.dart';
 
 class MainController extends ChangeNotifier {
   Scope? get scope => _scope;

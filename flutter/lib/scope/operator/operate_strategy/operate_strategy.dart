@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/operator/context.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/delete_service_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_avatar_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_contact_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_conversation_anchor_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_message_strategy.dart';
-import 'package:sheason_chat/scope/operator/operate_strategy/put_username_strategy.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/operator/context.dart';
+import 'package:ENC/scope/operator/operate_strategy/delete_service_strategy.dart';
+import 'package:ENC/scope/operator/operate_strategy/put_avatar_strategy.dart';
+import 'package:ENC/scope/operator/operate_strategy/put_contact_strategy.dart';
+import 'package:ENC/scope/operator/operate_strategy/put_conversation_anchor_strategy.dart';
+import 'package:ENC/scope/operator/operate_strategy/put_message_strategy.dart';
+import 'package:ENC/scope/operator/operate_strategy/put_username_strategy.dart';
 
 import 'put_conversation_strategy.dart';
 import 'put_service_strategy.dart';

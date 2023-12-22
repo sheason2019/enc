@@ -2,7 +2,7 @@ import 'package:jwk/jwk.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 
 @immutable
 class CryptoKeyPair {

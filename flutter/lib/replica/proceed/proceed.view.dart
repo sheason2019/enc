@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/replica/proceed/pending/pending.view.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/replica/proceed/pending/pending.view.dart';
+import 'package:ENC/replica/replica.controller.dart';
+import 'package:ENC/replica/replica.view.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 import 'confirm/confirm.view.dart';
 import 'success/success.view.dart';

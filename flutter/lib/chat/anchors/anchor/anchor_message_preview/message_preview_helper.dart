@@ -1,5 +1,5 @@
-import 'package:sheason_chat/prototypes/core.pbenum.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/prototypes/core.pbenum.dart';
+import 'package:ENC/schema/database.dart';
 
 class MessagePreviewHelper {
   MessagePreviewHelper._();

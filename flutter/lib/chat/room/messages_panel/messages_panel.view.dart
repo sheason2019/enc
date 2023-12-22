@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/chat/room/messages/messages.view.dart';
-import 'package:sheason_chat/chat/room/uncheck_message_hint/uncheck_message_hint.view.dart';
+import 'package:ENC/chat/room/messages/messages.view.dart';
+import 'package:ENC/chat/room/uncheck_message_hint/uncheck_message_hint.view.dart';
 
 class MessagesPanelView extends StatelessWidget {
   const MessagesPanelView({super.key});

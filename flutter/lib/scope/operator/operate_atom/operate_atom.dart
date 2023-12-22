@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom_type.dart';
 
 part 'operate_atom.g.dart';
 

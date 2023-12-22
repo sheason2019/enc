@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:protobuf/protobuf.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/operator/context.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/operator/context.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom_type.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/atom_proceeder.dart';
 
 class DeleteServiceAtomProceeder implements AtomProceeder<String> {
   @override

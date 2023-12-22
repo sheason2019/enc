@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/profile/account_qrcode/account_qrcode.view.dart';
-import 'package:sheason_chat/profile/alter_avatar/alter_avatar.view.dart';
-import 'package:sheason_chat/profile/alter_username/alter_username.view.dart';
-import 'package:sheason_chat/profile/operations/operations.view.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
-import 'package:sheason_chat/router/base_delegate.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/profile/account_qrcode/account_qrcode.view.dart';
+import 'package:ENC/profile/alter_avatar/alter_avatar.view.dart';
+import 'package:ENC/profile/alter_username/alter_username.view.dart';
+import 'package:ENC/profile/operations/operations.view.dart';
+import 'package:ENC/replica/replica.view.dart';
+import 'package:ENC/router/base_delegate.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 import 'services/services.view.dart';

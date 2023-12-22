@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/accounts/accounts.view.dart';
-import 'package:sheason_chat/accounts/online_hint/scope_online_hint.view.dart';
-import 'package:sheason_chat/barcode/scanner/scanner.view.dart';
-import 'package:sheason_chat/chat/anchors/anchors.view.dart';
-import 'package:sheason_chat/chat/create_group/create_group.view.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/accounts/accounts.view.dart';
+import 'package:ENC/accounts/online_hint/scope_online_hint.view.dart';
+import 'package:ENC/barcode/scanner/scanner.view.dart';
+import 'package:ENC/chat/anchors/anchors.view.dart';
+import 'package:ENC/chat/create_group/create_group.view.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ChatView extends StatelessWidget {

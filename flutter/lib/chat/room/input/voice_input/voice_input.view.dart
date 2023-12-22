@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/input/menu.view.dart';
-import 'package:sheason_chat/chat/room/input/voice_input/voice_input.controller.dart';
-import 'package:sheason_chat/chat/room/input/voice_input/voice_input_body.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/room/input/menu.view.dart';
+import 'package:ENC/chat/room/input/voice_input/voice_input.controller.dart';
+import 'package:ENC/chat/room/input/voice_input/voice_input_body.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 import 'toggle_service_button.view.dart';

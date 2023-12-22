@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/replica/proceed/pending/connect_pending/connect_pending.view.dart';
-import 'package:sheason_chat/replica/proceed/pending/host_pending/host_pending.view.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
+import 'package:ENC/replica/proceed/pending/connect_pending/connect_pending.view.dart';
+import 'package:ENC/replica/proceed/pending/host_pending/host_pending.view.dart';
+import 'package:ENC/replica/replica.controller.dart';
+import 'package:ENC/replica/replica.view.dart';
 
 class ReplicaProceedPending extends StatelessWidget {
   const ReplicaProceedPending({super.key});

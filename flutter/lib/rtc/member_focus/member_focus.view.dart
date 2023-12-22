@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/rtc/member_media_card/member_media_card.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
-import 'package:sheason_chat/rtc/rtc.model/member.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/rtc/member_media_card/member_media_card.view.dart';
+import 'package:ENC/rtc/rtc.controller.dart';
+import 'package:ENC/rtc/rtc.model/member.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class MemberFocusPage extends StatelessWidget {

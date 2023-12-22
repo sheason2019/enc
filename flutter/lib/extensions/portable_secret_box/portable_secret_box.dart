@@ -1,4 +1,4 @@
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 
 extension PortableSecretBoxExtension on PortableSecretBox {
   AccountIndex findAgent(AccountSecret secret) {

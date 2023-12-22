@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/accounts/online_hint/online_hint.view.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/accounts/online_hint/online_hint.view.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ScopeOnlineHint extends StatelessWidget {
   final Scope scope;

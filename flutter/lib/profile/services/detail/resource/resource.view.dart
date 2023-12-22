@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/profile/services/detail/resource/resource.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/profile/services/detail/resource/resource.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/string_helper.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ServiceResourcePage extends StatefulWidget {

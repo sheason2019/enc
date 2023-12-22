@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/anchors/anchor/anchor.view.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/anchors/anchor/anchor.view.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ConversationAnchorsView extends StatelessWidget {
   const ConversationAnchorsView({super.key});

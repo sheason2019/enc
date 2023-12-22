@@ -1,4 +1,4 @@
-package com.example.sheason_chat
+package com.example.ENC
 
 import io.flutter.embedding.android.FlutterActivity
 

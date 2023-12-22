@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/scope/subscribe/subscribe.dart';
+import 'package:ENC/scope/subscribe/subscribe.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class OnlineHint extends StatelessWidget {

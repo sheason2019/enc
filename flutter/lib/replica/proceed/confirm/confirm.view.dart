@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/replica/proceed/confirm/pull_confirm.view.dart';
-import 'package:sheason_chat/replica/proceed/confirm/push_confirm.view.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
+import 'package:ENC/replica/proceed/confirm/pull_confirm.view.dart';
+import 'package:ENC/replica/proceed/confirm/push_confirm.view.dart';
+import 'package:ENC/replica/replica.controller.dart';
+import 'package:ENC/replica/replica.view.dart';
 
 class ReplicaProceedConfirm extends StatelessWidget {
   const ReplicaProceedConfirm({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/accounts/online_hint/scope_online_hint.view.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/accounts/online_hint/scope_online_hint.view.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class AccountListTile extends StatelessWidget {
   final Scope scope;

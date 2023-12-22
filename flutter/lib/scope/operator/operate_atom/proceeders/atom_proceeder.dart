@@ -1,15 +1,15 @@
-import 'package:sheason_chat/scope/operator/context.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom_type.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_avatar_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_anchor_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_conversation_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_message_state_atom_proceeder.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/proceeders/put_username_atom_proceeder.dart';
+import 'package:ENC/scope/operator/context.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom_type.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/delete_service_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_avatar_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_contact_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_conversation_anchor_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_conversation_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_message_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_message_signature_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_message_state_atom_proceeder.dart';
+import 'package:ENC/scope/operator/operate_atom/proceeders/put_username_atom_proceeder.dart';
 
 import 'put_service_atom_proceeder.dart';
 

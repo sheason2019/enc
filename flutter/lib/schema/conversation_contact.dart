@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/schema/contact.dart';
-import 'package:sheason_chat/schema/conversation.dart';
+import 'package:ENC/schema/contact.dart';
+import 'package:ENC/schema/conversation.dart';
 
 class ConversationContacts extends Table {
   IntColumn get id => integer().autoIncrement()();

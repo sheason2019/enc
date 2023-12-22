@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:sheason_chat/schema/contact.dart';
-import 'package:sheason_chat/schema/conversation.dart';
-import 'package:sheason_chat/schema/conversation_contact.dart';
-import 'package:sheason_chat/schema/message.dart';
-import 'package:sheason_chat/schema/message_signature.dart';
-import 'package:sheason_chat/schema/message_state.dart';
-import 'package:sheason_chat/schema/operation.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/schema_versions.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
+import 'package:ENC/schema/contact.dart';
+import 'package:ENC/schema/conversation.dart';
+import 'package:ENC/schema/conversation_contact.dart';
+import 'package:ENC/schema/message.dart';
+import 'package:ENC/schema/message_signature.dart';
+import 'package:ENC/schema/message_state.dart';
+import 'package:ENC/schema/operation.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/schema_versions.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom.dart';
 
 part 'database.g.dart';
 

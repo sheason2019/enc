@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/cyprto/crypto_keypair.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/replica/replica.view.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/cyprto/crypto_keypair.dart';
+import 'package:ENC/cyprto/crypto_utils.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/replica/replica.view.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 enum ReplicaStatus {

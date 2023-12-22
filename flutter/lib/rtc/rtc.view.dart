@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/models/rtc_model.dart';
-import 'package:sheason_chat/rtc/member_media_card/member_media_card.view.dart';
-import 'package:sheason_chat/rtc/rtc.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/models/rtc_model.dart';
+import 'package:ENC/rtc/member_media_card/member_media_card.view.dart';
+import 'package:ENC/rtc/rtc.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 import 'control/control.view.dart';

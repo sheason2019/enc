@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/messages/message/types/file/file.controller.dart';
-import 'package:sheason_chat/chat/room/messages/message/wrapper.view.dart';
-import 'package:sheason_chat/models/network_resource.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/room/messages/message/types/file/file.controller.dart';
+import 'package:ENC/chat/room/messages/message/wrapper.view.dart';
+import 'package:ENC/models/network_resource.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class FileMessageView extends StatefulWidget {

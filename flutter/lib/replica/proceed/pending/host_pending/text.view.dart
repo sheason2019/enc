@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/replica/replica.controller.dart';
+import 'package:ENC/replica/replica.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ReplicaProceedHostPendingText extends StatelessWidget {

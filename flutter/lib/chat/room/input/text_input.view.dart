@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/input/menu.view.dart';
-import 'package:sheason_chat/chat/room/room.controller.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/chat/room/input/menu.view.dart';
+import 'package:ENC/chat/room/room.controller.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class TextInputView extends StatefulWidget {

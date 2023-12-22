@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/contacts/search/search.controller.dart';
+import 'package:ENC/contacts/search/search.controller.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class SearchContactPage extends StatefulWidget {

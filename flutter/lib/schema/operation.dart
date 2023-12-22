@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/operator/operate_atom/operate_atom.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/operator/operate_atom/operate_atom.dart';
 
 class Operations extends Table {
   IntColumn get id => integer().autoIncrement()();

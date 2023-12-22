@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class OperateContext {
   final Scope scope;

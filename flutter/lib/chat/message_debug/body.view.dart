@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/utils/string_helper.dart';
 
 class MessageDebugPageBody extends StatelessWidget {
   const MessageDebugPageBody({super.key});

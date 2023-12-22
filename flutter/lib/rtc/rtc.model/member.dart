@@ -1,5 +1,5 @@
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/rtc/rtc.model/session.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/rtc/rtc.model/session.dart';
 
 class RtcMember {
   final AccountSnapshot snapshot;

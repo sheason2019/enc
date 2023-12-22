@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/extensions/sign_wrapper/sign_wrapper.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/operation_cipher/operation_cipher.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/sign_helper.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/extensions/sign_wrapper/sign_wrapper.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/operation_cipher/operation_cipher.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/sign_helper.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Subscribe extends ChangeNotifier {

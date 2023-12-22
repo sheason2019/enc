@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/replica/connect/connect.view.dart';
-import 'package:sheason_chat/replica/host/host.view.dart';
-import 'package:sheason_chat/router/base_delegate.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/replica/connect/connect.view.dart';
+import 'package:ENC/replica/host/host.view.dart';
+import 'package:ENC/router/base_delegate.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 enum ReplicaDataDirection {
   push, // 将账号复制到其他设备

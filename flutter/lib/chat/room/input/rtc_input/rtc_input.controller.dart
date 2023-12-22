@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/chat/room/room.controller.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/models/rtc_model.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/utils/service_selector/service_selector.controller.dart';
-import 'package:sheason_chat/utils/sign_helper.dart';
+import 'package:ENC/chat/room/room.controller.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/models/rtc_model.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/utils/service_selector/service_selector.controller.dart';
+import 'package:ENC/utils/sign_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateRTCInviteController extends ChangeNotifier {

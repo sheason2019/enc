@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/accounts/account_avatar.view.dart';
-import 'package:sheason_chat/chat/message_debug/message_debug.view.dart';
-import 'package:sheason_chat/chat/room/messages/message/progress.view.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/accounts/account_avatar.view.dart';
+import 'package:ENC/chat/message_debug/message_debug.view.dart';
+import 'package:ENC/chat/room/messages/message/progress.view.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/string_helper.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class MessageListItemWrapperView extends StatelessWidget {

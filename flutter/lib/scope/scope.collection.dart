@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:sheason_chat/cyprto/crypto_utils.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/notifier/notifier.controller.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/cyprto/crypto_utils.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/notifier/notifier.controller.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ScopeCollection extends ChangeNotifier {
   final subs = <StreamSubscription>[];
@@ -16,7 +16,7 @@ class ScopeCollection extends ChangeNotifier {
 
   Future<String> get accountsPath async {
     final dir = await getApplicationDocumentsDirectory();
-    return path.join(dir.path, 'sheason_chat', 'accounts');
+    return path.join(dir.path, 'ENC', 'accounts');
   }
 
   updateScopes() async {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/chat/room/input/rtc_input/rtc_input.controller.dart';
-import 'package:sheason_chat/chat/room/room.controller.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/utils/service_selector/service_selector.view.dart';
+import 'package:ENC/chat/room/input/rtc_input/rtc_input.controller.dart';
+import 'package:ENC/chat/room/room.controller.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/utils/service_selector/service_selector.view.dart';
 
 class CreateRTCInvitePage extends StatelessWidget {
   final ChatController controller;

@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/extensions/portable_conversation/portable_conversation.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/extensions/portable_conversation/portable_conversation.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class ChatRoomPageTitle extends StatelessWidget {
   const ChatRoomPageTitle({super.key});

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/chat/edit_member/edit_member.controller.dart';
-import 'package:sheason_chat/chat/edit_member/list_tile/list_tile.view.dart';
+import 'package:ENC/chat/edit_member/edit_member.controller.dart';
+import 'package:ENC/chat/edit_member/list_tile/list_tile.view.dart';
 
 class EditMemberView extends StatelessWidget {
   final FutureOr<void> Function()? onSubmited;

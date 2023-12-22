@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/profile/operations/operation/operation.view.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/profile/operations/operation/operation.view.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class OperationsPage extends StatelessWidget {
   const OperationsPage({super.key});

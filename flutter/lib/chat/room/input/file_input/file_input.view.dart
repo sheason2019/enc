@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/service_selector/service_selector.controller.dart';
-import 'package:sheason_chat/utils/service_selector/service_selector.view.dart';
-import 'package:sheason_chat/utils/string_helper.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/service_selector/service_selector.controller.dart';
+import 'package:ENC/utils/service_selector/service_selector.view.dart';
+import 'package:ENC/utils/string_helper.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class FileInputView extends StatefulWidget {

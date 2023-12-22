@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as ln;
-import 'package:sheason_chat/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/notifier/notifier.controller.dart';
-import 'package:sheason_chat/scope/notifier/notifier_helper.dart';
-import 'package:sheason_chat/scope/scope.collection.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
+import 'package:ENC/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/notifier/notifier.controller.dart';
+import 'package:ENC/scope/notifier/notifier_helper.dart';
+import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/scope.model.dart';
 
 class NormalNotifier implements Notifier {
   final plugin = ln.FlutterLocalNotificationsPlugin();

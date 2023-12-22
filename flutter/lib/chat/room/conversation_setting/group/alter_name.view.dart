@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/main.controller.dart';
-import 'package:sheason_chat/prototypes/core.pbenum.dart';
-import 'package:sheason_chat/schema/database.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/sign_helper.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/main.controller.dart';
+import 'package:ENC/prototypes/core.pbenum.dart';
+import 'package:ENC/schema/database.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/sign_helper.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class AlterGroupNamePage extends StatefulWidget {

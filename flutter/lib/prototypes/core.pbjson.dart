@@ -142,10 +142,24 @@ final $typed_data.Uint8List accountIndexDescriptor = $convert.base64Decode(
 const AccountSnapshot$json = {
   '1': 'AccountSnapshot',
   '2': [
-    {'1': 'index', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'index'},
+    {
+      '1': 'index',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'index'
+    },
     {'1': 'username', '3': 2, '4': 1, '5': 9, '10': 'username'},
     {'1': 'avatar_url', '3': 3, '4': 1, '5': 9, '10': 'avatarUrl'},
-    {'1': 'serviceMap', '3': 4, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot.ServiceMapEntry', '10': 'serviceMap'},
+    {
+      '1': 'serviceMap',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.ENC.AccountSnapshot.ServiceMapEntry',
+      '10': 'serviceMap'
+    },
     {'1': 'version', '3': 5, '4': 1, '5': 5, '10': 'version'},
   ],
   '3': [AccountSnapshot_ServiceMapEntry$json],
@@ -156,7 +170,14 @@ const AccountSnapshot_ServiceMapEntry$json = {
   '1': 'ServiceMapEntry',
   '2': [
     {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.sheason_chat.PortableService', '10': 'value'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.PortableService',
+      '10': 'value'
+    },
   ],
   '7': {'7': true},
 };
@@ -176,8 +197,8 @@ const PortableService$json = {
 };
 
 /// Descriptor for `PortableService`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List portableServiceDescriptor = $convert.base64Decode(
-    'Cg9Qb3J0YWJsZVNlcnZpY2U=');
+final $typed_data.Uint8List portableServiceDescriptor =
+    $convert.base64Decode('Cg9Qb3J0YWJsZVNlcnZpY2U=');
 
 @$core.Deprecated('Use portableSecretBoxDescriptor instead')
 const PortableSecretBox$json = {
@@ -186,9 +207,30 @@ const PortableSecretBox$json = {
     {'1': 'cipher_data', '3': 1, '4': 1, '5': 12, '10': 'cipherData'},
     {'1': 'nonce', '3': 2, '4': 1, '5': 12, '10': 'nonce'},
     {'1': 'mac', '3': 3, '4': 1, '5': 12, '10': 'mac'},
-    {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'sender'},
-    {'1': 'receiver', '3': 5, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'receiver'},
-    {'1': 'encrypt_type', '3': 6, '4': 1, '5': 14, '6': '.sheason_chat.EncryptType', '10': 'encryptType'},
+    {
+      '1': 'sender',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'sender'
+    },
+    {
+      '1': 'receiver',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'receiver'
+    },
+    {
+      '1': 'encrypt_type',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.ENC.EncryptType',
+      '10': 'encryptType'
+    },
     {'1': 'declared_key', '3': 7, '4': 1, '5': 5, '10': 'declaredKey'},
   ],
 };
@@ -208,7 +250,14 @@ const PortableOperation$json = {
   '2': [
     {'1': 'client_id', '3': 1, '4': 1, '5': 9, '10': 'clientId'},
     {'1': 'clock', '3': 2, '4': 1, '5': 5, '10': 'clock'},
-    {'1': 'type', '3': 5, '4': 1, '5': 14, '6': '.sheason_chat.OperationType', '10': 'type'},
+    {
+      '1': 'type',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.ENC.OperationType',
+      '10': 'type'
+    },
     {'1': 'content', '3': 6, '4': 1, '5': 9, '10': 'content'},
   ],
 };
@@ -223,12 +272,40 @@ final $typed_data.Uint8List portableOperationDescriptor = $convert.base64Decode(
 const PortableConversation$json = {
   '1': 'PortableConversation',
   '2': [
-    {'1': 'type', '3': 1, '4': 1, '5': 14, '6': '.sheason_chat.ConversationType', '10': 'type'},
-    {'1': 'members', '3': 2, '4': 3, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'members'},
-    {'1': 'owner', '3': 3, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'owner'},
+    {
+      '1': 'type',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.ENC.ConversationType',
+      '10': 'type'
+    },
+    {
+      '1': 'members',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.ENC.AccountSnapshot',
+      '10': 'members'
+    },
+    {
+      '1': 'owner',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountSnapshot',
+      '10': 'owner'
+    },
     {'1': 'remote_url', '3': 4, '4': 1, '5': 9, '10': 'remoteUrl'},
     {'1': 'declared_secrets', '3': 5, '4': 3, '5': 12, '10': 'declaredSecrets'},
-    {'1': 'agent', '3': 6, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'agent'},
+    {
+      '1': 'agent',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'agent'
+    },
     {'1': 'version', '3': 7, '4': 1, '5': 5, '10': 'version'},
     {'1': 'name', '3': 10, '4': 1, '5': 9, '10': 'name'},
     {'1': 'avatar_url', '3': 11, '4': 1, '5': 9, '10': 'avatarUrl'},
@@ -250,11 +327,39 @@ const PortableMessage$json = {
   '1': 'PortableMessage',
   '2': [
     {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    {'1': 'message_type', '3': 2, '4': 1, '5': 14, '6': '.sheason_chat.MessageType', '10': 'messageType'},
+    {
+      '1': 'message_type',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.ENC.MessageType',
+      '10': 'messageType'
+    },
     {'1': 'content', '3': 3, '4': 1, '5': 9, '10': 'content'},
-    {'1': 'sender', '3': 4, '4': 1, '5': 11, '6': '.sheason_chat.AccountSnapshot', '10': 'sender'},
-    {'1': 'conversation', '3': 5, '4': 1, '5': 11, '6': '.sheason_chat.PortableConversation', '10': 'conversation'},
-    {'1': 'message_states', '3': 6, '4': 3, '5': 11, '6': '.sheason_chat.PortableMessageState', '10': 'messageStates'},
+    {
+      '1': 'sender',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountSnapshot',
+      '10': 'sender'
+    },
+    {
+      '1': 'conversation',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.PortableConversation',
+      '10': 'conversation'
+    },
+    {
+      '1': 'message_states',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.ENC.PortableMessageState',
+      '10': 'messageStates'
+    },
     {'1': 'created_at', '3': 7, '4': 1, '5': 3, '10': 'createdAt'},
   ],
 };
@@ -273,7 +378,14 @@ final $typed_data.Uint8List portableMessageDescriptor = $convert.base64Decode(
 const PortableMessageState$json = {
   '1': 'PortableMessageState',
   '2': [
-    {'1': 'account_index', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'accountIndex'},
+    {
+      '1': 'account_index',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'accountIndex'
+    },
     {'1': 'created_at', '3': 2, '4': 1, '5': 3, '10': 'createdAt'},
     {'1': 'receive_at', '3': 3, '4': 1, '5': 3, '10': 'receiveAt'},
     {'1': 'checked_at', '3': 4, '4': 1, '5': 3, '10': 'checkedAt'},
@@ -291,11 +403,25 @@ final $typed_data.Uint8List portableMessageStateDescriptor = $convert.base64Deco
 const SignWrapper$json = {
   '1': 'SignWrapper',
   '2': [
-    {'1': 'signer', '3': 1, '4': 1, '5': 11, '6': '.sheason_chat.AccountIndex', '10': 'signer'},
+    {
+      '1': 'signer',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.ENC.AccountIndex',
+      '10': 'signer'
+    },
     {'1': 'buffer', '3': 2, '4': 1, '5': 12, '10': 'buffer'},
     {'1': 'sign', '3': 3, '4': 1, '5': 12, '10': 'sign'},
     {'1': 'encrypt', '3': 4, '4': 1, '5': 8, '10': 'encrypt'},
-    {'1': 'content_type', '3': 5, '4': 1, '5': 14, '6': '.sheason_chat.ContentType', '10': 'contentType'},
+    {
+      '1': 'content_type',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.ENC.ContentType',
+      '10': 'contentType'
+    },
     {'1': 'created_at', '3': 6, '4': 1, '5': 3, '10': 'createdAt'},
   ],
 };
@@ -307,4 +433,3 @@ final $typed_data.Uint8List signWrapperDescriptor = $convert.base64Decode(
     'CgdlbmNyeXB0GAQgASgIUgdlbmNyeXB0EjwKDGNvbnRlbnRfdHlwZRgFIAEoDjIZLnNoZWFzb2'
     '5fY2hhdC5Db250ZW50VHlwZVILY29udGVudFR5cGUSHQoKY3JlYXRlZF9hdBgGIAEoA1IJY3Jl'
     'YXRlZEF0');
-

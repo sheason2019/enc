@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
+import 'package:ENC/prototypes/core.pb.dart';
 
 class Contacts extends Table {
   IntColumn get id => integer().autoIncrement()();

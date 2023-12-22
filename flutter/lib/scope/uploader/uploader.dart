@@ -3,10 +3,10 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
-import 'package:sheason_chat/dio.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/scope/scope.model.dart';
-import 'package:sheason_chat/utils/sign_helper.dart';
+import 'package:ENC/dio.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/scope.model.dart';
+import 'package:ENC/utils/sign_helper.dart';
 
 class Uploader {
   final Scope scope;

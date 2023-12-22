@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sheason_chat/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
-import 'package:sheason_chat/prototypes/core.pb.dart';
-import 'package:sheason_chat/schema/database.dart';
+import 'package:ENC/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/schema/database.dart';
 
 class ConversationAnchorMessagePreview extends StatelessWidget {
   final Message? message;
