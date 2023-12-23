@@ -1,9 +1,9 @@
+import 'package:ENC/scope/scope.model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/anchors/anchor/anchor.view.dart';
 import 'package:ENC/chat/room/conversation_setting/group/alter_name.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/alter_avatar/edit/edit.view.dart';
 import 'package:ENC/profile/alter_avatar/preview/preview.view.dart';
 import 'package:ENC/schema/database.dart';
@@ -14,7 +14,7 @@ class GroupSettings extends StatelessWidget {
   const GroupSettings({super.key, required this.conversation});
 
   toAlterAvatar(BuildContext context) async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     final picker = ImagePicker();
     final imageFile = await picker.pickImage(source: ImageSource.gallery);
     if (imageFile == null) return;
@@ -28,7 +28,7 @@ class GroupSettings extends StatelessWidget {
   }
 
   toAlterGroupName(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     delegate.pages.add(AlterGroupNamePage(conversation: conversation));
     delegate.notify();
   }

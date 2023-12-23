@@ -17,8 +17,14 @@ class ReplicaProceedConfirmPull extends StatelessWidget {
       children: [
         ListTile(
           leading: AccountAvatar(snapshot: target),
-          title: Text(target.username),
-          subtitle: Text(target.index.signPubKey),
+          title: Text(
+            target.username,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            target.index.signPubKey,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         Text(
           '传输验证码',

@@ -9,7 +9,6 @@ import 'package:ENC/chat/room/messages/checker.controller.dart';
 import 'package:ENC/chat/room/messages_panel/messages_panel.view.dart';
 import 'package:ENC/chat/room/room.controller.dart';
 import 'package:ENC/chat/room/title/title.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -65,7 +64,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   toSettings(BuildContext context) {
     final conversation = context.read<Conversation>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     delegate.pages.add(
       ConversationSettingPage(conversation: conversation),
     );

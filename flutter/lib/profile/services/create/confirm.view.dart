@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/scope.model.dart';
 
@@ -15,7 +14,7 @@ class ConfirmCreateServicePage extends StatelessWidget {
 
   handleCreateService(BuildContext context) async {
     final scope = context.read<Scope>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = scope.router.profileDelegate;
     final operation = await scope.operator.factory.service(url);
     await scope.operator.apply([operation], isReplay: false);
 

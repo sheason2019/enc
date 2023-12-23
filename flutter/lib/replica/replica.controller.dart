@@ -170,7 +170,8 @@ class ReplicaController extends ChangeNotifier {
 
     var scope = await collection.findScope(secret.signPubKey);
     scope ??= await collection.createScopeBySecret(secret);
-    scope.handleSetSnapshot(target!);
+    await scope.handleSetSnapshot(target!);
+    await scope.handleUpdateSnapshot();
 
     statusNotifier.value = ReplicaStatus.success;
   }

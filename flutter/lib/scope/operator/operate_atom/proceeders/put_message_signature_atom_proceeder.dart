@@ -29,7 +29,6 @@ class PutMessageSignatureAtomProceeder implements AtomProceeder<Uint8List> {
   @override
   Future<void> revert(OperateContext context, OperateAtom atom) async {
     final scope = context.scope;
-    if (atom.from != null) return;
 
     final id = int.parse(atom.to);
     await scope.db.messageSignatures.deleteWhere((tbl) => tbl.id.equals(id));

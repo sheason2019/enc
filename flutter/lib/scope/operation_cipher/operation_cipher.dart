@@ -1,9 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
-import 'package:cryptography/cryptography.dart';
-import 'package:ENC/cyprto/crypto_keypair.dart';
-import 'package:ENC/cyprto/crypto_utils.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -18,15 +13,9 @@ class OperationCipher {
   ) async {
     final output = <Map<String, dynamic>>[];
     for (final operation in operations) {
-      final secretBox = await CryptoUtils.encrypt(
-        scope,
-        scope.snapshot.index,
-        operation.info.writeToBuffer(),
-      );
-      final buffer = secretBox.writeToBuffer();
       final wrapper = await SignHelper.wrap(
         scope,
-        buffer,
+        operation.info.writeToBuffer(),
         contentType: ContentType.CONTENT_OPERATION,
         encryptTarget: scope.snapshot.index,
       );
@@ -49,26 +38,7 @@ class OperationCipher {
       final data = SignWrapper.fromBuffer(
         base64Decode(operation['data']),
       );
-      final valid = await CryptoUtils.verifySignature(
-        data.buffer,
-        Signature(
-          data.sign,
-          publicKey: CryptoKeyPair.createSignPubKey(
-            data.signer.signPubKey,
-          )!,
-        ),
-      );
-      if (!valid) {
-        log('[WARN] invalid operation signature');
-        continue;
-      }
-      final secretBox = PortableSecretBox.fromBuffer(
-        data.buffer,
-      );
-      final decryptBuffer = await CryptoUtils.decrypt(
-        scope,
-        secretBox,
-      );
+      final decryptBuffer = await SignHelper.unwrap(scope, data);
 
       final output = PortableOperation.fromBuffer(decryptBuffer);
       outputs.add(output);

@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/dio.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pbenum.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -25,7 +24,7 @@ class _AlterGroupNamePageState extends State<AlterGroupNamePage> {
   );
 
   void handleSubmit() async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     final conversation = widget.conversation;
     final id = conversation.info.agent.signPubKey;
     final scope = context.read<Scope>();

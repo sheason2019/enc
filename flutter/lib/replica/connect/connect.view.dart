@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ENC/barcode/scanner/scanner.view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/main.controller.dart';
@@ -84,7 +85,11 @@ class _ReplicaConnectPageState extends State<ReplicaConnectPage> {
       ),
       floatingActionButton: showQrScan
           ? FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                final delegate = context.read<MainController>().rootDelegate;
+                delegate.pages.add(const BarcodeScannerPage());
+                delegate.notify();
+              },
               label: const Text('扫一扫'),
               icon: const Icon(Icons.qr_code_scanner),
             )

@@ -1,8 +1,8 @@
+import 'package:ENC/scope/scope.model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/room/input/rtc_input/rtc_input.controller.dart';
 import 'package:ENC/chat/room/room.controller.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/utils/service_selector/service_selector.view.dart';
 
 class CreateRTCInvitePage extends StatelessWidget {
@@ -15,7 +15,7 @@ class CreateRTCInvitePage extends StatelessWidget {
 
   Future<void> handleSubmit(BuildContext context) async {
     final controller = context.read<CreateRTCInviteController>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     await controller.handleSubmit();
 
     delegate.pages.removeLast();

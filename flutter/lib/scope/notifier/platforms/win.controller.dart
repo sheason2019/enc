@@ -39,7 +39,7 @@ class WinNotifier implements Notifier {
     int conversationId,
   ) async {
     await controller.handleEnterScope(collection, scope);
-    final delegate = controller.rootDelegate;
+    final delegate = scope.router.chatDelegate;
     final select = scope.db.conversations.select();
     select.where((tbl) => tbl.id.equals(conversationId));
     final conversation = await select.getSingle();

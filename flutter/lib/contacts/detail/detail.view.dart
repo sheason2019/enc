@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/chat/room/room.view.dart';
 import 'package:ENC/extensions/portable_conversation/portable_conversation.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -36,15 +35,20 @@ class ContactDetailPage extends StatelessWidget {
 
     final operation = await scope.operator.factory.conversation(portable);
     await scope.operator.apply([operation], isReplay: false);
-    return select.getSingle();
+    final mustSelect = scope.db.conversations.select();
+    mustSelect.where(
+      (tbl) => tbl.type.equalsValue(ConversationType.CONVERSATION_PRIVATE),
+    );
+    mustSelect.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
+    return mustSelect.getSingle();
   }
 
   toPrivateConversation(BuildContext context) async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final router = context.read<Scope>().router;
     final conversation = await putConversation(context);
-    delegate.pages.removeRange(1, delegate.pages.length);
-    delegate.pages.add(ChatRoomPage(conversation: conversation));
-    delegate.notify();
+    router.tabIndex = 0;
+    router.chatDelegate.pages.add(ChatRoomPage(conversation: conversation));
+    router.chatDelegate.notify();
   }
 
   @override

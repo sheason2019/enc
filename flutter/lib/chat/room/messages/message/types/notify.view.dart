@@ -4,7 +4,6 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/contacts/detail/detail.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -141,7 +140,7 @@ class _AccountText extends StatelessWidget {
   }
 
   void handleTap(BuildContext context, Contact contact) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     delegate.pages.add(ContactDetailPage(snapshot: contact.snapshot));
     delegate.notify();
   }

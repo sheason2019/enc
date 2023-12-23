@@ -26,7 +26,7 @@ class BaseDelegateWrapper extends StatelessWidget {
           MaterialPage(child: child),
           for (final page in delegate.pages)
             MaterialPage(
-              key: ObjectKey(page),
+              key: ValueKey(page),
               child: page,
             ),
         ],

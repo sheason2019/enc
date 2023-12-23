@@ -6,7 +6,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/dio.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -48,8 +47,8 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
   }
 
   void handleSubmit() async {
-    final delegate = context.read<MainController>().rootDelegate;
     final scope = context.read<Scope>();
+    final delegate = scope.router.profileDelegate;
     final url = await scope.uploader.upload(
       controller.serviceUrl!,
       widget.imagePath,
@@ -63,8 +62,7 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
         break;
     }
 
-    delegate.pages.removeLast();
-    delegate.pages.removeLast();
+    delegate.pages.clear();
     delegate.notify();
   }
 

@@ -47,6 +47,8 @@ class PutMessageStrategy implements OperateStrategy {
       return;
     }
 
+    atoms.add(signatureAtom);
+
     final buffer = await SignHelper.unwrap(scope, wrapper);
     switch (wrapper.contentType) {
       case ContentType.CONTENT_MESSAGE:

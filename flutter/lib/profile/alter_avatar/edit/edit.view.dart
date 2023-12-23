@@ -6,7 +6,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/alter_avatar/preview/preview.view.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -33,7 +32,7 @@ class _AlterAvatarEditPageState extends State<AlterAvatarEditPage> {
 
   void handleNext() async {
     final scope = context.read<Scope>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = scope.router.profileDelegate;
     final state = editorKey.currentState;
     if (state == null) return;
 

@@ -79,13 +79,13 @@ class OperationFactory {
 
   late int clock;
   final _initC = Completer();
-  void initial() async {
+  Future<void> initial() async {
     final maxClock = scope.db.operations.clock.max();
     final selectCurrentClock = scope.db.operations.selectOnly()
       ..addColumns([maxClock]);
     final record = await selectCurrentClock.getSingleOrNull();
     final currentClock = record?.read(maxClock) ?? 0;
-    clock = currentClock;
-    _initC.complete();
+    clock = currentClock + 1;
+    if (!_initC.isCompleted) _initC.complete();
   }
 }

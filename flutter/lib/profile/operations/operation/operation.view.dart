@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/operations/detail/detail.view.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -17,7 +16,7 @@ class OperationListTile extends StatelessWidget {
   }
 
   void toDetail(BuildContext context, Operation operation) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     delegate.pages.add(OperationDetailPage(operation: operation));
     delegate.notify();
   }

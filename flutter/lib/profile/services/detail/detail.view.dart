@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/services/detail/resource/resource.view.dart';
 import 'package:ENC/profile/services/detail/reupload_account_snapshot/reupload_account_snapshot.view.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -10,13 +9,13 @@ class ServiceDetailPage extends StatelessWidget {
   const ServiceDetailPage({super.key, required this.url});
 
   to(BuildContext context, Widget widget) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     delegate.pages.add(widget);
     delegate.notify();
   }
 
   handleDeleteService(BuildContext context) async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     final scope = context.read<Scope>();
     // show confirm dialog
     final confirm = await showDialog(

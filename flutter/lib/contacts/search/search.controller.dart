@@ -7,7 +7,6 @@ import 'package:ENC/contacts/detail/detail.view.dart';
 import 'package:ENC/cyprto/crypto_keypair.dart';
 import 'package:ENC/cyprto/crypto_utils.dart';
 import 'package:ENC/dio.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/scope.model.dart';
 
@@ -19,7 +18,7 @@ class SearchContactController {
     String url,
   ) async {
     final scope = context.read<Scope>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = scope.router.contactDelegate;
     final snapshot = await handleSearch(url);
     // 更新联系人信息
     final operation = await scope.operator.factory.contact(snapshot);

@@ -1,3 +1,4 @@
+import 'package:ENC/utils/breakpoint/breakpoint.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -6,9 +7,9 @@ import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/main.controller.dart';
 
 void main() async {
+  driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
-  driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   runApp(const MyApp());
 }
 
@@ -46,28 +47,33 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ListenableProvider.value(value: mainController),
-        ListenableProvider.value(value: collection),
-        ListenableProvider.value(value: mainController.scope),
-      ],
-      builder: (context, _) => MaterialApp.router(
-        title: 'Sheason Chat',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          pageTransitionsTheme: const PageTransitionsTheme(builders: {
-            TargetPlatform.android: ZoomPageTransitionsBuilder(
-              allowEnterRouteSnapshotting: false,
-            ),
-            TargetPlatform.windows: ZoomPageTransitionsBuilder(
-              allowEnterRouteSnapshotting: false,
-            ),
-          }),
+    return LayoutBuilder(
+      builder: (context, constraints) => MultiProvider(
+        providers: [
+          Provider.value(
+            value: BreakPointHelper.calculate(constraints.maxWidth),
+          ),
+          ListenableProvider.value(value: mainController),
+          ListenableProvider.value(value: collection),
+          ListenableProvider.value(value: mainController.scope),
+        ],
+        builder: (context, _) => MaterialApp.router(
+          title: 'Sheason Chat',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: ZoomPageTransitionsBuilder(
+                allowEnterRouteSnapshotting: false,
+              ),
+              TargetPlatform.windows: ZoomPageTransitionsBuilder(
+                allowEnterRouteSnapshotting: false,
+              ),
+            }),
+          ),
+          debugShowCheckedModeBanner: false,
+          routerDelegate: mainController.rootDelegate,
         ),
-        debugShowCheckedModeBanner: false,
-        routerDelegate: mainController.rootDelegate,
       ),
     );
   }

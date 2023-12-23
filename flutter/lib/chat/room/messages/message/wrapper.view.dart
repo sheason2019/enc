@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/chat/message_debug/message_debug.view.dart';
 import 'package:ENC/chat/room/messages/message/progress.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:ENC/utils/string_helper.dart';
@@ -84,7 +83,7 @@ class _MessageContentCard extends StatefulWidget {
 
 class _MessageContentCardState extends State<_MessageContentCard> {
   toDebugPage(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     final message = context.read<Message>();
 
     delegate.pages.add(MessageDebugPage(message: message));

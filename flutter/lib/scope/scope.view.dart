@@ -1,3 +1,4 @@
+import 'package:ENC/scope/layout/layout.view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/contacts/contacts.view.dart';
@@ -17,8 +18,6 @@ class ScopePage extends StatefulWidget {
 }
 
 class _ScopePageState extends State<ScopePage> {
-  var tabIndex = 0;
-
   handleSetDefaultScope(BuildContext context) async {
     final controller = context.read<ScopeCollection>();
     await controller.setDefaultScope(widget.scope);
@@ -44,6 +43,31 @@ class _ScopePageState extends State<ScopePage> {
         final delegate = context.read<MainController>().rootDelegate;
         if (delegate.pages.length > 1) return false;
 
+        final router = context.read<Scope>().router;
+        switch (router.tabIndex) {
+          case 0:
+            if (router.chatDelegate.pages.isNotEmpty) {
+              router.chatDelegate.pages.removeLast();
+              router.chatDelegate.notify();
+              return true;
+            }
+            break;
+          case 1:
+            if (router.contactDelegate.pages.isNotEmpty) {
+              router.contactDelegate.pages.removeLast();
+              router.contactDelegate.notify();
+              return true;
+            }
+            break;
+          case 2:
+            if (router.profileDelegate.pages.isNotEmpty) {
+              router.profileDelegate.pages.removeLast();
+              router.profileDelegate.notify();
+              return true;
+            }
+            break;
+        }
+
         final backedAt = _backedAt;
         final now = DateTime.now();
         _backedAt = now;
@@ -63,36 +87,17 @@ class _ScopePageState extends State<ScopePage> {
 
         return false;
       },
-      child: Scaffold(
-        body: IndexedStack(
-          index: tabIndex,
-          children: const [
-            ChatView(),
-            ContactView(),
-            ProfileView(),
-          ],
-        ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: tabIndex,
-          onDestinationSelected: (v) {
-            setState(() {
-              tabIndex = v;
-            });
-          },
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.chat),
-              label: '消息',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.people),
-              label: '联系人',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.account_circle),
-              label: '档案',
-            ),
-          ],
+      child: ListenableBuilder(
+        listenable: scope.router,
+        builder: (context, _) => ScopeLayout(
+          child: IndexedStack(
+            index: scope.router.tabIndex,
+            children: const [
+              ChatView(),
+              ContactView(),
+              ProfileView(),
+            ],
+          ),
         ),
       ),
     );

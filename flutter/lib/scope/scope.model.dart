@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:ENC/scope/routers/routers.controller.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:ENC/prototypes/core.pb.dart';
@@ -143,6 +144,8 @@ class Scope extends ChangeNotifier {
     notifyListeners();
   }
 
+  final router = ScopeRouter();
+
   @override
   void dispose() {
     for (final sub in subs) {
@@ -151,6 +154,7 @@ class Scope extends ChangeNotifier {
     for (final subscribe in subscribes.values) {
       subscribe.dispose();
     }
+    router.dispose();
     db.close();
     super.dispose();
   }

@@ -8,7 +8,6 @@ import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/chat/edit_member/edit_member.controller.dart';
 import 'package:ENC/chat/edit_member/edit_member.view.dart';
 import 'package:ENC/dio.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -52,7 +51,7 @@ class _GroupMembersState extends State<GroupMembers> {
 
   handleEditMember() async {
     final scope = context.read<Scope>();
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
 
     final selectMembers = scope.db.contacts.select();
     selectMembers.where(

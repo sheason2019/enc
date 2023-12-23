@@ -1,5 +1,6 @@
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/operator/context.dart';
+import 'package:flutter/material.dart';
 
 import 'operate_strategy/operate_strategy.dart';
 
@@ -13,6 +14,7 @@ class BatchOperate {
     for (final operation in operations) {
       final strategy = OperateStrategy.create(context, operation);
       await strategy.revert();
+      debugPrint('revert clock ${operation.clock}');
     }
   }
 
@@ -26,6 +28,7 @@ class BatchOperate {
         operation,
       );
       await strategy.apply();
+      debugPrint('apply clock ${operation.clock}');
     }
   }
 }

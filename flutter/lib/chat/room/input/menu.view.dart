@@ -7,7 +7,6 @@ import 'package:ENC/chat/room/input/file_input/file_input.controller.dart';
 import 'package:ENC/chat/room/input/media_input/media_input.controller.dart';
 import 'package:ENC/chat/room/input/rtc_input/rtc_input.view.dart';
 import 'package:ENC/chat/room/room.controller.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/models/network_resource.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -125,7 +124,7 @@ class InputMenuBottomSheet extends StatelessWidget {
   handleCreateRTC(BuildContext context) {
     handleCloseSheet(context);
 
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     delegate.pages.add(
       CreateRTCInvitePage(controller: chatController),
     );

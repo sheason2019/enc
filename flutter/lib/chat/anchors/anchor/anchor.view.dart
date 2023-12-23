@@ -6,7 +6,6 @@ import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/chat/anchors/anchor/anchor_message_preview/anchor_message_preview.view.dart';
 import 'package:ENC/chat/room/room.view.dart';
 import 'package:ENC/extensions/portable_conversation/portable_conversation.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -23,7 +22,8 @@ class ConversationAnchorListTile extends StatelessWidget {
   void handleClick(
     BuildContext context,
   ) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
+    delegate.pages.clear();
     delegate.pages.add(ChatRoomPage(conversation: conversation));
     delegate.notify();
   }

@@ -34,6 +34,8 @@ class Operator {
         context,
         applyList,
       );
+
+      await scope.operator.factory.initial();
     });
 
     // 请求与服务器进行同步

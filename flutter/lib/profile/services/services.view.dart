@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/accounts/online_hint/online_hint.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/services/create/create.view.dart';
 import 'package:ENC/profile/services/detail/detail.view.dart';
 import 'package:ENC/prototypes/core.pb.dart';
@@ -24,7 +23,8 @@ class ServicesPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              final delegate = context.read<MainController>().rootDelegate;
+              final scope = context.read<Scope>();
+              final delegate = scope.router.profileDelegate;
               delegate.pages.add(const CreateServicePage());
               delegate.notify();
             },
@@ -47,7 +47,7 @@ class _ServiceItem extends StatelessWidget {
   const _ServiceItem({required this.serviceUrl});
 
   toDetail(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     delegate.pages.add(ServiceDetailPage(url: serviceUrl));
     delegate.notify();
   }

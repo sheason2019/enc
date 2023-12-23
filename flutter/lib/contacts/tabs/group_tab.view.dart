@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/anchors/anchor/anchor.view.dart';
 import 'package:ENC/chat/room/room.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -58,9 +57,10 @@ class GroupListTile extends StatelessWidget {
     BuildContext context,
     Conversation conversation,
   ) {
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.add(ChatRoomPage(conversation: conversation));
-    delegate.notify();
+    final router = context.read<Scope>().router;
+    router.tabIndex = 0;
+    router.chatDelegate.pages.add(ChatRoomPage(conversation: conversation));
+    router.chatDelegate.notify();
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/scope/scope.model.dart';
 
 class AlterUsernamePage extends StatefulWidget {
@@ -23,7 +22,7 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
   }
 
   Future<void> handleSubmit() async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     final newName = textController.text;
     final operation = await scope.operator.factory.username(newName);
     await scope.operator.apply([operation], isReplay: false);

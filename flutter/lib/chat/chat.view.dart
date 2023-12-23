@@ -1,93 +1,37 @@
-import 'dart:io';
-
+import 'package:ENC/router/base_delegate_wrapper.dart';
+import 'package:ENC/utils/breakpoint/breakpoint.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/accounts/account_avatar.view.dart';
-import 'package:ENC/accounts/accounts.view.dart';
-import 'package:ENC/accounts/online_hint/scope_online_hint.view.dart';
-import 'package:ENC/barcode/scanner/scanner.view.dart';
 import 'package:ENC/chat/anchors/anchors.view.dart';
-import 'package:ENC/chat/create_group/create_group.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
-  void toBarcodeScanner(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.add(const BarcodeScannerPage());
-    delegate.notify();
-  }
-
-  void toCreateGroup(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.add(const CreateGroupPage());
-    delegate.notify();
-  }
-
-  toAccounts(BuildContext context) {
-    final delegate = context.read<MainController>().rootDelegate;
-    delegate.pages.add(const AccountsPage());
-    delegate.notify();
-  }
-
   @override
   Widget build(BuildContext context) {
     final scope = context.watch<Scope>();
+    final bp = context.watch<BreakPoint>();
 
-    final allowScan = Platform.isAndroid || Platform.isIOS;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('消息列表'),
-        centerTitle: true,
-        leading: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+    if (bp == BreakPoint.lg) {
+      return Scaffold(
+        body: Row(
           children: [
-            GestureDetector(
-              onTap: () => toAccounts(context),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: AccountAvatar(
-                  snapshot: scope.snapshot,
-                ),
-              ),
+            const ConversationAnchorsView().width(360),
+            const VerticalDivider(
+              width: 1,
+              color: Colors.black12,
             ),
-            ScopeOnlineHint(scope: scope).padding(left: 8),
+            BaseDelegateWrapper(
+              delegate: scope.router.chatDelegate,
+              child: const Scaffold(),
+            ).expanded(),
           ],
-        ).center().padding(horizontal: 16),
-        leadingWidth: 144,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: PopupMenuButton<int>(
-              onSelected: (v) {
-                switch (v) {
-                  case 0:
-                    return toBarcodeScanner(context);
-                  case 1:
-                    return toCreateGroup(context);
-                }
-              },
-              itemBuilder: (context) => [
-                if (allowScan)
-                  const PopupMenuItem(
-                    value: 0,
-                    child: Text('扫一扫'),
-                  ),
-                const PopupMenuItem(
-                  value: 1,
-                  child: Text('创建群聊'),
-                ),
-              ],
-              icon: const Icon(Icons.add),
-            ),
-          ),
-        ],
-      ),
-      body: const ConversationAnchorsView(),
-    );
+        ),
+      );
+    }
+
+    return const ConversationAnchorsView();
   }
 }

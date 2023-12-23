@@ -10,7 +10,6 @@ import 'package:ENC/chat/edit_member/edit_member.view.dart';
 import 'package:ENC/chat/room/room.view.dart';
 import 'package:ENC/dio.dart';
 import 'package:ENC/extensions/portable_conversation/portable_conversation.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -34,7 +33,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     final scope = context.read<Scope>();
     final select = scope.db.contacts.select();
     select.where((tbl) => tbl.signPubkey.equals(scope.secret.signPubKey));
-    final contact = await select.getSingle();
+    final contact = await select.getSingleOrNull();
+    if (contact == null) return;
+
     controller.disableSet.add(contact.id);
     controller.notify();
   }
@@ -62,7 +63,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     controller.selectSet.clear();
     controller.selectSet.addAll(controller.memberSet);
 
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     delegate.pages.add(EditMemberView(controller: controller));
     delegate.notify();
   }
@@ -75,7 +76,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   void handleSubmit() async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.chatDelegate;
     final url = serviceController.serviceUrl;
     if (url == null) {
       throw Exception('url cannot be null');
@@ -119,7 +120,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     selectConversation.where((tbl) => tbl.signPubkey.equals(agent.signPubKey));
     final inserted = await selectConversation.getSingle();
 
-    delegate.pages.removeLast();
+    delegate.pages.clear();
     delegate.pages.add(ChatRoomPage(conversation: inserted));
     delegate.notify();
   }

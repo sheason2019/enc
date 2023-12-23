@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/contacts/detail/detail.view.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -49,7 +48,7 @@ class ContactListTile extends StatelessWidget {
   }
 
   handleClick(BuildContext context, AccountSnapshot snapshot) {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.contactDelegate;
     delegate.pages.add(ContactDetailPage(snapshot: snapshot));
     delegate.notify();
   }

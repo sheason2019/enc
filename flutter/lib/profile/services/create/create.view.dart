@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:ENC/scope/scope.model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/dio.dart';
-import 'package:ENC/main.controller.dart';
 import 'package:ENC/profile/services/create/confirm.view.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 
@@ -17,7 +17,7 @@ class _CreateServicePageState extends State<CreateServicePage> {
   final controller = TextEditingController();
 
   handleNextStep() async {
-    final delegate = context.read<MainController>().rootDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     final uri = Uri.parse(controller.text);
     if (!uri.isAbsolute) {
       throw Exception('input data is not url');
