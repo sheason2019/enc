@@ -35,7 +35,7 @@ jobs:
           - os: ubuntu-latest
             target: Android
             build_target: apk
-            build_path: build/app/outputs/flutter-apk
+            build_path: flutter/build/app/outputs/flutter-apk
             asset_extension: .apk
             asset_content_type: application/vnd.android.package-archive
     needs: draft-release
