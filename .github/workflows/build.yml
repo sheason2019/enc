@@ -23,7 +23,6 @@ jobs:
             release_name: Release ${{ github.ref }}
             draft: true
             prerelease: false
-            generate_release_notes: true
   build:
     name: Build ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
