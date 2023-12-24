@@ -68,13 +68,6 @@ jobs:
         if: matrix.target == 'Android'
         run: mv app-release.apk $GITHUB_WORKSPACE/enc_${{ matrix.target }}.apk
         working-directory: ${{ matrix.build_path }}
-      - name: Copy VC redistributables to release directory for Windows
-        if: matrix.target == 'Windows'
-        run: |
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') .
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') .
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') .
-        working-directory: ${{ matrix.build_path }}
       - name: Compress build for Windows
         if: matrix.target == 'Windows'
         run: compress-archive -Path * -DestinationPath ${env:GITHUB_WORKSPACE}\flutter_gallery_${{ matrix.target }}.zip
