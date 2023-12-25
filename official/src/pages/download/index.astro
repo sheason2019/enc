@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import AppBar from "../../components/AppBar/AppBar.astro";
+import AppAnchor from "../../components/AppAnchor.astro";
+---
+
+<Layout title="下载 ENC">
+  <AppBar />
+  <main class="container mx-auto">
+    <h1 class="text-5xl my-4">下载页面</h1>
+    <h2 class="text-4xl mb-2">客户端</h2>
+    <p>目前请前往 GitHub Release 页面下载最新的 ENC 客户端：</p>
+    <AppAnchor
+      href="https://github.com/sheason2019/cfc/releases"
+      target="_blank"
+    >
+      CFC GitHub Release 页面
+    </AppAnchor>
+    <h2 class="text-4xl mb-2">服务器</h2>
+    <p>
+      <span>若要自行部署服务器，请查看</span>
+      <AppAnchor href="/manual">使用帮助/部署服务器</AppAnchor>
+    </p>
+  </main>
+</Layout>

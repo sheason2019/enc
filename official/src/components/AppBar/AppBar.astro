@@ -1,0 +1,18 @@
+---
+import EncIcon from "../EncIcon.astro";
+import AppBarAnchor from "./AppBarAnchor.astro";
+---
+
+<div class="py-2 flex items-center px-4">
+  <a class="w-12 h-12" href="/">
+    <EncIcon />
+  </a>
+  <div class="ml-2">
+    <AppBarAnchor href="/manual">使用帮助</AppBarAnchor>
+  </div>
+  <div class="ml-2">
+    <AppBarAnchor href="/document">技术文档</AppBarAnchor>
+  </div>
+  <div class="flex-1"></div>
+  <AppBarAnchor href="/download">立即下载</AppBarAnchor>
+</div>
