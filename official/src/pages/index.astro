@@ -7,8 +7,8 @@ import AppAnchor from "../components/AppAnchor.astro";
 ---
 
 <Layout title="ENC - 应用于内部网络的即时通讯工具">
-  <main>
-    <AppBar />
+  <AppBar />
+  <main class="px-4">
     <Notice />
     <h2 class="mt-24 text-center text-5xl">功能简介</h2>
     <Section label="现代化的即时通讯能力">
@@ -17,22 +17,18 @@ import AppAnchor from "../components/AppAnchor.astro";
       <p>可基本覆盖内部网络用户的即时通讯需求</p>
     </Section>
     <Section label="去中心化">
-      <p>ENC 去中心化的设计使用户账号可同时与多个服务器建立连接</p>
-      <p>这不仅意味着用户可以同时从多个相互隔离的内部网络数据源获取信息</p>
-      <p>
-        还意味着用户可以通过以同时连接到多个公共网络服务器的方式实现个人账号的“高可用”
-      </p>
-      <p>从而避免单一服务器崩溃导致的服务不可用</p>
+      <p>ENC 账号可同时与多个服务器建立连接</p>
+      <p>这不仅意味着用户可以同时从多个数据源获取信息</p>
+      <p>还意味着用户可以通过连接到多个服务器的方式实现账号的“高可用”</p>
+      <p>从而有效避免单一服务器崩溃导致的账号下线</p>
     </Section>
     <Section label="基于 ECC25519 的端到端加密">
-      <p>端到端加密可以有效避免网络环境中的窃听行为</p>
-      <p>
-        ENC 通过 X25519 & ED25519 & chacha20-ploy1305 实现端到端加密和消息签名
-      </p>
-      <p>从而有效保护用户的消息隐私</p>
+      <p>端到端加密可以有效避免消息发送过程中的窃听行为</p>
+      <p>ENC 通过 X25519 & chacha20-ploy1305 实现了端到端加密</p>
+      <p>并借此保护用户的消息隐私</p>
     </Section>
     <Section label="多设备同步">
-      <p>ENC 的账号可以同时在多个设备上保持登录，并同步用户的操作</p>
+      <p>ENC 的账号可以同时在多个设备上登录并保持同步</p>
       <p>
         <span>实现这一功能的理论基础是CRDT，具体内容请点击查看</span>
         <AppAnchor href="#">技术文档/多设备数据同步</AppAnchor>
@@ -63,20 +59,15 @@ import AppAnchor from "../components/AppAnchor.astro";
         </AppAnchor>
         <span>描述你的问题</span>
       </p>
-      <p>我会第一时间提供帮助</p>
+      <p>我会在收到消息的第一时间提供帮助</p>
     </Section>
     <Section label="更多信息">
+      <p>想了解关于 ENC 的更多消息</p>
       <p>
-        <span>还没决定好是否要使用 ENC ？ 可查看 </span>
-        <AppAnchor href="#">使用帮助 / 典型场景</AppAnchor>
-      </p>
-      <p>
-        <span>想了解该如何使用 ENC ？ 可查看</span>
-        <AppAnchor href="#">使用帮助</AppAnchor>
-      </p>
-      <p>
-        <span>对 ENC 的技术细节感兴趣？ 可查看</span>
-        <AppAnchor href="#">技术文档</AppAnchor>
+        <span>请查阅</span>
+        <AppAnchor href="/manual">使用帮助</AppAnchor>
+        <span>/</span>
+        <AppAnchor href="/document">技术文档</AppAnchor>
       </p>
     </Section>
   </main>
@@ -87,11 +78,10 @@ import AppAnchor from "../components/AppAnchor.astro";
     color: white;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow: auto;
   }
 
   p {
     margin-bottom: 12px;
+    text-align: center;
   }
 </style>

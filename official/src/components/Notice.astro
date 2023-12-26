@@ -3,7 +3,7 @@ import EncIcon from "./EncIcon.astro";
 ---
 
 <div class="flex flex-col items-center">
-  <div class="flex flex-row my-12 items-center">
+  <div class="flex flex-col sm:flex-row my-12 items-center">
     <div class="w-64 h-64 mr-6">
       <EncIcon />
     </div>
@@ -19,9 +19,9 @@ import EncIcon from "./EncIcon.astro";
       </h1>
     </div>
   </div>
-  <h1 class="text-6xl">应用于内部网络的即时通讯工具</h1>
-  <a href="/download">
-    <button class="download mt-8 px-8 py-4 rounded-md">立即下载</button>
+  <h1 class="text-2xl sm:text-4xl md:text-6xl">应用于内部网络的即时通讯工具</h1>
+  <a href="/download" class="mt-8">
+    <button class="download px-8 py-4 rounded-md">立即下载</button>
   </a>
 </div>
 
