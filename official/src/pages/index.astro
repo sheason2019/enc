@@ -12,51 +12,49 @@ import AppAnchor from "../components/AppAnchor.astro";
     <Notice />
     <h2 class="mt-24 text-center text-5xl">功能简介</h2>
     <Section label="现代化的即时通讯能力">
-      <div class="flex">
-        <img class="w-72" alt="app example snapshot" />
-        <div class="w-72">
-          <ul class="list-disc">
-            <li>群组</li>
-            <li>多媒体消息</li>
-            <li>音视频通话</li>
-            <li>……</li>
-          </ul>
-        </div>
-      </div>
-    </Section>
-    <Section label="代码开源">
-      <p>ENC客户端和服务器的源代码都是开源的</p>
-      <p>这意味着所有人都可以审查代码中存在的漏洞</p>
-      <p>或是根据自己的需要对应用提出改进的意见</p>
+      <p>就像您所熟知的其他即时通讯应用一样</p>
+      <p>ENC 支持群组、多媒体消息、音视频通话等功能</p>
+      <p>可基本覆盖内部网络用户的即时通讯需求</p>
     </Section>
     <Section label="去中心化">
-      <p>ENC去中心化的设计使用户账号可同时与多个服务器建立连接</p>
-      <p>这不仅意味着单一账号可同时从公共网络和局域网络中获取消息</p>
-      <p>还意味着用户可以同时连接到多个公共网络，从而实现个人账号的“高可用”</p>
+      <p>ENC 去中心化的设计使用户账号可同时与多个服务器建立连接</p>
+      <p>这不仅意味着用户可以同时从多个相互隔离的内部网络数据源获取信息</p>
+      <p>
+        还意味着用户可以通过以同时连接到多个公共网络服务器的方式实现个人账号的“高可用”
+      </p>
+      <p>从而避免单一服务器崩溃导致的服务不可用</p>
     </Section>
     <Section label="基于 ECC25519 的端到端加密">
-      <p>端到端加密可有效避免中间人窃听用户消息</p>
+      <p>端到端加密可以有效避免网络环境中的窃听行为</p>
       <p>
-        ENC 主要使用 X25519 & ED25519 & chacha20-ploy1305
-        实现端到端加密和消息签名
+        ENC 通过 X25519 & ED25519 & chacha20-ploy1305 实现端到端加密和消息签名
       </p>
+      <p>从而有效保护用户的消息隐私</p>
     </Section>
     <Section label="多设备同步">
-      <p>ENC 的账号可以在多个设备上保持同步</p>
+      <p>ENC 的账号可以同时在多个设备上保持登录，并同步用户的操作</p>
       <p>
         <span>实现这一功能的理论基础是CRDT，具体内容请点击查看</span>
-        <a href="#">技术文档/多设备数据同步</a>
+        <AppAnchor href="#">技术文档/多设备数据同步</AppAnchor>
       </p>
     </Section>
     <Section label="多平台支持">
-      <p>ENC 的客户端使用Flutter编写，目前支持 Android 和 Windows</p>
-      <p>服务器使用Node.js编写，可通过 Docker 部署到常见的服务器或个人 PC</p>
+      <p>ENC 的客户端使用 Flutter 编写，但目前仅支持 Android 和 Windows 平台</p>
+      <p>服务器使用 Node.js 编写，可通过 Docker 部署到常见的服务器或个人 PC</p>
     </Section>
     <h2 class="text-center text-5xl">关于 ENC</h2>
-    <Section label="作者信息" />
+    <Section label="开发者信息">
+      <p>ENC 目前仍属于一款由个人开发者独立开发的应用</p>
+      <p>
+        <span>如果您想与开发者取得联系，可以考虑发送电子邮件至</span>
+        <AppAnchor href="https://mail.qq.com" target="_blank">
+          811627877@qq.com
+        </AppAnchor>
+      </p>
+    </Section>
     <Section label="提出建议">
       <p>
-        <span>若对ENC有任何功能或设计上的建议、意见，请前往</span>
+        <span>若对ENC有任何意见或建议，请前往</span>
         <AppAnchor
           href="https://github.com/sheason2019/cfc/issues"
           target="_black"
@@ -65,12 +63,20 @@ import AppAnchor from "../components/AppAnchor.astro";
         </AppAnchor>
         <span>描述你的问题</span>
       </p>
-      <p>我们会积极回复并考虑如何解决</p>
+      <p>我会第一时间提供帮助</p>
     </Section>
-    <Section label="支持和赞助">
-      <p>如果您非常喜欢ENC，可以在ENC的GitHub主页为此项目提供一颗 Star</p>
+    <Section label="更多信息">
       <p>
-        如果您想帮助ENC积极成长，可以通过提供 Pull Request 的方式为ENC建设源码
+        <span>还没决定好是否要使用 ENC ？ 可查看 </span>
+        <AppAnchor href="#">使用帮助 / 典型场景</AppAnchor>
+      </p>
+      <p>
+        <span>想了解该如何使用 ENC ？ 可查看</span>
+        <AppAnchor href="#">使用帮助</AppAnchor>
+      </p>
+      <p>
+        <span>对 ENC 的技术细节感兴趣？ 可查看</span>
+        <AppAnchor href="#">技术文档</AppAnchor>
       </p>
     </Section>
   </main>

@@ -15,14 +15,25 @@ import EncIcon from "./EncIcon.astro";
         <span class="high-light">N</span>etwork
       </h1>
       <h1 class="text-6xl mt-8">
-        <span class="high-light">C</span>ommulicate</h1>
+        <span class="high-light">C</span>ommulicate
+      </h1>
     </div>
   </div>
   <h1 class="text-6xl">应用于内部网络的即时通讯工具</h1>
+  <a href="/download">
+    <button class="download mt-8 px-8 py-4 rounded-md">立即下载</button>
+  </a>
 </div>
 
 <style>
   .high-light {
-    color: #6750A4;
+    color: #6750a4;
+  }
+  .download {
+    background-color: #6750a4;
+    transition: all 150ms;
+  }
+  .download:hover {
+    box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.25);
   }
 </style>
