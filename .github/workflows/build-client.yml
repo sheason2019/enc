@@ -1,8 +1,8 @@
-name: Builds
+name: Build Client
 on:
   push:
     tags:
-      - "client-v*"
+      - "v*"
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
           draft: true
           prerelease: false
           generate_release_notes: true
