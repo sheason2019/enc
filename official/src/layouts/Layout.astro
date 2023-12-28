@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import AppBar from '../components/AppBar/AppBar.astro';
 interface Props {
 	title: string;
 }
@@ -19,6 +20,7 @@ const { title } = Astro.props;
 		<ViewTransitions />
 	</head>
 	<body>
+		<AppBar />
 		<slot />
 	</body>
 </html>
@@ -33,7 +35,6 @@ const { title } = Astro.props;
 		color: #FFFFFF;
 	}
 	body {
-		height: 100%;
 		padding: 0;
 		margin: 0;
 	}

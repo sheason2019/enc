@@ -1,0 +1,26 @@
+<div class="toc-side-bar px-4 hidden md:block">
+  <slot />
+</div>
+
+<div class="block md:hidden fixed right-4 bottom-4">
+  <a
+    href="/manual/toc"
+    class="fab w-12 h-12 bg-white rounded-full text-black flex items-center justify-center"
+  >
+    目录
+  </a>
+</div>
+
+<style>
+  .toc-side-bar {
+    --toc-font-size: 1rem;
+    --toc-title-font-size: 1.175rem;
+  }
+  .fab {
+    transition: box-shadow 250ms;
+  }
+  .fab:hover {
+    cursor: pointer;
+    box-shadow: 0 0 12px 12px rgba(255, 255, 255, 0.2);
+  }
+</style>

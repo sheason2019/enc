@@ -4,6 +4,6 @@ interface Props extends astroHTML.JSX.AnchorHTMLAttributes {}
 const props = Astro.props;
 ---
 
-<a {...props} class={`text-blue-300 hover:text-blue-400 ${props.class}`}>
+<a class={`text-blue-300 hover:text-blue-400 ${props.class}`} {...props}>
   <slot />
 </a>

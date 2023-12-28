@@ -1,0 +1,17 @@
+---
+import ManualToc from "../../components/Toc/ManualToc.astro";
+import DocumentLayout from "../../layouts/DocumentLayout.astro";
+---
+
+<DocumentLayout title="目录" hiddenToc>
+  <div class="toc-container">
+    <ManualToc />
+  </div>
+</DocumentLayout>
+
+<style>
+  .toc-container {
+    --toc-font-size: 1.5rem;
+    --toc-title-font-size: 1.875rem;
+  }
+</style>

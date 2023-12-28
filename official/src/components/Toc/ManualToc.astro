@@ -1,0 +1,28 @@
+---
+import TocNode from "./TocNode.astro";
+import { parseToc } from "./ParseToc.ts";
+import AppAnchor from "../AppAnchor.astro";
+
+const instances = await Astro.glob("../../pages/manual/**/*.md");
+const nodeList = parseToc(instances);
+---
+
+<div class="toc">
+  <AppAnchor
+    class="toc-title mb-3 font-bold block no-underline"
+    href="/manual/toc"
+  >
+    目录
+  </AppAnchor>
+  {nodeList.map((node) => <TocNode treeNode={node} />)}
+</div>
+
+<style>
+  .toc {
+    position: sticky;
+    top: 72px;
+  }
+  .toc-title {
+    font-size: var(--toc-title-font-size);
+  }
+</style>

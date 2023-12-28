@@ -1,0 +1,54 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import AppBar from "../components/AppBar/AppBar.astro";
+import ManualToc from "../components/Toc/ManualToc.astro";
+import TocSideBar from "../components/Toc/TocSideBar.astro";
+interface Props {
+  title: string;
+  hiddenToc?: boolean;
+}
+
+const { title, hiddenToc } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body>
+    <AppBar />
+    <div class="flex">
+      {
+        !hiddenToc && (
+          <TocSideBar>
+            <ManualToc />
+          </TocSideBar>
+        )
+      }
+      <main class="flex-1 container mx-auto prose prose-invert px-4 py-2">
+        <slot />
+      </main>
+    </div>
+    <style is:global>
+      html {
+        font-family: system-ui, sans-serif;
+        background: #0f0f0f;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        color: #ffffff;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>

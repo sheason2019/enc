@@ -1,0 +1,28 @@
+---
+import AppAnchor from "../AppAnchor.astro";
+import { type ITreeNode } from "./ParseToc.ts";
+interface Props {
+  treeNode: ITreeNode;
+}
+
+const { treeNode } = Astro.props;
+---
+
+<AppAnchor class="toc-node mb-2 block no-underline" href={treeNode.value.url}>
+  {treeNode.value.frontmatter["title"]}
+</AppAnchor>
+{
+  !!treeNode.children && treeNode.children.length > 0 && (
+    <div class="ml-4">
+      {treeNode.children.map((node) => (
+        <Astro.self treeNode={node} />
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .toc-node {
+    font-size: var(--toc-font-size);
+  }
+</style>
