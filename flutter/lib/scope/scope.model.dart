@@ -147,15 +147,15 @@ class Scope extends ChangeNotifier {
   final router = ScopeRouter();
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     for (final sub in subs) {
-      sub.cancel();
+      await sub.cancel();
     }
     for (final subscribe in subscribes.values) {
       subscribe.dispose();
     }
     router.dispose();
-    db.close();
+    await db.close();
     super.dispose();
   }
 }

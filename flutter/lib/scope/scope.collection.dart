@@ -97,6 +97,7 @@ class ScopeCollection extends ChangeNotifier {
   }
 
   Future<void> deleteScope(Scope scope) async {
+    await scope.dispose();
     final dir = Directory(
       path.join(await accountsPath, scope.secret.signPubKey),
     );
