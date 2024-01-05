@@ -22,11 +22,11 @@ class _AlterUsernamePageState extends State<AlterUsernamePage> {
   }
 
   Future<void> handleSubmit() async {
-    final delegate = context.read<Scope>().router.chatDelegate;
+    final delegate = context.read<Scope>().router.profileDelegate;
     final newName = textController.text;
     final operation = await scope.operator.factory.username(newName);
     await scope.operator.apply([operation], isReplay: false);
-    delegate.pages.removeLast();
+    delegate.pages.clear();
     delegate.notify();
   }
 
