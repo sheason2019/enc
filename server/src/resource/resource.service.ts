@@ -64,9 +64,10 @@ export class ResourceService {
     // 统计 Operations 使用情况
     const operationLength = await this.getAccountOperationUsage(account);
 
+    // 默认用户资源使用量为 5GB
     return {
       used: messageLength + storageLength + operationLength,
-      total: null,
+      total: 5_000_000_000,
     };
   }
 
