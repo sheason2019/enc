@@ -7,16 +7,12 @@
 
 ## 官方网站
 
-TODO
+https://enc.sheason.site
 
 ## 使用手册
 
-TODO
+https://enc.sheason.site/manual
 
 ## 下载页面
 
-TODO
-
-## 开发相关
-
-
+https://github.com/sheason2019/enc/releases
