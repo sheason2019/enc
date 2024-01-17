@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -12,12 +14,12 @@ enum _VideoResourceType {
 class SimpleVideo extends StatefulWidget {
   final _VideoResourceType _type;
   final String? url;
-  final String? filePath;
+  final XFile? file;
 
   const SimpleVideo._({
     required _VideoResourceType type,
     this.url,
-    this.filePath,
+    this.file,
   }) : _type = type;
 
   factory SimpleVideo.network(String url) {
@@ -27,10 +29,10 @@ class SimpleVideo extends StatefulWidget {
     );
   }
 
-  factory SimpleVideo.file(String filePath) {
+  factory SimpleVideo.file(XFile file) {
     return SimpleVideo._(
       type: _VideoResourceType.file,
-      filePath: filePath,
+      file: file,
     );
   }
 
@@ -46,7 +48,17 @@ class _SimpleVideoState extends State<SimpleVideo> {
   Future<void> initVideo() async {
     switch (widget._type) {
       case _VideoResourceType.file:
-        await player.open(Media('file:///${widget.filePath}'), play: false);
+        if (!kIsWeb) {
+          await player.open(
+            Media('file:///${widget.file!.path}'),
+            play: false,
+          );
+        } else {
+          await player.open(
+            await Media.memory(await widget.file!.readAsBytes()),
+            play: false,
+          );
+        }
         break;
       case _VideoResourceType.network:
         await player.open(Media(widget.url!), play: false);

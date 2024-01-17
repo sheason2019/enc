@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:ENC/utils/breakpoint/breakpoint.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/room/messages/message/wrapper.view.dart';
@@ -15,8 +15,8 @@ class VideoMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final message = context.watch<Message>();
-    final isDesktop =
-        Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+    final bp = context.watch<BreakPoint>();
+    final lg = bp == BreakPoint.lg;
 
     final networkResource = NetworkResource.fromJson(
       jsonDecode(message.content),
@@ -24,9 +24,9 @@ class VideoMessageView extends StatelessWidget {
 
     return MessageListItemWrapperView(
       child: SimpleVideo.network(networkResource.url).constrained(
-        minWidth: isDesktop ? 400 : 280,
-        maxWidth: isDesktop ? 400 : 280,
-        maxHeight: isDesktop ? 400 : 280,
+        minWidth: lg ? 400 : 280,
+        maxWidth: lg ? 400 : 280,
+        maxHeight: lg ? 400 : 280,
       ),
     );
   }

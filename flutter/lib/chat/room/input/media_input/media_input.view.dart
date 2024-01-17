@@ -99,6 +99,6 @@ class _PreviewVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleVideo.file(mediaInputContext.mediaFile.path).width(360);
+    return SimpleVideo.file(mediaInputContext.mediaFile).width(360);
   }
 }

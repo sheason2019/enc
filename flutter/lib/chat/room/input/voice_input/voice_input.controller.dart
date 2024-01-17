@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
@@ -51,12 +53,23 @@ class VoiceInputController extends ChangeNotifier {
     if (!await recorder.hasPermission()) {
       throw Exception('Permission denied');
     }
+
+    if (kIsWeb) {
+      return recorder.start(
+        const RecordConfig(
+          encoder: AudioEncoder.wav,
+        ),
+        path: '',
+      );
+    }
+
     final uuid = const Uuid().v4();
+
+    final tempDir = await getTemporaryDirectory();
     final filePath = path.join(
-      scope.paths.cache,
+      tempDir.path,
       '$uuid.wav',
     );
-
     final dirPath = path.dirname(filePath);
     final dir = Directory(dirPath);
     if (!await dir.exists()) {
