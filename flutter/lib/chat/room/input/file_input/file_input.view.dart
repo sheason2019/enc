@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -10,11 +9,11 @@ import 'package:styled_widget/styled_widget.dart';
 
 class FileInputView extends StatefulWidget {
   final Scope scope;
-  final String filePath;
+  final XFile file;
   const FileInputView({
     super.key,
     required this.scope,
-    required this.filePath,
+    required this.file,
   });
 
   @override
@@ -38,10 +37,10 @@ class _FileInputViewState extends State<FileInputView> {
       children: [
         ListTile(
           leading: const Icon(Icons.file_present_rounded),
-          title: Text(path.basename(widget.filePath)),
+          title: Text(path.basename(widget.file.name)),
           subtitle: FutureBuilder(
             initialData: 0,
-            future: File(widget.filePath).length(),
+            future: widget.file.length(),
             builder: (context, snapshot) => Text(
               StringHelper.fileSize(snapshot.requireData),
             ),
