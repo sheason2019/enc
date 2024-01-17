@@ -1,17 +1,19 @@
+import 'package:ENC/cyprto/crypto_utils.dart';
+import 'package:ENC/prototypes/core.pb.dart';
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/accounts/account_list_tile/account_list_tile.view.dart';
 import 'package:ENC/main.controller.dart';
 import 'package:ENC/replica/replica.view.dart';
-import 'package:ENC/scope/scope.collection.dart';
 
 class AccountsPage extends StatelessWidget {
   const AccountsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final collection = context.watch<ScopeCollection>();
-    final scopes = collection.scopeMap.values.toList();
+    final adapter = context.watch<PersistAdapter>();
+    final scopes = adapter.scopeMap.values.toList();
 
     final key = GlobalKey<ScaffoldState>();
 
@@ -43,7 +45,13 @@ class AccountsPage extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              await collection.createScope();
+              final keypair = await CryptoUtils.generate();
+              final secret = AccountSecret.create()
+                ..ecdhPubKey = keypair.ecdhPubKey
+                ..ecdhPrivKey = keypair.ecdhPrivKey
+                ..signPubKey = keypair.signPubKey
+                ..signPrivKey = keypair.signPrivKey;
+              await adapter.createScope(secret);
               key.currentState?.closeEndDrawer();
             },
             title: const Text('新建随机账号'),

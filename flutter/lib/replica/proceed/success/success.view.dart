@@ -1,7 +1,7 @@
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/main.controller.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -11,8 +11,8 @@ class ReplicaProceedSuccess extends StatelessWidget {
   handleClick(BuildContext context) {
     final scope = context.read<Scope?>();
     final mainController = context.read<MainController>();
-    final collection = context.read<ScopeCollection>();
-    mainController.handleEnterScope(collection, scope);
+    final adapter = context.read<PersistAdapter>();
+    mainController.handleEnterScope(adapter, scope);
   }
 
   @override

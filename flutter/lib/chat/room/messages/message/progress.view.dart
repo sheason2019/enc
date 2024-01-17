@@ -30,7 +30,7 @@ class MessageStateProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<double?>(
-      initialData: 0,
+      initialData: null,
       stream: progress(context),
       builder: (context, snapshot) {
         final value = snapshot.data;

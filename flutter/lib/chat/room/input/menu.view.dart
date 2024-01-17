@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/room/input/file_input/file_input.controller.dart';
@@ -79,7 +78,7 @@ class InputMenuBottomSheet extends StatelessWidget {
 
     final upload = await scope.uploader.upload(
       serviceUrl,
-      mediaInputContext.mediaFile.path,
+      mediaInputContext.mediaFile,
     );
 
     final message = await chatController.inputController.createMessage();
@@ -103,17 +102,19 @@ class InputMenuBottomSheet extends StatelessWidget {
   handleInputFile(BuildContext context) async {
     handleCloseSheet(context);
 
-    final filePath = await fileInputController.pickFile();
-    if (filePath == null) return;
+    final file = await fileInputController.pickFile();
+    if (file == null) return;
 
-    final serviceUrl = await fileInputController.showPreviewDialog(filePath);
+    final serviceUrl = await fileInputController.showPreviewDialog(
+      file,
+    );
     if (serviceUrl == null) return;
 
-    final upload = await scope.uploader.upload(serviceUrl, filePath);
+    final upload = await scope.uploader.upload(serviceUrl, file);
     final message = await chatController.inputController.createMessage();
     message.content = jsonEncode(NetworkResource(
       url: upload,
-      name: path.basename(filePath),
+      name: file.name,
     ));
     message.messageType = MessageType.MESSAGE_TYPE_FILE;
 

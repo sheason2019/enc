@@ -7,13 +7,26 @@ import 'package:ENC/dio.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:ENC/utils/sign_helper.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Uploader {
   final Scope scope;
   Uploader({required this.scope});
 
-  // 上传加密内容
   Future<String> upload(
+    String serviceUrl,
+    XFile file,
+  ) async {
+    if (kIsWeb) {
+      return uploadBlob(serviceUrl, await file.readAsBytes());
+    } else {
+      return _uploadFile(serviceUrl, file.path);
+    }
+  }
+
+  // 上传加密内容
+  Future<String> _uploadFile(
     String serviceUrl,
     String filePath,
   ) async {
@@ -81,6 +94,75 @@ class Uploader {
     );
 
     await file.close();
+    return '$url/$fileId';
+  }
+
+  Future<String> uploadBlob(
+    String serviceUrl,
+    Uint8List blob,
+  ) async {
+    final url = '$serviceUrl/storage/${scope.secret.signPubKey}';
+    // 文件上传功能
+    const blockSize = 512 * 1024;
+
+    final fileSize = blob.length;
+    final blockCount = (fileSize / blockSize).ceil();
+
+    final chunkList = <String>[];
+
+    for (var block = 0; block < blockCount; block++) {
+      final data = blob.sublist(
+        block * blockSize,
+        math.min(blockSize, fileSize),
+      );
+      final wrapper = await SignHelper.wrap(
+        scope,
+        data,
+        contentType: ContentType.CONTENT_BUFFER,
+      );
+
+      final formData = FormData.fromMap({
+        'type': 'upload',
+        'payload': base64Encode(wrapper.writeToBuffer()),
+      });
+
+      final resp = await dio.post(
+        url,
+        data: formData,
+      );
+      chunkList.add(resp.data);
+    }
+
+    // 如果只上传了单文件，则直接返回单文件ID
+    if (chunkList.length == 1) {
+      return '$url/${chunkList.first}';
+    }
+
+    final mergeData = utf8.encode(jsonEncode(chunkList));
+    final mergeWrapper = await SignHelper.wrap(
+      scope,
+      mergeData,
+      contentType: ContentType.CONTENT_BUFFER,
+    );
+
+    final resp = await dio.post(
+      url,
+      data: FormData.fromMap({
+        'type': 'merge',
+        'payload': mergeWrapper.writeToBuffer(),
+      }),
+    );
+    final fileId = resp.data.toString();
+
+    // 清理 Chunk 文件以降低资源占用
+    await dio.post(
+      url,
+      data: FormData.fromMap({
+        'type': 'delete',
+        'payload': base64UrlEncode(mergeWrapper.writeToBuffer()),
+      }),
+    );
+
     return '$url/$fileId';
   }
 }

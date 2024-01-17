@@ -66,7 +66,7 @@ class _FileMessageViewState extends State<FileMessageView> {
                       ),
                     ),
                   ],
-                ).padding(horizontal: 12),
+                ).padding(horizontal: 12).constrained(maxWidth: 240),
                 if (controller.cached)
                   _FileOpenButton(controller: controller)
                 else

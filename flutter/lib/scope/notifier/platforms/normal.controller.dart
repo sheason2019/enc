@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as ln;
@@ -8,7 +9,7 @@ import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/notifier/notifier.controller.dart';
 import 'package:ENC/scope/notifier/notifier_helper.dart';
-import 'package:ENC/scope/scope.collection.dart';
+
 import 'package:ENC/scope/scope.model.dart';
 
 class NormalNotifier implements Notifier {
@@ -73,7 +74,7 @@ class NormalNotifier implements Notifier {
   @override
   Future<void> initial(
     MainController controller,
-    ScopeCollection collection,
+    PersistAdapter adapter,
   ) async {
     const ln.AndroidInitializationSettings initializationSettingsAndroid =
         ln.AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -94,7 +95,7 @@ class NormalNotifier implements Notifier {
       onDidReceiveNotificationResponse: (details) {
         NotifierHelper.handleActivateMessage(
           controller,
-          collection,
+          adapter,
           details.payload ?? '',
         );
       },

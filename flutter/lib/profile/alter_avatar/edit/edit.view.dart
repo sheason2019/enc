@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as image;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +7,6 @@ import 'package:ENC/profile/alter_avatar/preview/preview.view.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class AlterAvatarEditPage extends StatefulWidget {
   final XFile imageFile;
@@ -45,14 +41,10 @@ class _AlterAvatarEditPageState extends State<AlterAvatarEditPage> {
       width: rect.width.toInt(),
       height: rect.height.toInt(),
     );
-    final cachePath = path.join(
-      scope.paths.cache,
-      const Uuid().v4(),
-    );
-    await image.encodePngFile(cachePath, croped);
+
     delegate.pages.add(
       AlterAvatarPreviewPage(
-        imagePath: cachePath,
+        image: croped,
         target: widget.target,
         conversation: widget.conversation,
       ),
@@ -66,15 +58,23 @@ class _AlterAvatarEditPageState extends State<AlterAvatarEditPage> {
       appBar: AppBar(
         title: const Text('编辑头像'),
       ),
-      body: ExtendedImage.file(
-        File(widget.imageFile.path),
-        fit: BoxFit.contain,
-        mode: ExtendedImageMode.editor,
-        cacheRawData: true,
-        extendedImageEditorKey: editorKey,
-        initEditorConfigHandler: (state) => EditorConfig(
-          cropAspectRatio: CropAspectRatios.ratio1_1,
-        ),
+      body: FutureBuilder(
+        future: widget.imageFile.readAsBytes(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+          return ExtendedImage.memory(
+            snapshot.requireData,
+            fit: BoxFit.contain,
+            mode: ExtendedImageMode.editor,
+            cacheRawData: true,
+            extendedImageEditorKey: editorKey,
+            initEditorConfigHandler: (state) => EditorConfig(
+              cropAspectRatio: CropAspectRatios.ratio1_1,
+            ),
+          );
+        },
       ).padding(all: 48).center(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: handleNext,

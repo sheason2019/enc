@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +79,7 @@ class VoiceInputBody extends StatelessWidget {
 
     final resourceUrl = await scope.uploader.upload(
       controller.service,
-      wavFilePath!,
+      XFile(wavFilePath!),
     );
     final content = NetworkResource(
       url: resourceUrl,
@@ -89,7 +91,9 @@ class VoiceInputBody extends StatelessWidget {
     await chatController.inputController.sendMessage([message]);
     await chatController.messagesController.handleNextTickToBottom();
     // 完成上传后删除文件
-    await File(wavFilePath).delete();
+    if (!kIsWeb) {
+      await File(wavFilePath).delete();
+    }
   }
 
   @override

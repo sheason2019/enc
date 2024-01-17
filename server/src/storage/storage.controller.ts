@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpException,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { StorageService } from './storage.service';
 import { NoFilesInterceptor } from '@nestjs/platform-express';
@@ -64,6 +65,7 @@ export class StorageController {
   getFile(
     @Param('signPubkey') signPubkey: string,
     @Param('fileId') fileId: string,
+    @Query('name') name: string | undefined,
     @Res() res: Response,
   ) {
     // 这是因为 Flutter 的 base64Url 和 Nodejs 的 Base64Url 填充逻辑不同
@@ -75,6 +77,8 @@ export class StorageController {
     if (!fs.existsSync(p)) {
       throw new HttpException('文件不存在', HttpStatus.NOT_FOUND);
     }
+
+    res.setHeader('Content-Disposition', `inline;filename=${name ?? fileId}`);
 
     const file = fs.createReadStream(p);
     file.pipe(res);

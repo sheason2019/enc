@@ -1,9 +1,9 @@
 import 'package:ENC/scope/layout/layout.view.dart';
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/contacts/contacts.view.dart';
 import 'package:ENC/main.controller.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/chat/chat.view.dart';
 import 'package:ENC/profile/profile.view.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -18,14 +18,9 @@ class ScopePage extends StatefulWidget {
 }
 
 class _ScopePageState extends State<ScopePage> {
-  handleSetDefaultScope(BuildContext context) async {
-    final controller = context.read<ScopeCollection>();
-    await controller.setDefaultScope(widget.scope);
-  }
-
   @override
   void initState() {
-    handleSetDefaultScope(context);
+    context.read<PersistAdapter>().setDefaultScope(widget.scope);
     super.initState();
   }
 

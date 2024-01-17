@@ -7,6 +7,7 @@ import 'package:ENC/main.controller.dart';
 import 'package:ENC/scope/layout/account_collection_entry/account_collection_entry.view.dart';
 import 'package:ENC/utils/breakpoint/breakpoint.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/chat/anchors/anchor/anchor.view.dart';
@@ -60,7 +61,7 @@ class ConversationAnchorsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scope = context.watch<Scope>();
-    final allowScan = Platform.isAndroid || Platform.isIOS;
+    final allowScan = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
     final list = scope.anchor.list;
 

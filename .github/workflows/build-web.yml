@@ -1,0 +1,43 @@
+name: Build ENC Web
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build ENC Web Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codespace
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: sheason/web-enc
+      - name: Clone Flutter repository with master channel
+        uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b
+        with:
+          channel: master
+      - run: flutter doctor -v
+      - run: |
+          cd ./flutter
+          flutter pub get
+      - run: |
+          cd ./flutter
+          flutter build -v web --release
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: ./flutter
+          file: ./flutter/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      

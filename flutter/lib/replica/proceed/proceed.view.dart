@@ -1,9 +1,9 @@
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/replica/proceed/pending/pending.view.dart';
 import 'package:ENC/replica/replica.controller.dart';
 import 'package:ENC/replica/replica.view.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/scope/scope.model.dart';
 
 import 'confirm/confirm.view.dart';
@@ -34,7 +34,7 @@ class ReplicaProceedPage extends StatelessWidget {
         dataDirection: dataDirection,
         connDirection: connDirection,
         namespace: namespace,
-        collection: context.read<ScopeCollection>(),
+        adapter: context.read<PersistAdapter>(),
       )..start(),
       dispose: (context, controller) => controller.dispose(),
       builder: (context, _) => const _ReplicaProceedPagination(),
