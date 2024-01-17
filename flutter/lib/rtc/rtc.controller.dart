@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:ENC/models/rtc_model.dart';
 import 'package:ENC/prototypes/core.pb.dart';
@@ -301,7 +301,23 @@ class RtcController extends ChangeNotifier {
 
   Future<void> _createLocalStream() async {
     late MediaStream stream;
-    if (Platform.isAndroid) {
+    if (kIsWeb) {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        'audio': true,
+        'video': {
+          'mandatory': {
+            'frameRate': 60.0,
+          },
+        },
+      });
+      final audioStream = await navigator.mediaDevices.getUserMedia({
+        'audio': true,
+      });
+      final tracks = audioStream.getAudioTracks();
+      for (final track in tracks) {
+        stream.addTrack(track);
+      }
+    } else if (Platform.isAndroid) {
       stream = await navigator.mediaDevices.getUserMedia({
         'audio': true,
         'video': {
@@ -310,9 +326,7 @@ class RtcController extends ChangeNotifier {
           },
         },
       });
-    }
-
-    if (Platform.isWindows) {
+    } else if (Platform.isWindows) {
       final sources = await desktopCapturer.getSources(
         types: [SourceType.Screen],
       );
