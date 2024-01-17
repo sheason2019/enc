@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   void init() async {
     mainController.addListener(() => setState(() {}));
     await adapter.init();
-    await adapter.notifier.initial(mainController, adapter);
+    await adapter.notifier?.initial(mainController, adapter);
     final defaultScope = await adapter.getDefaultScope();
     await mainController.handleEnterScope(adapter, defaultScope);
   }

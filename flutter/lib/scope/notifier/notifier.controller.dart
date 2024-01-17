@@ -27,9 +27,9 @@ abstract class Notifier {
     Conversation conversation,
   );
 
-  factory Notifier.create() {
+  static Notifier? create() {
     if (kIsWeb) {
-      return NormalNotifier();
+      return null;
     }
     if (Platform.isWindows) {
       return WinNotifier();

@@ -37,7 +37,7 @@ class Scope extends ChangeNotifier {
   late final AppDatabase db;
   late final uploader = Uploader(scope: this);
 
-  final Notifier notifier;
+  final Notifier? notifier;
   final PersistAdapter adapter;
 
   Future handleUpdateSnapshot() async {

@@ -45,20 +45,20 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   handleBlockNotifier() {
-    scope.notifier.blockConversation = widget.conversation;
-    scope.notifier.blockScope = scope;
+    scope.notifier?.blockConversation = widget.conversation;
+    scope.notifier?.blockScope = scope;
   }
 
   handleCancelBlockNotifier() {
-    scope.notifier.blockConversation = null;
-    scope.notifier.blockScope = null;
+    scope.notifier?.blockConversation = null;
+    scope.notifier?.blockScope = null;
   }
 
   @override
   void initState() {
     handleBlockNotifier();
     handleTriggerAnchor();
-    scope.notifier.clean(scope, widget.conversation);
+    scope.notifier?.clean(scope, widget.conversation);
     super.initState();
   }
 
