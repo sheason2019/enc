@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:ENC/cyprto/crypto_keypair.dart';
 import 'package:ENC/cyprto/crypto_utils.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/replica/replica.view.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -20,7 +20,7 @@ class ReplicaController extends ChangeNotifier {
   final ReplicaDataDirection dataDirection;
   final ReplicaConnDirection connDirection;
   final String url;
-  final ScopeCollection collection;
+  final PersistAdapter adapter;
   final statusNotifier = ValueNotifier(ReplicaStatus.pending);
 
   late CryptoKeyPair keypair;
@@ -36,7 +36,7 @@ class ReplicaController extends ChangeNotifier {
     required this.url,
     required this.dataDirection,
     required this.connDirection,
-    required this.collection,
+    required this.adapter,
   });
 
   Socket? socket;
@@ -168,8 +168,8 @@ class ReplicaController extends ChangeNotifier {
     );
     final secret = AccountSecret.fromBuffer(plainData);
 
-    var scope = await collection.findScope(secret.signPubKey);
-    scope ??= await collection.createScopeBySecret(secret);
+    var scope = adapter.scopeMap[secret.signPubKey];
+    scope ??= await adapter.createScope(secret);
     await scope.handleSetSnapshot(target!);
     await scope.handleUpdateSnapshot();
 

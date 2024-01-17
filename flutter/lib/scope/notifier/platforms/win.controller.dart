@@ -1,3 +1,4 @@
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:drift/drift.dart';
 import 'package:ENC/chat/anchors/anchor/anchor_message_preview/message_preview_helper.dart';
 import 'package:ENC/chat/room/room.view.dart';
@@ -5,7 +6,6 @@ import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/notifier/notifier.controller.dart';
 import 'package:ENC/scope/notifier/notifier_helper.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:win_toast/win_toast.dart';
 
@@ -15,7 +15,7 @@ class WinNotifier implements Notifier {
   @override
   Future<void> initial(
     MainController controller,
-    ScopeCollection collection,
+    PersistAdapter adapter,
   ) async {
     await WinToast.instance().initialize(
       aumId: 'Client.First.Commulicate',
@@ -26,7 +26,7 @@ class WinNotifier implements Notifier {
     WinToast.instance().setActivatedCallback((event) async {
       NotifierHelper.handleActivateMessage(
         controller,
-        collection,
+        adapter,
         event.argument,
       );
     });
@@ -34,11 +34,11 @@ class WinNotifier implements Notifier {
 
   Future<void> handleActivateMessage(
     MainController controller,
-    ScopeCollection collection,
+    PersistAdapter adapter,
     Scope scope,
     int conversationId,
   ) async {
-    await controller.handleEnterScope(collection, scope);
+    await controller.handleEnterScope(adapter, scope);
     final delegate = scope.router.chatDelegate;
     final select = scope.db.conversations.select();
     select.where((tbl) => tbl.id.equals(conversationId));

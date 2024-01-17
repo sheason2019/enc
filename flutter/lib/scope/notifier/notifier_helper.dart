@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as path;
@@ -7,7 +8,6 @@ import 'package:ENC/chat/room/room.view.dart';
 import 'package:ENC/dio.dart';
 import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/scope/scope.model.dart';
 
 class NotifierHelper {
@@ -43,7 +43,7 @@ class NotifierHelper {
 
   static Future<void> handleActivateMessage(
     MainController controller,
-    ScopeCollection collection,
+    PersistAdapter adapter,
     String payload,
   ) async {
     final argument = payload.split('/');
@@ -52,11 +52,11 @@ class NotifierHelper {
     }
 
     final signPubkey = argument[1];
-    final scope = await collection.findScope(signPubkey);
+    final scope = adapter.scopeMap[signPubkey];
     if (scope == null) return;
     final conversationId = int.parse(argument[2]);
 
-    await controller.handleEnterScope(collection, scope);
+    await controller.handleEnterScope(adapter, scope);
     final delegate = scope.router.chatDelegate;
     final select = scope.db.conversations.select();
     select.where((tbl) => tbl.id.equals(conversationId));

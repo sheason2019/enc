@@ -1,8 +1,8 @@
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ENC/accounts/account_avatar.view.dart';
 import 'package:ENC/accounts/online_hint/scope_online_hint.view.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/main.controller.dart';
 import 'package:ENC/scope/scope.model.dart';
 
@@ -11,14 +11,14 @@ class AccountListTile extends StatelessWidget {
   const AccountListTile({super.key, required this.scope});
 
   handleEnterScope(BuildContext context) {
-    final collection = context.read<ScopeCollection>();
+    final adapter = context.read<PersistAdapter>();
     final controller = context.read<MainController>();
-    controller.handleEnterScope(collection, scope);
+    controller.handleEnterScope(adapter, scope);
   }
 
   handleDeleteScope(BuildContext context) {
-    final controller = context.read<ScopeCollection>();
-    controller.deleteScope(scope);
+    final adapter = context.read<PersistAdapter>();
+    adapter.deleteScope(scope);
   }
 
   @override

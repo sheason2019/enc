@@ -1,9 +1,9 @@
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:ENC/utils/breakpoint/breakpoint.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
-import 'package:ENC/scope/scope.collection.dart';
 import 'package:ENC/main.controller.dart';
 
 void main() async {
@@ -22,14 +22,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final mainController = MainController();
-  final collection = ScopeCollection();
+  final adapter = PersistAdapter.create();
 
   void init() async {
     mainController.addListener(() => setState(() {}));
-    await collection.notifier.initial(mainController, collection);
-    await collection.updateScopes();
-    final defaultScope = await collection.findDefaultScope();
-    await mainController.handleEnterScope(collection, defaultScope);
+    await adapter.init();
+    await adapter.notifier.initial(mainController, adapter);
+    final defaultScope = await adapter.getDefaultScope();
+    await mainController.handleEnterScope(adapter, defaultScope);
   }
 
   @override
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     mainController.dispose();
-    collection.dispose();
+    adapter.dispose();
     super.dispose();
   }
 
@@ -54,11 +54,11 @@ class _MyAppState extends State<MyApp> {
             value: BreakPointHelper.calculate(constraints.maxWidth),
           ),
           ListenableProvider.value(value: mainController),
-          ListenableProvider.value(value: collection),
+          ListenableProvider.value(value: adapter),
           ListenableProvider.value(value: mainController.scope),
         ],
         builder: (context, _) => MaterialApp.router(
-          title: 'Sheason Chat',
+          title: 'ENC',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,

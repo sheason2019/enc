@@ -7,7 +7,7 @@ import 'package:ENC/main.controller.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/notifier/platforms/normal.controller.dart';
 import 'package:ENC/scope/notifier/platforms/win.controller.dart';
-import 'package:ENC/scope/scope.collection.dart';
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:ENC/scope/scope.model.dart';
 
 abstract class Notifier {
@@ -18,7 +18,7 @@ abstract class Notifier {
 
   Future<void> initial(
     MainController controller,
-    ScopeCollection collection,
+    PersistAdapter adapter,
   );
 
   Future<void> clean(
