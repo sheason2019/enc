@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:image/image.dart' as img;
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +20,13 @@ enum AvatarSubmitTarget {
 }
 
 class AlterAvatarPreviewPage extends StatefulWidget {
-  final String imagePath;
+  final img.Image image;
   final Conversation? conversation;
   final AvatarSubmitTarget target;
 
   const AlterAvatarPreviewPage({
     super.key,
-    required this.imagePath,
+    required this.image,
     required this.target,
     required this.conversation,
   });
@@ -40,18 +40,13 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
     context.read<Scope>(),
   );
 
-  @override
-  void dispose() {
-    File(widget.imagePath).delete();
-    super.dispose();
-  }
-
   void handleSubmit() async {
     final scope = context.read<Scope>();
+    final png = img.encodePng(widget.image);
     final delegate = scope.router.profileDelegate;
-    final url = await scope.uploader.upload(
+    final url = await scope.uploader.uploadBlob(
       controller.serviceUrl!,
-      widget.imagePath,
+      png,
     );
     switch (widget.target) {
       case AvatarSubmitTarget.snapshot:
@@ -108,8 +103,8 @@ class _AlterAvatarPreviewPageState extends State<AlterAvatarPreviewPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ExtendedImage.file(
-            File(widget.imagePath),
+          ExtendedImage.memory(
+            widget.image.buffer.asUint8List(),
           ).clipRRect(all: 9999).center(),
           ServiceSelector(controller: controller)
               .width(360)

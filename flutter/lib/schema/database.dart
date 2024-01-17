@@ -1,8 +1,5 @@
-import 'dart:io';
-
-import 'package:path/path.dart' as path;
+import 'package:ENC/schema/excutor/export.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:ENC/schema/contact.dart';
 import 'package:ENC/schema/conversation.dart';
 import 'package:ENC/schema/conversation_contact.dart';
@@ -29,7 +26,7 @@ part 'database.g.dart';
 )
 class AppDatabase extends _$AppDatabase {
   final String accountPath;
-  AppDatabase(this.accountPath) : super(_openConnection(accountPath));
+  AppDatabase(this.accountPath) : super(createExcutor(accountPath));
 
   @override
   int get schemaVersion => 2;
@@ -45,11 +42,4 @@ class AppDatabase extends _$AppDatabase {
       ),
     );
   }
-}
-
-LazyDatabase _openConnection(String accountPath) {
-  return LazyDatabase(() async {
-    final file = File(path.join(accountPath, 'db.sqlite'));
-    return NativeDatabase.createInBackground(file);
-  });
 }

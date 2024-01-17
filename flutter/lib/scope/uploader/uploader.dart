@@ -7,6 +7,7 @@ import 'package:ENC/dio.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/scope.model.dart';
 import 'package:ENC/utils/sign_helper.dart';
+import 'package:flutter/foundation.dart';
 
 class Uploader {
   final Scope scope;
@@ -82,5 +83,28 @@ class Uploader {
 
     await file.close();
     return '$url/$fileId';
+  }
+
+  Future<String> uploadBlob(
+    String serviceUrl,
+    Uint8List blob,
+  ) async {
+    final url = '$serviceUrl/storage/${scope.secret.signPubKey}';
+    final wrapper = await SignHelper.wrap(
+      scope,
+      blob,
+      contentType: ContentType.CONTENT_BUFFER,
+    );
+
+    final formData = FormData.fromMap({
+      'type': 'upload',
+      'payload': base64Encode(wrapper.writeToBuffer()),
+    });
+
+    final resp = await dio.post(
+      url,
+      data: formData,
+    );
+    return '$url/${resp.data}';
   }
 }

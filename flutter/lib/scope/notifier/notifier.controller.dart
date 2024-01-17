@@ -9,6 +9,7 @@ import 'package:ENC/scope/notifier/platforms/normal.controller.dart';
 import 'package:ENC/scope/notifier/platforms/win.controller.dart';
 import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:ENC/scope/scope.model.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class Notifier {
   Scope? blockScope;
@@ -27,6 +28,9 @@ abstract class Notifier {
   );
 
   factory Notifier.create() {
+    if (kIsWeb) {
+      return NormalNotifier();
+    }
     if (Platform.isWindows) {
       return WinNotifier();
     } else {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ENC/scope/scope.model.dart';
@@ -78,9 +76,17 @@ class _PreviewImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExtendedImage.file(
-      File(mediaInputContext.mediaFile.path),
-      fit: BoxFit.contain,
+    return FutureBuilder(
+      future: mediaInputContext.mediaFile.readAsBytes(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
+        return ExtendedImage.memory(
+          snapshot.requireData,
+          fit: BoxFit.contain,
+        );
+      },
     ).constrained(maxWidth: 360);
   }
 }

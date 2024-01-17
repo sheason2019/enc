@@ -1,8 +1,9 @@
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/scope/notifier/notifier.controller.dart';
 import 'package:ENC/scope/persist_adapter/fs_adapter.dart';
+import 'package:ENC/scope/persist_adapter/web_adapter.dart';
 import 'package:ENC/scope/scope.model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class PersistAdapter extends ChangeNotifier with AdapterMixin {
   Future<void> init();
@@ -12,7 +13,11 @@ abstract class PersistAdapter extends ChangeNotifier with AdapterMixin {
   Future<void> setDefaultScope(Scope? scope);
 
   factory PersistAdapter.create() {
-    return FsAdapter();
+    if (kIsWeb) {
+      return WebAdapter();
+    } else {
+      return FsAdapter();
+    }
   }
 }
 
