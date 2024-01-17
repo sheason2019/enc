@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:ENC/scope/persist_adapter/persist_adapter.dart';
 import 'package:ENC/scope/routers/routers.controller.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:ENC/schema/database.dart';
 import 'package:ENC/scope/account_paths/account_paths.dart';
@@ -16,11 +16,13 @@ import 'package:ENC/scope/uploader/uploader.dart';
 import '../models/conversation_anchor.dart';
 
 class Scope extends ChangeNotifier {
+  final String accountKey;
   final AccountPaths paths;
   Scope({
-    required String accountPath,
+    required this.accountKey,
     required this.notifier,
-  }) : paths = AccountPaths(root: accountPath);
+    required this.adapter,
+  }) : paths = AccountPaths(root: accountKey);
   final subs = <StreamSubscription>[];
 
   var secret = AccountSecret();
@@ -36,15 +38,10 @@ class Scope extends ChangeNotifier {
   late final uploader = Uploader(scope: this);
 
   final Notifier notifier;
+  final PersistAdapter adapter;
 
   Future handleUpdateSnapshot() async {
-    final snapshotFile = File(paths.snapshot);
-    if (!await snapshotFile.exists()) return;
-
-    final snapshot = AccountSnapshot.fromBuffer(
-      await snapshotFile.readAsBytes(),
-    );
-    this.snapshot = snapshot;
+    snapshot = await adapter.getAccountSnapshot(accountKey);
     await handleUpdateSubscribe();
 
     notifyListeners();
@@ -52,57 +49,49 @@ class Scope extends ChangeNotifier {
 
   Future<void> handleSetSnapshot(AccountSnapshot snapshot) async {
     snapshot.version = this.snapshot.version + 1;
-    final snapshotFile = File(paths.snapshot);
-    await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
+    await adapter.setAccountSnapshot(accountKey, snapshot);
     this.snapshot = snapshot;
 
     notifyListeners();
   }
 
   Future<void> handleUpdateConversationAnchor() async {
-    final anchorFile = File(paths.conversationAnchor);
-    if (!await anchorFile.exists()) return;
-
-    final anchor = ConversationAnchor.fromJson(
-      jsonDecode(await anchorFile.readAsString()),
-    );
-    this.anchor = anchor;
+    anchor = await adapter.getConversationAnchor(accountKey);
     notifyListeners();
   }
 
   Future<void> handleSetConversationAnchor(
     ConversationAnchor anchor,
   ) async {
-    final anchorFile = File(paths.conversationAnchor);
-    await anchorFile.writeAsString(jsonEncode(anchor.toJson()));
+    await adapter.setConversationAnchor(accountKey, anchor);
     this.anchor = anchor;
     notifyListeners();
   }
 
-  Future handleUpdateSecret() async {
-    final secretFile = File(paths.secret);
-    if (!await secretFile.exists()) return;
-
-    final secret = AccountSecret.fromBuffer(
-      await secretFile.readAsBytes(),
-    );
-    this.secret = secret;
-    notifyListeners();
+  Future handleInitSecret() async {
+    secret = await adapter.getAccountSecret(accountKey);
   }
 
-  Future<void> handleInitIsar() async {
+  Future<void> handleInitDb() async {
     db = AppDatabase(paths.root);
   }
 
   Future<void> handleInitDeviceId() async {
     final plugin = DeviceInfoPlugin();
+    if (kIsWeb) {
+      final deviceInfo = await plugin.webBrowserInfo;
+      deviceId = deviceInfo.userAgent ?? 'Unknown WebAgent';
+      return;
+    }
     if (Platform.isWindows) {
       final diviceInfo = await plugin.windowsInfo;
       deviceId = diviceInfo.deviceId;
+      return;
     }
     if (Platform.isAndroid) {
       final deviceInfo = await plugin.androidInfo;
       deviceId = deviceInfo.fingerprint;
+      return;
     }
   }
 
@@ -134,9 +123,9 @@ class Scope extends ChangeNotifier {
 
   init() async {
     // 获取 secret 和 snapshot
-    await handleInitIsar();
+    await handleInitDb();
     await handleInitDeviceId();
-    await handleUpdateSecret();
+    await handleInitSecret();
     await handleUpdateSnapshot();
     await handleUpdateConversationAnchor();
 

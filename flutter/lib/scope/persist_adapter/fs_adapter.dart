@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:ENC/models/conversation_anchor.dart';
 import 'package:ENC/prototypes/core.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
@@ -100,8 +102,9 @@ class FsAdapter extends ChangeNotifier
     }
     for (final append in appendSet) {
       final scope = Scope(
-        accountPath: append,
+        accountKey: append,
         notifier: notifier,
+        adapter: this,
       );
       scopeMap[append] = scope;
       await scope.init();
@@ -115,5 +118,68 @@ class FsAdapter extends ChangeNotifier
     for (final scope in scopeMap.values) {
       await scope.dispose();
     }
+  }
+
+  @override
+  Future<AccountSecret> getAccountSecret(String accountKey) async {
+    final secretFile = File(path.join(accountKey, '.secret'));
+
+    return AccountSecret.fromBuffer(
+      await secretFile.readAsBytes(),
+    );
+  }
+
+  @override
+  Future<AccountSnapshot> getAccountSnapshot(String accountKey) async {
+    final snapshotFile = File(path.join(accountKey, '.snapshot'));
+
+    return AccountSnapshot.fromBuffer(
+      await snapshotFile.readAsBytes(),
+    );
+  }
+
+  @override
+  Future<void> setAccountSecret(
+    String accountKey,
+    AccountSecret secret,
+  ) async {
+    final secretFile = File(path.join(accountKey, '.secret'));
+    await secretFile.writeAsBytes(secret.writeToBuffer());
+  }
+
+  @override
+  Future<void> setAccountSnapshot(
+    String accountKey,
+    AccountSnapshot snapshot,
+  ) async {
+    final snapshotFile = File(path.join(accountKey, '.snapshot'));
+    await snapshotFile.writeAsBytes(snapshot.writeToBuffer());
+  }
+
+  @override
+  Future<ConversationAnchor> getConversationAnchor(String accountKey) async {
+    final anchorFile = File(path.join(
+      accountKey,
+      '.conversation-anchor',
+    ));
+
+    return ConversationAnchor.fromJson(
+      jsonDecode(await anchorFile.readAsString()),
+    );
+  }
+
+  @override
+  Future<void> setConversationAnchor(
+    String accountKey,
+    ConversationAnchor anchor,
+  ) async {
+    final anchorFile = File(path.join(
+      accountKey,
+      '.conversation-anchor',
+    ));
+
+    await anchorFile.writeAsString(
+      jsonEncode(anchor.toJson()),
+    );
   }
 }
